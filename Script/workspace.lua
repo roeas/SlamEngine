@@ -3,38 +3,44 @@ workspace("SlamEngine")
 
     architecture("x64")
     configurations{ "Debug", "Release", "Final" }
-    staticruntime "on" -- Use static C runtime library
 
     -- Debug mode, no optimization
-    filter { "configurations:Debug" }
-        defines { "SL_DEBUG" }
+    filter{ "configurations:Debug" }
+        defines{ "SL_DEBUG" }
         symbols("On")
         optimize("Off")
         runtime("Debug") -- /MTd
 
     -- Release mode
-    filter { "configurations:Release" }
-        defines { "SL_RELEASE" }
+    filter{ "configurations:Release" }
+        defines{ "SL_RELEASE" }
         symbols("On")
         optimize("On")
-        runtime("Debug") -- /MTd
-
-    -- Final maode, full optimization
-    filter { "configurations:Final" }
-        defines { "SL_FINAL" }
-        symbols("Off")
-        optimize("Full")
         runtime("Release") -- /MT
 
-    filter { "system:Windows" }
-        defines { "SL_WINDOWS" }
-        systemversion("latest")
+    -- Final maode, full optimization
+    filter{ "configurations:Final" }
+        defines{ "SL_FINAL" }
+        symbols("Off")
+        optimize("Speed")
+        runtime("Release") -- /MT
 
-    filter {}
-    rtti("Off")
+    filter{ "system:Windows" }
+        systemversion("latest")
+        defines{ "SL_WINDOWS" }
+
+    filter{}
     exceptionhandling("Off")
+    fatalwarnings{ "All" }
     justmycode("Off")
-	fatalwarnings { "All" }
+    rtti("Off")
+    staticruntime("on")
+
+    defines
+    {
+        "SL_ROOT_PATH=\""..RootPath.."\"",
+        "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
+    }
 
     flags
     {

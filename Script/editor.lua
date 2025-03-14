@@ -4,18 +4,12 @@ project("Editor")
     kind("ConsoleApp")
     language("C++")
     cppdialect("C++20")
-    -- dependson { "Slam" }
+    dependson { "Slam" }
 
     -- Project, binary and intermediate file paths
     location(path.join(RootPath, "Project"))
-    targetdir(path.join(BinaryPath, "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"))
-    objdir(path.join(IntermediatePath, "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"))
-
-    defines
-    {
-        "SL_ROOT_PATH=\""..RootPath.."\"",
-        "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
-    }
+    targetdir(path.join(BinaryPath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
+    objdir(path.join(IntermediatePath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
 
     -- Include paths
     includedirs
@@ -36,7 +30,7 @@ project("Editor")
     filter { "configurations:Debug" }
         libdirs
         {
-            -- path.join(BinaryPath, "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/Slam"),
+            -- path.join(BinaryPath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/Slam"),
         }
         links
         {
@@ -45,11 +39,10 @@ project("Editor")
     filter { "configurations:Release or configurations:Final" }
         libdirs
         {
-            -- path.join(BinaryPath, "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/Slam"),
+            -- path.join(BinaryPath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/Slam"),
         }
         links
         {
             -- "Slam",
         }
     filter {}
-    

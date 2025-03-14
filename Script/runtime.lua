@@ -7,14 +7,8 @@ project("Slam")
 
     -- Project, binary and intermediate file paths
     location(path.join(RootPath, "Project"))
-    targetdir(path.join(BinaryPath, "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"))
-    objdir(path.join(IntermediatePath, "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}/%{prj.name}"))
-
-    defines
-    {
-        "SL_ROOT_PATH=\""..RootPath.."\"",
-        "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
-    }
+    targetdir(path.join(BinaryPath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
+    objdir(path.join(IntermediatePath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
 
     -- Include paths
     includedirs
