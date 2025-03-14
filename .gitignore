@@ -3,3 +3,4 @@
 *.sln
 
 build/
+/Engine/Binary/
