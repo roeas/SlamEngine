@@ -1,0 +1,5 @@
+/.vs
+/Project
+*.sln
+
+build/
