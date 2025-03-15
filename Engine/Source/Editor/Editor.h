@@ -10,7 +10,6 @@ struct EditorInitor
     const char *m_title;
     uint32_t m_width;
     uint32_t m_height;
-    // sl::GraphicsBackend m_backend;
 };
 
 class Editor final
