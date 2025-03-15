@@ -1,0 +1,35 @@
+name: MSBuild
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup third party
+      run: ${{github.workspace}}/SetupThirdParty.bat
+
+    - name: Setup engine and editor
+      run: ${{github.workspace}}/Setup.bat
+
+    - name: Build Debug x64
+      run: msbuild ${{github.workspace}}/SlamEngine.sln /p:Configuration=Debug /p:Platform=x64
+
+    - name: Build Release x64
+      run: msbuild ${{github.workspace}}/SlamEngine.sln /p:Configuration=Release /p:Platform=x64
+
+    - name: Build Final x64
+      run: msbuild ${{github.workspace}}/SlamEngine.sln /p:Configuration=Final /p:Platform=x64
