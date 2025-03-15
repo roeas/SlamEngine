@@ -1,6 +1,7 @@
 workspace("SlamEngine")
     location(RootPath)
 
+    systemversion("latest")
     architecture("x64")
     configurations{ "Debug", "Release", "Final" }
 
@@ -25,10 +26,6 @@ workspace("SlamEngine")
         optimize("Speed")
         runtime("Release") -- /MT
 
-    filter{ "system:Windows" }
-        systemversion("latest")
-        defines{ "SL_WINDOWS" }
-
     filter{}
     exceptionhandling("Off")
     fatalwarnings{ "All" }
@@ -40,6 +37,14 @@ workspace("SlamEngine")
     {
         "SL_ROOT_PATH=\""..RootPath.."\"",
         "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
+        "SPDLOG_NO_EXCEPTIONS", "SPDLOG_USE_STD_FORMAT",
+    }
+
+    includedirs
+    {
+        SourcePath,
+        ThirdPartyPath,
+        path.join(ThirdPartyPath, "spdlog/include"),
     }
 
     flags

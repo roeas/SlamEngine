@@ -10,21 +10,16 @@ project("Slam")
     targetdir(path.join(BinaryPath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
     objdir(path.join(IntermediatePath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
 
-    -- Include paths
-    includedirs
-    {
-        SourcePath,
-        RuntimePath,
-        ThirdPartyPath,
-    }
-
-    -- Files
     files
     {
         path.join(RuntimePath, "**.*"),
     }
 
-    -- Thirdparty libs
+    includedirs
+    {
+        RuntimePath,
+    }
+
     filter { "configurations:Debug" }
         includedirs
         {

@@ -20,3 +20,8 @@ project("Build")
     {
         path.join(RootPath, "Setup.bat"),
     }
+
+    flags
+    {
+        "ExcludeFromBuild",
+    }
