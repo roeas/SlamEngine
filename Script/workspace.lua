@@ -27,11 +27,11 @@ workspace("SlamEngine")
         runtime("Release") -- /MT
 
     filter{}
-    exceptionhandling("Off")
-    fatalwarnings{ "All" }
-    justmycode("Off")
-    rtti("Off")
-    staticruntime("on")
+    exceptionhandling("Off") -- No exception
+    fatalwarnings{ "All" } -- Treat all compiler warnings as errors
+    rtti("Off") -- No RTTI
+    staticruntime("On") -- Use /MT instead of /MD
+    usestandardpreprocessor("On") -- Enable __VA_OPT__
 
     defines
     {
