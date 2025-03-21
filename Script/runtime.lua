@@ -5,7 +5,7 @@ project("Slam")
     language("C++")
     cppdialect("C++20")
 
-    -- Project, binary and intermediate file paths
+    -- Project, binary and intermediate files paths
     location(path.join(RootPath, "Project"))
     targetdir(path.join(BinaryPath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
     objdir(path.join(IntermediatePath, "%{cfg.system}-%{cfg.architecture}-%{cfg.buildcfg}/%{prj.name}"))
@@ -17,7 +17,9 @@ project("Slam")
 
     includedirs
     {
+        SourcePath,
         RuntimePath,
+        ThirdPartyPath,
         path.join(ThirdPartyPath, "spdlog/include"),
     }
 
@@ -28,7 +30,7 @@ project("Slam")
         }
         libdirs
         {
-			path.join(ThirdPartyPath, "spdlog/build/Debug"),
+            path.join(ThirdPartyPath, "spdlog/build/Debug"),
         }
         links
         {
@@ -41,7 +43,7 @@ project("Slam")
         }
         libdirs
         {
-			path.join(ThirdPartyPath, "spdlog/build/Release"),
+            path.join(ThirdPartyPath, "spdlog/build/Release"),
         }
         links
         {

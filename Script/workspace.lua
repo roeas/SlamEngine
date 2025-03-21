@@ -10,6 +10,7 @@ workspace("SlamEngine")
         defines{ "SL_DEBUG" }
         symbols("On")
         optimize("Off")
+        linktimeoptimization("Off")
         runtime("Debug") -- /MDd
 
     -- Release mode
@@ -17,6 +18,7 @@ workspace("SlamEngine")
         defines{ "SL_RELEASE" }
         symbols("On")
         optimize("On")
+        linktimeoptimization("Off")
         runtime("Release") -- /MD
 
     -- Final maode, full optimization
@@ -24,13 +26,14 @@ workspace("SlamEngine")
         defines{ "SL_FINAL" }
         symbols("Off")
         optimize("Speed")
+        linktimeoptimization("On")
         runtime("Release") -- /MD
 
     filter{}
     exceptionhandling("Off") -- No exception
     fatalwarnings{ "All" } -- Treat all compiler warnings as errors
     rtti("Off") -- No RTTI
-    staticruntime("Off") -- Use /MD instead of /MT
+    staticruntime("Off") -- Use /MD or /MDd
     usestandardpreprocessor("On") -- Enable __VA_OPT__
 
     defines
@@ -38,12 +41,6 @@ workspace("SlamEngine")
         "SL_ROOT_PATH=\""..RootPath.."\"",
         "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
         "SPDLOG_COMPILED_LIB", "SPDLOG_USE_STD_FORMAT"
-    }
-
-    includedirs
-    {
-        SourcePath,
-        ThirdPartyPath,
     }
 
     flags
