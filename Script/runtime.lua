@@ -18,6 +18,7 @@ project("Slam")
     includedirs
     {
         RuntimePath,
+        path.join(ThirdPartyPath, "spdlog/include"),
     }
 
     filter { "configurations:Debug" }
@@ -27,11 +28,11 @@ project("Slam")
         }
         libdirs
         {
-            
+			path.join(ThirdPartyPath, "spdlog/build/Debug"),
         }
         links
         {
-            
+            "spdlogd",
         }
     filter { "configurations:Release or configurations:Final" }
         includedirs
@@ -40,10 +41,10 @@ project("Slam")
         }
         libdirs
         {
-            
+			path.join(ThirdPartyPath, "spdlog/build/Release"),
         }
         links
         {
-            
+            "spdlog",
         }
     filter {}

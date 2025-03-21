@@ -1,0 +1,3 @@
+|Lib|Type|
+|:-:|:-:|
+|spdlog|static|

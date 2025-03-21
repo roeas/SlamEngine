@@ -30,26 +30,25 @@ workspace("SlamEngine")
     exceptionhandling("Off") -- No exception
     fatalwarnings{ "All" } -- Treat all compiler warnings as errors
     rtti("Off") -- No RTTI
-    staticruntime("OFf") -- Use /MD instead of /MT
+    staticruntime("Off") -- Use /MD instead of /MT
     usestandardpreprocessor("On") -- Enable __VA_OPT__
 
     defines
     {
         "SL_ROOT_PATH=\""..RootPath.."\"",
         "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
-        "SPDLOG_NO_EXCEPTIONS", "SPDLOG_USE_STD_FORMAT",
+        "SPDLOG_COMPILED_LIB", "SPDLOG_USE_STD_FORMAT"
     }
 
     includedirs
     {
         SourcePath,
         ThirdPartyPath,
-        path.join(ThirdPartyPath, "spdlog/include"),
     }
 
     flags
     {
-        -- Enable Visual Studio to use multiple compiler processes when building.
+        -- Enable Visual Studio to use multiple compiler processes when building
         "MultiProcessorCompile",
     }
 
