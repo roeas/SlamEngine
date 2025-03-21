@@ -222,3 +222,12 @@ private:
 };
 
 } // namespace sl
+
+EVENT_FORMATTER_SPECIALIZE(sl::WindowCloseEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowResizeEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowMinimizeEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowMaximizeEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowRestoreEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowGetFocusEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowLossFocusEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowDropEvent);

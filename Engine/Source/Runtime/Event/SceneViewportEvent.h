@@ -114,3 +114,8 @@ public:
 };
 
 } // namespace sl
+
+EVENT_FORMATTER_SPECIALIZE(sl::SceneViewportResizeEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::SceneViewportGetFocusEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::SceneViewportLostFocusEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::SceneViewportHoverEvent);

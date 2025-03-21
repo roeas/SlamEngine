@@ -137,3 +137,8 @@ private:
 };
 
 } // namespace sl
+
+EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonPressEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonReleaseEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::MouseMoveEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::MouseScrollEvent);

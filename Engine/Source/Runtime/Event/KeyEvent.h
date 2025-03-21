@@ -105,3 +105,7 @@ private:
 };
 
 } // namespace sl
+
+EVENT_FORMATTER_SPECIALIZE(sl::KeyPressEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::KeyReleaseEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::KeyTypeEvent);
