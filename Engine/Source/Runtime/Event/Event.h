@@ -35,13 +35,13 @@ enum class EventType
 
 // Use it in the global namespace
 #define EVENT_FORMATTER_SPECIALIZE(event) \
-template <>\
-struct std::formatter<event> : std::formatter<std::string>\
-{\
-    auto format(const event &e, format_context &ctx) const\
-    {\
-        return formatter<string>::format(e.ToString(), ctx);\
-    }\
+template <> \
+struct std::formatter<event> : std::formatter<std::string> \
+{ \
+    auto format(const event &e, format_context &ctx) const \
+    { \
+        return formatter<string>::format(e.ToString(), ctx); \
+    } \
 }
 
 class Event

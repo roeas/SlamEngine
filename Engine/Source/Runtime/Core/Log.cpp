@@ -6,15 +6,13 @@
 #include <spdlog/sinks/callback_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include <iostream>
-
 namespace sl
 {
 
 namespace
 {
 
-constexpr std::array<LogLevel, 6> SpdLevelToSLLevel =
+constexpr std::array<LogLevel, 7> SPDLevelToSLLevel =
 {
     LogLevel::Trace,
     LogLevel::Debug,
@@ -22,27 +20,29 @@ constexpr std::array<LogLevel, 6> SpdLevelToSLLevel =
     LogLevel::Warn,
     LogLevel::Error,
     LogLevel::Fatal,
+    LogLevel::Off,
 };
 
 } // namespace
 
 void Log::Init()
 {
-    // Output to console.
+    // Output to console
     auto pConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    pConsoleSink->set_pattern("%^[%T] %n: %v%$");
+    pConsoleSink->set_pattern("%^[%T] [%n] %v%$");
 
-    // Output to file.
+    // Output to file
     auto pFileSink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(Path::FromeRoot("Engine/Log/Slam.log"), true);
-    pFileSink->set_pattern("[%T] [%l] %n: %v");
+    pFileSink->set_pattern("[%T] [%n] [%l] %v");
 
-    // Output to buffer and show on ui.
+    // Output to buffer and show on ui
     auto pCallbackSink = std::make_shared<spdlog::sinks::callback_sink_mt>([](const spdlog::details::log_msg &msg)
     {
-        // TODO: Add time information to log buffer.
+        // TODO: Ring buffer
+        // TODO: Add time information to #m_logInfos
         m_logInfos.emplace_back
         (
-            SpdLevelToSLLevel[msg.level],
+            SPDLevelToSLLevel[msg.level],
             std::string{ msg.payload.data(), msg.payload.size() }
         );
     });
@@ -50,6 +50,8 @@ void Log::Init()
     std::vector<spdlog::sink_ptr> sinks{ pConsoleSink, pFileSink, pCallbackSink };
     m_pEngineLogger = std::make_unique<spdlog::logger>("Engine", sinks.begin(), sinks.end());
     m_pEngineLogger->set_level(spdlog::level::trace);
+
+    SL_LOG_INFO("Logger initialized.");
 }
 
 } // namespace sl

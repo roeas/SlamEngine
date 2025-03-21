@@ -8,7 +8,6 @@ namespace sl
 Editor::Editor(const EditorInitor &initor)
 {
     Log::Init();
-    SL_LOG_INFO("Log initialized.");
 }
 
 Editor::~Editor()
