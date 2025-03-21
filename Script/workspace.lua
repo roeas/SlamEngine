@@ -10,27 +10,27 @@ workspace("SlamEngine")
         defines{ "SL_DEBUG" }
         symbols("On")
         optimize("Off")
-        runtime("Debug") -- /MTd
+        runtime("Debug") -- /MDd
 
     -- Release mode
     filter{ "configurations:Release" }
         defines{ "SL_RELEASE" }
         symbols("On")
         optimize("On")
-        runtime("Release") -- /MT
+        runtime("Release") -- /MD
 
     -- Final maode, full optimization
     filter{ "configurations:Final" }
         defines{ "SL_FINAL" }
         symbols("Off")
         optimize("Speed")
-        runtime("Release") -- /MT
+        runtime("Release") -- /MD
 
     filter{}
     exceptionhandling("Off") -- No exception
     fatalwarnings{ "All" } -- Treat all compiler warnings as errors
     rtti("Off") -- No RTTI
-    staticruntime("On") -- Use /MT instead of /MD
+    staticruntime("OFf") -- Use /MD instead of /MT
     usestandardpreprocessor("On") -- Enable __VA_OPT__
 
     defines
