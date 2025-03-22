@@ -5,18 +5,6 @@
 #include <format>
 #include <functional>
 
-namespace sl
-{
-
-enum class EventType
-{
-    None = 0,
-    WindowClose, WindowResize, WindowMinimize, WindowMaximize, WindowRestore, WindowGetFocus, WindowLostFocus, WindowDrop,
-    KeyPress, KeyRelease, KeyType,
-    MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll,
-    SceneViewportResize, SceneViewportGetFocus, SceneViewportLostFocus, SceneViewportHover,
-};
-
 #define SL_EVENT_CATEGORY_NONE           UINT8_C(0x00)
 #define SL_EVENT_CATEGORY_WINDOW         UINT8_C(0x01)
 #define SL_EVENT_CATEGORY_INPUT          UINT8_C(0x02)
@@ -43,6 +31,18 @@ struct std::formatter<event> : std::formatter<std::string> \
         return formatter<string>::format(e.ToString(), ctx); \
     } \
 }
+
+namespace sl
+{
+
+enum class EventType
+{
+    None = 0,
+    WindowClose, WindowResize, WindowMinimize, WindowMaximize, WindowRestore, WindowGetFocus, WindowLostFocus, WindowDrop,
+    KeyPress, KeyRelease, KeyType,
+    MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll,
+    SceneViewportResize, SceneViewportGetFocus, SceneViewportLostFocus, SceneViewportHover,
+};
 
 class Event
 {

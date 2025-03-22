@@ -4,7 +4,7 @@ project("Editor")
     kind("ConsoleApp")
     language("C++")
     cppdialect("C++20")
-    dependson { "Slam" }
+    dependson{ "Slam" }
 
     -- Project, binary and intermediate files paths
     location(path.join(RootPath, "Project"))
@@ -33,3 +33,15 @@ project("Editor")
     {
         "Slam",
     }
+
+    filter{ "configurations:Debug" }
+        postbuildcommands 
+        {
+            "{COPYFILE} %["..path.join(ThirdPartyPath, "sdl/build/Debug/SDL3.dll").."] %[%{cfg.targetdir}]",
+        }
+    filter{ "configurations:Release or configurations:Final" }
+        postbuildcommands 
+        {
+            "{COPYFILE} %["..path.join(ThirdPartyPath, "sdl/build/Release/SDL3.dll").."] %[%{cfg.targetdir}]",
+        }
+    filter{}
