@@ -5,3 +5,5 @@
 [premake-core](https://github.com/premake/premake-core) v5.0.0-beta5
 
 [spdlog](https://github.com/gabime/spdlog) v1.15.1
+
+[SDL](https://github.com/libsdl-org/SDL) v3.2.8

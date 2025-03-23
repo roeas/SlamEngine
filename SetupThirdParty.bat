@@ -25,5 +25,15 @@ cd %SPDLOG_PATH%
 cmake -B build -DSPDLOG_USE_STD_FORMAT=ON
 cmake --build build --target spdlog --config Debug
 cmake --build build --target spdlog --config Release
+echo.
+
+rem SDL
+set "SDL_PATH=%THIRD_PARTY_PATH%\sdl"
+echo [ SDL ] path: %SDL_PATH%
+cd %SDL_PATH%
+cmake -B build
+cmake --build build --target SDL3-shared --config Debug
+cmake --build build --target SDL3-shared --config Release
+echo.
 
 pause

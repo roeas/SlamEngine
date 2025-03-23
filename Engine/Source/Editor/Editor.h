@@ -1,9 +1,12 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 namespace sl
 {
+
+class Window;
 
 struct EditorInitor
 {
@@ -34,6 +37,8 @@ private:
 
     bool m_isRunning = true;
     bool m_isMinimized = false;
+
+    std::unique_ptr<Window> m_pWindow;
 };
 
 } // namespace sl
