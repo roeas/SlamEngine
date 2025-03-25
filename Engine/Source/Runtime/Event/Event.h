@@ -43,7 +43,7 @@ enum class EventType
     WindowResize, WindowMinimize, WindowMaximize, WindowRestore,
     WindowGetFocus, WindowLostFocus, WindowClose,
     KeyPress, KeyRelease, KeyType,
-    MouseButtonPress, MouseButtonRelease, MouseMove, MouseScroll,
+    MouseMove, MouseButtonDown, MouseButtonUp, MouseScroll,
     Drop,
     SceneViewportResize, SceneViewportGetFocus, SceneViewportLostFocus, SceneViewportHover,
 };

@@ -44,7 +44,7 @@ class MouseButtonDownEvent : public Event
 public:
     static EventType GetStaticEventType()
     {
-        return EventType::MouseButtonPress;
+        return EventType::MouseButtonDown;
     }
 
 public:
@@ -62,7 +62,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("MouseButtonPress: {}{}", m_button, (m_isDoubleClick ? ", double click" : ""));
+        return std::format("MouseButtonDown: {}{}", m_button, (m_isDoubleClick ? ", double click" : ""));
     }
 
     uint8_t GetButton() const { return m_button; }
@@ -78,7 +78,7 @@ class MouseButtonUpEvent : public Event
 public:
     static EventType GetStaticEventType()
     {
-        return EventType::MouseButtonRelease;
+        return EventType::MouseButtonUp;
     }
 
 public:
@@ -96,7 +96,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("MouseButtonRelease: {}", m_button);
+        return std::format("MouseButtonUp: {}", m_button);
     }
 
     uint8_t GetButton() const { return m_button; }
@@ -140,7 +140,7 @@ private:
 
 } // namespace sl
 
+EVENT_FORMATTER_SPECIALIZE(sl::MouseMoveEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonDownEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonUpEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::MouseMoveEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::MouseScrollEvent);

@@ -22,6 +22,8 @@ void Window::Init()
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+    // TODO: Create render context
+
     SL_LOG_INFO("SDL initialized.");
 }
 
@@ -45,7 +47,7 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_pNativeWindow = pWindow;
 
     SDL_SetWindowPosition(static_cast<SDL_Window *>(m_pNativeWindow), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    SDL_GL_SetSwapInterval(1);
+
     SDL_ShowWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
