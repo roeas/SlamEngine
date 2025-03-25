@@ -6,7 +6,9 @@
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 
+#include <glad/gl.h>
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_opengl.h>
 
 namespace sl
 {
@@ -15,14 +17,11 @@ void Window::Init()
 {
     SL_ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS), "Failed to initialize SDL: {}", SDL_GetError());
 
-    const char *glVersion = "#version 130";
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-    // TODO: Create render context
 
     SL_LOG_INFO("SDL initialized.");
 }
@@ -46,9 +45,24 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     }
     m_pNativeWindow = pWindow;
 
-    SDL_SetWindowPosition(static_cast<SDL_Window *>(m_pNativeWindow), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    { // TMP
+        SDL_GLContext context = SDL_GL_CreateContext(pWindow);
+        if (!context)
+        {
+            SL_LOG_ERROR("Failed to creat OpenGL context: {}", SDL_GetError());
+            return;
+        }
 
-    SDL_ShowWindow(static_cast<SDL_Window *>(m_pNativeWindow));
+        SDL_GL_MakeCurrent(pWindow, context);
+        SDL_GL_SetSwapInterval(1);
+
+        int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
+        SL_LOG_INFO("OpenGL {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+    }
+
+    SDL_SetWindowPosition(pWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+
+    SDL_ShowWindow(pWindow);
 }
 
 Window::~Window()
@@ -63,7 +77,11 @@ void Window::BeginFrame()
 
 void Window::EndFrame()
 {
+    // TMP
+    glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 
+    SDL_GL_SwapWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
 void Window::PullEvents()

@@ -43,6 +43,11 @@ workspace("SlamEngine")
         "SPDLOG_COMPILED_LIB", "SPDLOG_NO_EXCEPTIONS", "SPDLOG_USE_STD_FORMAT"
     }
 
+    includedirs
+    {
+        path.join(ThirdPartyPath, "spdlog/include"),
+    }
+    
     flags
     {
         -- Enable Visual Studio to use multiple compiler processes when building

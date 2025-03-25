@@ -18,11 +18,8 @@ project("Editor")
 
     includedirs
     {
-        SourcePath,
         EditorPath,
         RuntimePath,
-        ThirdPartyPath,
-        path.join(ThirdPartyPath, "spdlog/include"),
     }
 
     libdirs

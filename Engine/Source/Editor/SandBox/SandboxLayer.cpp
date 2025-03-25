@@ -37,7 +37,7 @@ void SandboxLayer::BeginFrame()
 
 void SandboxLayer::OnUpdate(float deltaTime)
 {
-	SL_LOG_DEBUG(deltaTime);
+
 }
 
 void SandboxLayer::OnRender()

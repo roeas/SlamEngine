@@ -13,22 +13,18 @@ project("Slam")
     files
     {
         path.join(RuntimePath, "**.*"),
+        path.join(ThirdPartyPath, "glad/**.*");
     }
 
     includedirs
     {
-        SourcePath,
         RuntimePath,
         ThirdPartyPath,
-        path.join(ThirdPartyPath, "spdlog/include"),
         path.join(ThirdPartyPath, "sdl/include"),
+        path.join(ThirdPartyPath, "glad/include"),
     }
 
     filter{ "configurations:Debug" }
-        includedirs
-        {
-            
-        }
         libdirs
         {
             path.join(ThirdPartyPath, "spdlog/build/Debug"),
@@ -40,10 +36,6 @@ project("Slam")
             "SDL3",
         }
     filter{ "configurations:Release or configurations:Final" }
-        includedirs
-        {
-            
-        }
         libdirs
         {
             path.join(ThirdPartyPath, "spdlog/build/Release"),

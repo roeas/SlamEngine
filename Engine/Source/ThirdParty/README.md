@@ -3,3 +3,4 @@
 |:-:|:-:|
 |spdlog|static|
 |SDL|shared|
+|glad|source|
