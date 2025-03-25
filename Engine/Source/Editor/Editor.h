@@ -6,7 +6,14 @@
 namespace sl
 {
 
+class Event;
 class Window;
+class WindowCloseEvent;
+class WindowMinimizeEvent;
+class WindowRestoreEvent;
+class LayerStack;
+
+}
 
 struct EditorInitor
 {
@@ -35,10 +42,13 @@ private:
     void Render();
     void EndFrame();
 
+    void OnEvent(sl::Event &event);
+    bool OnWindowClose(sl::WindowCloseEvent &event);
+    bool OnWindowMinimize(sl::WindowMinimizeEvent &event);
+    bool OnWindowRestore(sl::WindowRestoreEvent &event);
+
     bool m_isRunning = true;
     bool m_isMinimized = false;
 
-    std::unique_ptr<Window> m_pWindow;
+    std::unique_ptr<sl::Window> m_pWindow;
 };
-
-} // namespace sl

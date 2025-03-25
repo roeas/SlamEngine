@@ -1,6 +1,10 @@
 #include "Window.h"
 
 #include "Core/Log.h"
+#include "Event/DropEvent.h"
+#include "Event/KeyEvent.h"
+#include "Event/MouseEvent.h"
+#include "Event/WindowEvent.h"
 
 #include <SDL3/SDL.h>
 
@@ -52,7 +56,7 @@ Window::~Window()
 
 void Window::BegineFrame()
 {
-
+    PullEvents();
 }
 
 void Window::EndFrame()
@@ -62,7 +66,115 @@ void Window::EndFrame()
 
 void Window::PullEvents()
 {
+    SDL_Event SDLevent;
+    while (SDL_PollEvent(&SDLevent))
+    {
+        switch (SDLevent.type)
+        {
+            // Window events
+            case SDL_EVENT_WINDOW_RESIZED:
+            {
+                WindowResizeEvent event(SDLevent.window.data1, SDLevent.window.data2);
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_WINDOW_MINIMIZED:
+            {
+                WindowMinimizeEvent event;
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_WINDOW_MAXIMIZED:
+            {
+                WindowMaximizeEvent event;
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_WINDOW_RESTORED:
+            {
+                WindowRestoreEvent event;
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_WINDOW_FOCUS_GAINED:
+            {
+                WindowGetFocusEvent event;
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_WINDOW_FOCUS_LOST:
+            {
+                WindowLossFocusEvent event;
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
+            {
+                WindowCloseEvent event;
+                m_eventCallback(event);
+                break;
+            }
 
+            // Keyboard events
+            case SDL_EVENT_KEY_DOWN:
+            {
+                KeyDownEvent event(SDLevent.key.scancode, SDLevent.key.mod, SDLevent.key.repeat);
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_KEY_UP:
+            {
+                KeyUpEvent event(SDLevent.key.scancode);
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_TEXT_INPUT:
+            {
+                KeyTypeEvent event(SDLevent.text.text);
+                m_eventCallback(event);
+                break;
+            }
+
+            // Mouse events
+            case SDL_EVENT_MOUSE_MOTION:
+            {
+                MouseMoveEvent event(SDLevent.motion.x, SDLevent.motion.y);
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            {
+                MouseButtonDownEvent event(SDLevent.button.button, SDLevent.button.clicks == 2);
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+            {
+                MouseButtonUpEvent event(SDLevent.button.button);
+                m_eventCallback(event);
+                break;
+            }
+            case SDL_EVENT_MOUSE_WHEEL:
+            {
+                MouseScrollEvent event(SDLevent.wheel.x, SDLevent.wheel.y);
+                m_eventCallback(event);
+                break;
+            }
+
+            // Drop events
+            case SDL_EVENT_DROP_FILE:
+            {
+                DropEvent event(SDLevent.drop.data);
+                m_eventCallback(event);
+                break;
+            }
+
+            default:
+            {
+                break;
+            }
+        }
+    }
 }
 
 } // namespace sl

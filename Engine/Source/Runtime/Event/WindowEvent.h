@@ -5,31 +5,6 @@
 namespace sl
 {
 
-class WindowCloseEvent : public Event
-{
-public:
-    static EventType GetStaticEventType()
-    {
-        return EventType::WindowClose;
-    }
-
-public:
-    EventType GetEventType() const override
-    {
-        return GetStaticEventType();
-    }
-
-    uint8_t GetCategories() const override
-    {
-        return SL_EVENT_CATEGORY_WINDOW;
-    }
-
-    std::string ToString() const override
-    {
-        return "WindowClose";
-    }
-};
-
 class WindowResizeEvent : public Event
 {
 public:
@@ -188,18 +163,15 @@ public:
     }
 };
 
-// TODO: Support multi drop
-class WindowDropEvent : public Event
+class WindowCloseEvent : public Event
 {
 public:
     static EventType GetStaticEventType()
     {
-        return EventType::WindowDrop;
+        return EventType::WindowClose;
     }
 
 public:
-    WindowDropEvent(std::string path) : m_path(std::move(path)) {}
-
     EventType GetEventType() const override
     {
         return GetStaticEventType();
@@ -212,22 +184,16 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("WindowDrop: {}", m_path);
+        return "WindowClose";
     }
-
-    const std::string &GetPath() const { return m_path; }
-
-private:
-    std::string m_path;
 };
 
 } // namespace sl
 
-EVENT_FORMATTER_SPECIALIZE(sl::WindowCloseEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::WindowResizeEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::WindowMinimizeEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::WindowMaximizeEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::WindowRestoreEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::WindowGetFocusEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::WindowLossFocusEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowDropEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::WindowCloseEvent);

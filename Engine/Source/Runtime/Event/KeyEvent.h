@@ -6,7 +6,7 @@
 namespace sl
 {
 
-class KeyPressEvent : public Event
+class KeyDownEvent : public Event
 {
 public:
     static EventType GetStaticEventType()
@@ -15,8 +15,8 @@ public:
     }
 
 public:
-    KeyPressEvent(int keycode, bool isRepeat = false)
-        : m_key(keycode), m_isRepeat(isRepeat) {}
+    KeyDownEvent(uint32_t keycode, uint16_t modifier, bool isRepeat = false)
+        : m_key(keycode), m_modifier(modifier), m_isRepeat(isRepeat) {}
 
     EventType GetEventType() const override
     {
@@ -30,18 +30,20 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("KeyPress: {}{}", m_key, (m_isRepeat ? ", repeat" : ""));
+        return std::format("KeyPress: {}, modifier: {}{}", m_key, m_modifier, (m_isRepeat ? ", repeat" : ""));
     }
 
-    int GetKey() const { return m_key; }
+    uint32_t GetKey() const { return m_key; }
+    uint16_t GetModifier() const{ return m_modifier; }
     bool IsRepeat() const { return m_isRepeat; }
 
 private:
-    int m_key;
+    uint32_t m_key;
+    uint16_t m_modifier;
     bool m_isRepeat;
 };
 
-class KeyReleaseEvent : public Event
+class KeyUpEvent : public Event
 {
 public:
     static EventType GetStaticEventType()
@@ -50,7 +52,7 @@ public:
     }
 
 public:
-    KeyReleaseEvent(int keycode) : m_key(keycode) {}
+    KeyUpEvent(uint32_t keycode) : m_key(keycode) {}
 
     EventType GetEventType() const override
     {
@@ -67,10 +69,10 @@ public:
         return std::format("KeyRelease: {}", m_key);
     }
 
-    int GetKey() const { return m_key; }
+    uint32_t GetKey() const { return m_key; }
 
 private:
-    int m_key;
+    uint32_t m_key;
 };
 
 class KeyTypeEvent : public Event
@@ -82,7 +84,7 @@ public:
     }
 
 public:
-    KeyTypeEvent(int keycode) : m_key(keycode) {}
+    KeyTypeEvent(const char *text) : m_pText(text) {}
 
     virtual EventType GetEventType() const override
     {
@@ -96,16 +98,16 @@ public:
 
     virtual std::string ToString() const override
     {
-        return std::format("KeyType: {}", m_key);
+        return std::format("KeyType: {}", m_pText);
     }
-    int GetKey() const { return m_key; }
+    const char *GetKey() const { return m_pText; }
 
 private:
-    int m_key;
+    const char *m_pText;
 };
 
 } // namespace sl
 
-EVENT_FORMATTER_SPECIALIZE(sl::KeyPressEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::KeyReleaseEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::KeyDownEvent);
+EVENT_FORMATTER_SPECIALIZE(sl::KeyUpEvent);
 EVENT_FORMATTER_SPECIALIZE(sl::KeyTypeEvent);
