@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Event/WindowEvent.h"
 #include "Layer/LayerStack.h"
+#include "SandBox/SandboxLayer.h"
 #include "Window/Window.h"
 
 Editor::Editor(const EditorInitor &initor)
@@ -12,7 +13,12 @@ Editor::Editor(const EditorInitor &initor)
     m_pMainWindow = std::make_unique<sl::Window>("SlamEngine", 1280, 720);
     m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
 
+    auto pSandBoxLayer = std::make_unique<SandboxLayer>();
+
     m_pLayerStack = std::make_unique<sl::LayerStack>();
+    m_pLayerStack->PushLayer(std::move(pSandBoxLayer));
+
+    m_clock.Tick();
 }
 
 Editor::~Editor()
@@ -38,13 +44,15 @@ void Editor::Run()
 
 void Editor::BeginFrame()
 {
+    m_clock.Tick();
+
     m_pMainWindow->BeginFrame();
     m_pLayerStack->BeginFrame();
 }
 
 void Editor::Update()
 {
-    m_pLayerStack->Update(0.0f);
+    m_pLayerStack->Update(m_clock.GetDeltatIme());
 }
 
 void Editor::Render()

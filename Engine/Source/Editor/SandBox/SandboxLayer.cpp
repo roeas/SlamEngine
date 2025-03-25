@@ -1,6 +1,7 @@
 #include "SandboxLayer.h"
 
 #include "Core/Path.hpp"
+#include "Core/Log.h"
 
 // Just some temporary codes here
 
@@ -36,7 +37,7 @@ void SandboxLayer::BeginFrame()
 
 void SandboxLayer::OnUpdate(float deltaTime)
 {
-
+	SL_LOG_DEBUG(deltaTime);
 }
 
 void SandboxLayer::OnRender()

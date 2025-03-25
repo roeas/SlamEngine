@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Time.hpp"
+
 #include <cstdint>
 #include <memory>
 
@@ -50,6 +52,7 @@ private:
     bool m_isRunning = true;
     bool m_isMinimized = false;
 
+    sl::Clock m_clock;
     std::unique_ptr<sl::Window> m_pMainWindow;
     std::unique_ptr<sl::LayerStack> m_pLayerStack;
 };
