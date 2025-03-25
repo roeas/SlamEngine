@@ -56,7 +56,7 @@ Window::~Window()
     SDL_DestroyWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
-void Window::BegineFrame()
+void Window::BeginFrame()
 {
     PullEvents();
 }

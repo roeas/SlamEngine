@@ -7,11 +7,11 @@ namespace sl
 {
 
 class Event;
+class LayerStack;
 class Window;
 class WindowCloseEvent;
 class WindowMinimizeEvent;
 class WindowRestoreEvent;
-class LayerStack;
 
 }
 
@@ -37,7 +37,7 @@ public:
     void Run();
 
 private:
-    void BegineFrame();
+    void BeginFrame();
     void Update();
     void Render();
     void EndFrame();
@@ -50,5 +50,6 @@ private:
     bool m_isRunning = true;
     bool m_isMinimized = false;
 
-    std::unique_ptr<sl::Window> m_pWindow;
+    std::unique_ptr<sl::Window> m_pMainWindow;
+    std::unique_ptr<sl::LayerStack> m_pLayerStack;
 };

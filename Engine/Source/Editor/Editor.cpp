@@ -2,14 +2,17 @@
 
 #include "Core/Log.h"
 #include "Event/WindowEvent.h"
+#include "Layer/LayerStack.h"
 #include "Window/Window.h"
 
 Editor::Editor(const EditorInitor &initor)
 {
     sl::Log::Init();
     sl::Window::Init();
-    m_pWindow = std::make_unique<sl::Window>("SlamEngine", 1280, 720);
-    m_pWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
+    m_pMainWindow = std::make_unique<sl::Window>("SlamEngine", 1280, 720);
+    m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
+
+    m_pLayerStack = std::make_unique<sl::LayerStack>();
 }
 
 Editor::~Editor()
@@ -21,7 +24,7 @@ void Editor::Run()
 {
     while (m_isRunning)
     {
-        BegineFrame();
+        BeginFrame();
 
         if (!m_isMinimized)
         {
@@ -33,24 +36,26 @@ void Editor::Run()
     }
 }
 
-void Editor::BegineFrame()
+void Editor::BeginFrame()
 {
-    m_pWindow->BegineFrame();
+    m_pMainWindow->BeginFrame();
+    m_pLayerStack->BeginFrame();
 }
 
 void Editor::Update()
 {
-
+    m_pLayerStack->Update(0.0f);
 }
 
 void Editor::Render()
 {
-
+    m_pLayerStack->Render();
 }
 
 void Editor::EndFrame()
 {
-    m_pWindow->EndFrame();
+    m_pLayerStack->EndFrame();
+    m_pMainWindow->EndFrame();
 }
 
 void Editor::OnEvent(sl::Event &event)
@@ -59,6 +64,16 @@ void Editor::OnEvent(sl::Event &event)
     dispatcher.Dispatch<sl::WindowCloseEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowClose));
     dispatcher.Dispatch<sl::WindowMinimizeEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowMinimize));
     dispatcher.Dispatch<sl::WindowRestoreEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowRestore));
+
+    // Iterate layers from top to bottom / from end to begin
+    for (auto it = m_pLayerStack->rend(); it != m_pLayerStack->rbegin(); ++it)
+    {
+        if (event.IsHandled())
+        {
+            break;
+        }
+        (*it)->OnEvent(event);
+    }
 }
 
 bool Editor::OnWindowClose(sl::WindowCloseEvent &event)

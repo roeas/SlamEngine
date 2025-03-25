@@ -19,7 +19,7 @@ public:
     Window &operator=(Window &&) = delete;
     ~Window();
 
-    void BegineFrame();
+    void BeginFrame();
     void EndFrame();
 
     std::string_view GetTitlke() const { return m_title; }
