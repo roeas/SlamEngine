@@ -5,6 +5,7 @@
 #include "Event/KeyEvent.h"
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
+#include "ImGui/ImGuiContext.h"
 
 #include <glad/gl.h>
 #include <SDL3/SDL.h>
@@ -40,7 +41,7 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     SDL_Window *pWindow = SDL_CreateWindow(m_title.data(), m_width, m_height, windowFlags);
     if (!pWindow)
     {
-        SL_LOG_ERROR("Failed to creat window \"{}\": {}", m_title.data(), SDL_GetError());
+        SL_LOG_ERROR("Failed to creat window: {}", SDL_GetError());
         return;
     }
     m_pNativeWindow = pWindow;
@@ -52,12 +53,13 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
             SL_LOG_ERROR("Failed to creat OpenGL context: {}", SDL_GetError());
             return;
         }
+        m_pRenderContext = context;
 
         SDL_GL_MakeCurrent(pWindow, context);
         SDL_GL_SetSwapInterval(1);
 
         int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-        SL_LOG_INFO("OpenGL {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
+        SL_LOG_INFO("OpenGL {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version)); 
     }
 
     SDL_SetWindowPosition(pWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
@@ -73,14 +75,15 @@ Window::~Window()
 void Window::BeginFrame()
 {
     PullEvents();
+
+    // TMP
+    glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Window::EndFrame()
 {
-    // TMP
-    glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
+    SDL_GL_MakeCurrent(static_cast<SDL_Window *>(m_pNativeWindow), static_cast<SDL_GLContext>(m_pRenderContext));
     SDL_GL_SwapWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
@@ -89,6 +92,8 @@ void Window::PullEvents()
     SDL_Event SDLevent;
     while (SDL_PollEvent(&SDLevent))
     {
+        sl::ImGuiContext::OnEvent(&SDLevent);
+
         switch (SDLevent.type)
         {
             // Window events

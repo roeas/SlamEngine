@@ -45,9 +45,12 @@ workspace("SlamEngine")
 
     includedirs
     {
+        RuntimePath,
+        ThirdPartyPath,
         path.join(ThirdPartyPath, "spdlog/include"),
+        path.join(ThirdPartyPath, "imgui"),
     }
-    
+
     flags
     {
         -- Enable Visual Studio to use multiple compiler processes when building

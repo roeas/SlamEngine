@@ -2,8 +2,10 @@
 
 #include "Core/Log.h"
 #include "Event/WindowEvent.h"
+#include "ImGui/ImGuiContext.h"
 #include "Layer/LayerStack.h"
 #include "SandBox/SandboxLayer.h"
+#include "UI/ImGuiLayer.h"
 #include "Window/Window.h"
 
 Editor::Editor(const EditorInitor &initor)
@@ -13,9 +15,13 @@ Editor::Editor(const EditorInitor &initor)
     m_pMainWindow = std::make_unique<sl::Window>("SlamEngine", 1280, 720);
     m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
 
+    sl::ImGuiContext::Init(m_pMainWindow->GetNativeWindow(), m_pMainWindow->GetRenderContext());
+
+    auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
 
     m_pLayerStack = std::make_unique<sl::LayerStack>();
+    m_pLayerStack->PushLayer(std::move(pImGuiLayer));
     m_pLayerStack->PushLayer(std::move(pSandBoxLayer));
 
     m_clock.Tick();
@@ -23,6 +29,7 @@ Editor::Editor(const EditorInitor &initor)
 
 Editor::~Editor()
 {
+    sl::ImGuiContext::Shutdown();
     sl::Window::Quit();
 }
 

@@ -14,12 +14,12 @@ project("Slam")
     {
         path.join(RuntimePath, "**.*"),
         path.join(ThirdPartyPath, "glad/**.*");
+        path.join(ThirdPartyPath, "imgui/*.h");
+        path.join(ThirdPartyPath, "imgui/*.cpp");
     }
 
     includedirs
     {
-        RuntimePath,
-        ThirdPartyPath,
         path.join(ThirdPartyPath, "sdl/include"),
         path.join(ThirdPartyPath, "glad/include"),
     }

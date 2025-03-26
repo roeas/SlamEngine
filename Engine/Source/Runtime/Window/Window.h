@@ -25,6 +25,7 @@ public:
     std::string_view GetTitlke() const { return m_title; }
     std::tuple<uint32_t, uint32_t> GetSize() const { return { m_width, m_height }; }
     void *GetNativeWindow() const { return m_pNativeWindow; }
+    void *GetRenderContext() const { return m_pRenderContext; }
 
     void SetEventCallback(auto fun) { m_eventCallback = fun; }
 
@@ -34,6 +35,7 @@ private:
     std::string m_title;
     uint32_t m_width, m_height;
     void *m_pNativeWindow = nullptr;
+    void *m_pRenderContext = nullptr;
 
     EventCallback m_eventCallback;
 };

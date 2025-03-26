@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "Editor.h"
 
 int main()

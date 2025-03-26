@@ -19,7 +19,6 @@ project("Editor")
     includedirs
     {
         EditorPath,
-        RuntimePath,
     }
 
     libdirs
