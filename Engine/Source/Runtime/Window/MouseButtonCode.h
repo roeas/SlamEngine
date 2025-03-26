@@ -1,5 +1,14 @@
 #pragma once
 
+#include <cstdint>
+
+namespace
+{
+
+using MouseButtonType = uint8_t;
+
+}
+
 // Copy from SDL_mouse.h
 
 #define SL_MOUSE_BUTTON_LEFT    1

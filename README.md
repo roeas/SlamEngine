@@ -11,3 +11,5 @@
 [glad](https://github.com/Dav1dde/glad) v2.0.8
 
 [ImGui](https://github.com/ocornut/imgui) v1.91.9b
+
+[GLM](https://github.com/g-truc/glm) v1.0.1

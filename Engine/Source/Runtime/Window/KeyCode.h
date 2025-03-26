@@ -1,5 +1,15 @@
 #pragma once
 
+#include <cstdint>
+
+namespace sl
+{
+
+using KeyCodeType = uint32_t;
+using KeyModifierType = uint16_t;
+
+}
+
 // Copy from SL_scancode.h and SDL_keycode.h
 
 #define SL_KEY_UNKNOWN 0
@@ -389,7 +399,7 @@
 #define SL_KEY_MOD_CAPS   0x2000u /**< the Caps Lock key is down. */
 #define SL_KEY_MOD_MODE   0x4000u /**< the !AltGr key is down. */
 #define SL_KEY_MOD_SCROLL 0x8000u /**< the Scroll Lock key is down. */
-#define SL_KEY_MOD_CTRL   (SDL_KMOD_LCTRL | SDL_KMOD_RCTRL)   /**< Any Ctrl key is down. */
-#define SL_KEY_MOD_SHIFT  (SDL_KMOD_LSHIFT | SDL_KMOD_RSHIFT) /**< Any Shift key is down. */
-#define SL_KEY_MOD_ALT    (SDL_KMOD_LALT | SDL_KMOD_RALT)     /**< Any Alt key is down. */
-#define SL_KEY_MOD_GUI    (SDL_KMOD_LGUI | SDL_KMOD_RGUI)     /**< Any GUI key is down. */
+#define SL_KEY_MOD_CTRL   (SL_KEY_MOD_LCTRL | SL_KEY_MOD_RCTRL)   /**< Any Ctrl key is down. */
+#define SL_KEY_MOD_SHIFT  (SL_KEY_MOD_LSHIFT | SL_KEY_MOD_RSHIFT) /**< Any Shift key is down. */
+#define SL_KEY_MOD_ALT    (SL_KEY_MOD_LALT | SL_KEY_MOD_RALT)     /**< Any Alt key is down. */
+#define SL_KEY_MOD_GUI    (SL_KEY_MOD_LGUI | SL_KEY_MOD_RGUI)     /**< Any GUI key is down. */

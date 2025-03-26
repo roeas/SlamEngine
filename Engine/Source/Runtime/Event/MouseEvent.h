@@ -48,7 +48,7 @@ public:
     }
 
 public:
-    MouseButtonDownEvent(uint8_t button, uint8_t doubleClick) : m_button(button), m_isDoubleClick(doubleClick) {}
+    MouseButtonDownEvent(MouseButtonType button, bool doubleClick) : m_button(button), m_isDoubleClick(doubleClick) {}
 
     EventType GetEventType() const override
     {
@@ -65,11 +65,11 @@ public:
         return std::format("MouseButtonDown: {}{}", m_button, (m_isDoubleClick ? ", double click" : ""));
     }
 
-    uint8_t GetButton() const { return m_button; }
+    MouseButtonType GetButton() const { return m_button; }
     bool IsDoubleClick() const { return m_isDoubleClick; }
 
 private:
-    uint8_t m_button;
+    MouseButtonType m_button;
     bool m_isDoubleClick;
 };
 
@@ -82,7 +82,7 @@ public:
     }
 
 public:
-    MouseButtonUpEvent(uint8_t button) : m_button(button) {}
+    MouseButtonUpEvent(MouseButtonType button) : m_button(button) {}
 
     EventType GetEventType() const override
     {
@@ -99,10 +99,10 @@ public:
         return std::format("MouseButtonUp: {}", m_button);
     }
 
-    uint8_t GetButton() const { return m_button; }
+    MouseButtonType GetButton() const { return m_button; }
 
 private:
-    uint8_t m_button;
+    MouseButtonType m_button;
 };
 
 class MouseScrollEvent : public Event

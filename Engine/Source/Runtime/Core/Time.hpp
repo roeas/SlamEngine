@@ -11,7 +11,7 @@ public:
     void Tick()
     {
         auto crtTimePoint = std::chrono::steady_clock::now();
-        long long deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(crtTimePoint - m_lastTimePoint).count();
+        auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(crtTimePoint - m_lastTimePoint).count();
 
         m_deltaTime = (float)deltaTime * 0.001f;
         m_lastTimePoint = crtTimePoint;
@@ -39,7 +39,7 @@ public:
     float GetDuration() const
     {
         auto crtTimePoint = std::chrono::steady_clock::now();
-        long long deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(crtTimePoint - m_startTimePoint).count();
+        auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(crtTimePoint - m_startTimePoint).count();
 
         return (float)deltaTime * 0.001f;
     }

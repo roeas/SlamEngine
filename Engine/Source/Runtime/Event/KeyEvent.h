@@ -15,7 +15,7 @@ public:
     }
 
 public:
-    KeyDownEvent(uint32_t keycode, uint16_t modifier, bool isRepeat = false)
+    KeyDownEvent(KeyCodeType keycode, KeyModifierType modifier, bool isRepeat = false)
         : m_key(keycode), m_modifier(modifier), m_isRepeat(isRepeat) {}
 
     EventType GetEventType() const override
@@ -33,13 +33,13 @@ public:
         return std::format("KeyPress: {}, modifier: {}{}", m_key, m_modifier, (m_isRepeat ? ", repeat" : ""));
     }
 
-    uint32_t GetKey() const { return m_key; }
-    uint16_t GetModifier() const{ return m_modifier; }
+    KeyCodeType GetKey() const { return m_key; }
+    KeyModifierType GetModifier() const{ return m_modifier; }
     bool IsRepeat() const { return m_isRepeat; }
 
 private:
-    uint32_t m_key;
-    uint16_t m_modifier;
+    KeyCodeType m_key;
+    KeyModifierType m_modifier;
     bool m_isRepeat;
 };
 

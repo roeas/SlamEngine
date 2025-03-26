@@ -5,3 +5,4 @@
 |SDL|shared|
 |glad|source|
 |ImGui|source|
+|GLM|header only|
