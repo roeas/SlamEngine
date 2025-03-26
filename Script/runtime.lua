@@ -22,6 +22,7 @@ project("Slam")
     {
         path.join(ThirdPartyPath, "sdl/include"),
         path.join(ThirdPartyPath, "glad/include"),
+        path.join(ThirdPartyPath, "imgui"),
     }
 
     filter{ "configurations:Debug" }

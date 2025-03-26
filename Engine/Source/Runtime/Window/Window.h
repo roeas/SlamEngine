@@ -2,6 +2,8 @@
 
 #include "Event/Event.h"
 
+#include <glm/vec2.hpp>
+
 namespace sl
 {
 
@@ -23,7 +25,7 @@ public:
     void EndFrame();
 
     std::string_view GetTitlke() const { return m_title; }
-    std::tuple<uint32_t, uint32_t> GetSize() const { return { m_width, m_height }; }
+    glm::u32vec2 GetSize() const { return { m_width, m_height }; }
     void *GetNativeWindow() const { return m_pNativeWindow; }
     void *GetRenderContext() const { return m_pRenderContext; }
 
