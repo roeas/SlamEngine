@@ -1,5 +1,8 @@
 #include "LayerStack.h"
 
+#include "Event/Event.h"
+#include "Layer/Layer.h"
+
 namespace sl
 {
 
@@ -17,7 +20,7 @@ void LayerStack::BeginFrame()
     }
 }
 
-void LayerStack::Update(float deltaTime)
+void LayerStack::OnUpdate(float deltaTime)
 {
     for (auto &pLayer : m_pLayers)
     {
@@ -25,7 +28,7 @@ void LayerStack::Update(float deltaTime)
     }
 }
 
-void LayerStack::Render()
+void LayerStack::OnRender()
 {
     for (auto &pLayer : m_pLayers)
     {
@@ -38,6 +41,19 @@ void LayerStack::EndFrame()
     for (auto &pLayer : m_pLayers)
     {
         pLayer->EndFrame();
+    }
+}
+
+void LayerStack::OnEvent(Event &event)
+{
+    // Iterate layers from top to bottom / from end to begin
+    for (auto it = rend(); it != rbegin(); ++it)
+    {
+        if (event.IsHandled())
+        {
+            break;
+        }
+        (*it)->OnEvent(event);
     }
 }
 

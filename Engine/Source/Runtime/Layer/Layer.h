@@ -1,9 +1,9 @@
 #pragma once
 
+#include "Event/Event.h"
+
 namespace sl
 {
-
-class Event;
 
 class Layer
 {
@@ -12,12 +12,13 @@ public:
 
     virtual void OnAttach() = 0;
     virtual void OnDetach() = 0;
-    virtual void OnEvent(Event &event) = 0;
     
     virtual void BeginFrame() = 0;
     virtual void OnUpdate(float deltaTime) = 0;
     virtual void OnRender() = 0;
     virtual void EndFrame() = 0;
+
+    virtual void OnEvent(Event &event) = 0;
 };
 
 } // namespace sl

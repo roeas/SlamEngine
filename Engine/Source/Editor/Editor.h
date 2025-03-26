@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Time.hpp"
+#include "Layer/LayerStack.h"
 
 #include <cstdint>
 #include <memory>
@@ -9,7 +10,6 @@ namespace sl
 {
 
 class Event;
-class LayerStack;
 class Window;
 class WindowCloseEvent;
 class WindowMinimizeEvent;
@@ -53,6 +53,7 @@ private:
     bool m_isMinimized = false;
 
     sl::Clock m_clock;
+    sl::LayerStack m_layerStack;
+
     std::unique_ptr<sl::Window> m_pMainWindow;
-    std::unique_ptr<sl::LayerStack> m_pLayerStack;
 };

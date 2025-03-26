@@ -1,8 +1,5 @@
 #include "SandboxLayer.h"
 
-#include "Core/Path.hpp"
-#include "Core/Log.h"
-
 // Just some temporary codes here
 
 SandboxLayer::SandboxLayer()
@@ -25,11 +22,6 @@ void SandboxLayer::OnDetach()
 
 }
 
-void SandboxLayer::OnEvent(sl::Event &event)
-{
-
-}
-
 void SandboxLayer::BeginFrame()
 {
 
@@ -46,6 +38,11 @@ void SandboxLayer::OnRender()
 }
 
 void SandboxLayer::EndFrame()
+{
+
+}
+
+void SandboxLayer::OnEvent(sl::Event &event)
 {
 
 }

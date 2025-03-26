@@ -14,9 +14,11 @@ public:
     void PushLayer(std::unique_ptr<Layer> pLayer);
 
     void BeginFrame();
-    void Update(float deltaTime);
-    void Render();
+    void OnUpdate(float deltaTime);
+    void OnRender();
     void EndFrame();
+
+    void OnEvent(Event &event);
 
     auto begin() { return m_pLayers.begin(); }
     auto end() { return m_pLayers.end(); }

@@ -3,26 +3,26 @@
 #include "Core/Log.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
-#include "Layer/LayerStack.h"
-#include "SandBox/SandboxLayer.h"
-#include "UI/ImGuiLayer.h"
 #include "Window/Window.h"
+
+#include "ImGui/ImGuiLayer.h"
+#include "SandBox/SandboxLayer.h"
 
 Editor::Editor(const EditorInitor &initor)
 {
     sl::Log::Init();
-    sl::Window::Init();
-    m_pMainWindow = std::make_unique<sl::Window>("SlamEngine", 1280, 720);
-    m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
 
+    sl::Window::Init();
+    m_pMainWindow = std::make_unique<sl::Window>(initor.m_title, initor.m_width, initor.m_height);
+    m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
     sl::ImGuiContext::Init(m_pMainWindow->GetNativeWindow(), m_pMainWindow->GetRenderContext());
 
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
+    pImGuiLayer->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
 
-    m_pLayerStack = std::make_unique<sl::LayerStack>();
-    m_pLayerStack->PushLayer(std::move(pImGuiLayer));
-    m_pLayerStack->PushLayer(std::move(pSandBoxLayer));
+    m_layerStack.PushLayer(std::move(pImGuiLayer));
+    m_layerStack.PushLayer(std::move(pSandBoxLayer));
 
     m_clock.Tick();
 }
@@ -51,25 +51,24 @@ void Editor::Run()
 
 void Editor::BeginFrame()
 {
-    m_clock.Tick();
-
     m_pMainWindow->BeginFrame();
-    m_pLayerStack->BeginFrame();
+    m_layerStack.BeginFrame();
 }
 
 void Editor::Update()
 {
-    m_pLayerStack->Update(m_clock.GetDeltatIme());
+    m_clock.Tick();
+    m_layerStack.OnUpdate(m_clock.GetDeltatIme());
 }
 
 void Editor::Render()
 {
-    m_pLayerStack->Render();
+    m_layerStack.OnRender();
 }
 
 void Editor::EndFrame()
 {
-    m_pLayerStack->EndFrame();
+    m_layerStack.EndFrame();
     m_pMainWindow->EndFrame();
 }
 
@@ -80,15 +79,7 @@ void Editor::OnEvent(sl::Event &event)
     dispatcher.Dispatch<sl::WindowMinimizeEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowMinimize));
     dispatcher.Dispatch<sl::WindowRestoreEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowRestore));
 
-    // Iterate layers from top to bottom / from end to begin
-    for (auto it = m_pLayerStack->rend(); it != m_pLayerStack->rbegin(); ++it)
-    {
-        if (event.IsHandled())
-        {
-            break;
-        }
-        (*it)->OnEvent(event);
-    }
+    m_layerStack.OnEvent(event);
 }
 
 bool Editor::OnWindowClose(sl::WindowCloseEvent &event)
