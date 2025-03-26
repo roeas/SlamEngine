@@ -12,4 +12,10 @@
 
 [ImGui](https://github.com/ocornut/imgui) v1.91.9b
 
+[IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) 3eac3a08c43680cd8a5cef32001a75766126ef99
+
 [GLM](https://github.com/g-truc/glm) v1.0.1
+
+[Noto Sans](https://fonts.google.com/noto)
+
+[Material Symbols](https://fonts.google.com/icons)

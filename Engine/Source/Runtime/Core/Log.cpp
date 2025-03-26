@@ -51,7 +51,7 @@ void Log::Init()
     m_pEngineLogger = std::make_unique<spdlog::logger>("Engine", sinks.begin(), sinks.end());
     m_pEngineLogger->set_level(spdlog::level::trace);
 
-    SL_LOG_INFO("Logger initialized.");
+    SL_LOG_INFO("Logger initialized");
 }
 
 } // namespace sl

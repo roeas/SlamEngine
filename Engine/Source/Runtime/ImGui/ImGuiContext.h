@@ -15,11 +15,14 @@ public:
     static void Submit();
     static void OnEvent(void *pSDLEvent);
 
+    static bool WantCaptureMouse();
+    static bool WantCaptureKeyboard();
+
     static void SetUsingMouse(bool enable);
 
     static ImFont *GetRegularFont() { return m_pRegularFont; }
     static ImFont *GetBoldFont() { return m_pBoldFont; }
-    static ImFont *GetThinFont() { return m_pThinFont; }
+    static ImFont *GetLightFont() { return m_pLightFont; }
 
 public:
     ImGuiContext() = delete;
@@ -36,7 +39,7 @@ private:
     // ImGui holds the ownership of these datas
     inline static ImFont *m_pRegularFont;
     inline static ImFont *m_pBoldFont;
-    inline static ImFont *m_pThinFont;
+    inline static ImFont *m_pLightFont;
 };
 
 } // namespace sl

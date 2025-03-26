@@ -3,59 +3,56 @@
 #include "Core/Log.h"
 #include "Core/Path.hpp"
 
+#include <ImGui/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
-#include <ImGui/imgui_impl_sdl3.h>
 #include <ImGui/imgui_impl_opengl3.h>
+#include <ImGui/imgui_impl_sdl3.h>
 
 namespace sl
 {
 
 void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
 {
-    // 1. Init imgui
+    // 1. Init ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
 
     // 2. Setup configs
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io.ConfigViewportsNoTaskBarIcon = true;
     io.ConfigDebugIsDebuggerPresent = true;
 
     static std::string s_iniFilePath = Path::FromeRoot("Engine/Config/imgui.ini");
-    io.IniFilename = s_iniFilePath.c_str();
-
-#if 0
+    io.IniFilename = s_iniFilePath.data();
 
     // 3. Load font
     constexpr float FontSize = 18.0f;
+    m_pRegularFont = io.Fonts->AddFontFromFileTTF(
+        sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Regular.ttf").data(), FontSize);
+    io.FontDefault = m_pRegularFont;
+
+    // Merge icon font
     ImFontConfig fontConfig;
     fontConfig.GlyphOffset = ImVec2{ 0.0f, 2.0f };
     fontConfig.GlyphMinAdvanceX = FontSize;
     fontConfig.MergeMode = true;
     static const ImWchar s_iconRange[] = { (ImWchar)ICON_MIN_MS, (ImWchar)ICON_MAX_MS, 0 };
-
-    m_pRegularFont = io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/OpenSans/static/OpenSans-Regular.ttf").c_str(), FontSize);
-    // Merge icon font
     io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/GoogleMaterialSymbols/MaterialSymbolsOutlined.ttf").c_str(), FontSize, &fontConfig, s_iconRange);
+        sl::Path::FromeAsset("Font/GoogleMaterialSymbols/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf").data(),
+        FontSize, &fontConfig, s_iconRange);
     m_pBoldFont = io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/OpenSans/static/OpenSans-Bold.ttf").c_str(), FontSize);
-    m_pThinFont = io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/OpenSans/static/OpenSans-Light.ttf").c_str(), FontSize);
-    io.FontDefault = m_pRegularFont;
-
-#endif
+        sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Bold.ttf").data(), FontSize);
+    m_pLightFont = io.Fonts->AddFontFromFileTTF(
+        sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Light.ttf").data(), FontSize);
 
     // 4. Set color and style
     SetColor();
     SetStyle();
 
-    // 5. Init platform and Rendering backend
+    // 5. Setup Platform / Renderer backends
     ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window *>(pNativeWindow), pRenderContext);
     ImGui_ImplOpenGL3_Init("#version 460");
 }
@@ -79,7 +76,6 @@ void ImGuiContext::Submit()
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    // For docking
     ImGui::UpdatePlatformWindows();
     ImGui::RenderPlatformWindowsDefault();
 }
@@ -87,6 +83,16 @@ void ImGuiContext::Submit()
 void ImGuiContext::OnEvent(void *pSDLEvent)
 {
     ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event *>(pSDLEvent));
+}
+
+bool ImGuiContext::WantCaptureMouse()
+{
+    return ImGui::GetIO().WantCaptureMouse;
+}
+
+bool ImGuiContext::WantCaptureKeyboard()
+{
+    return ImGui::GetIO().WantCaptureKeyboard;
 }
 
 void ImGuiContext::SetUsingMouse(bool enable)

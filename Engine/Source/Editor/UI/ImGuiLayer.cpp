@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "ImGui/ImGuiContext.h"
 
+#include <ImGui/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 
 ImGuiLayer::ImGuiLayer()

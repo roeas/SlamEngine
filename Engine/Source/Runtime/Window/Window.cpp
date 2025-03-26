@@ -9,22 +9,22 @@
 
 #include <glad/gl.h>
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_opengl.h>
 
 namespace sl
 {
 
 void Window::Init()
 {
-    SL_ASSERT(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS), "Failed to initialize SDL: {}", SDL_GetError());
+
+    SL_LOG_INFO("Initializing SDL");
+
+    SL_ASSERT(SDL_Init(SDL_INIT_EVENTS), "Failed to initialize SDL: {}", SDL_GetError());
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-    SL_LOG_INFO("SDL initialized.");
 }
 
 void Window::Quit()
@@ -35,7 +35,9 @@ void Window::Quit()
 Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_title(title), m_width(width), m_height(height)
 {
-    uint64_t windowFlags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN;
+    SL_LOG_TRACE("Creating window \"{}\"", title);
+
+    uint64_t windowFlags = SDL_WINDOW_RESIZABLE;
     windowFlags |= SDL_WINDOW_OPENGL;
 
     SDL_Window *pWindow = SDL_CreateWindow(m_title.data(), m_width, m_height, windowFlags);
@@ -47,19 +49,21 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_pNativeWindow = pWindow;
 
     { // TMP
-        SDL_GLContext context = SDL_GL_CreateContext(pWindow);
-        if (!context)
+        SL_LOG_TRACE("Creating OpenGL context");
+
+        SDL_GLContext pContext = SDL_GL_CreateContext(pWindow);
+        if (!pContext)
         {
             SL_LOG_ERROR("Failed to creat OpenGL context: {}", SDL_GetError());
             return;
         }
-        m_pRenderContext = context;
+        m_pRenderContext = pContext;
 
-        SDL_GL_MakeCurrent(pWindow, context);
+        SDL_GL_MakeCurrent(pWindow, pContext);
         SDL_GL_SetSwapInterval(1);
 
         int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-        SL_LOG_INFO("OpenGL {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version)); 
+        SL_LOG_TRACE("\tVersion: {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
     }
 
     SDL_SetWindowPosition(pWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
@@ -69,16 +73,17 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
 
 Window::~Window()
 {
+    SDL_GL_DestroyContext(static_cast<SDL_GLContext>(m_pRenderContext));
     SDL_DestroyWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
 void Window::BeginFrame()
 {
-    PullEvents();
-
     // TMP
     glClearColor(0.6f, 0.8f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    PullEvents();
 }
 
 void Window::EndFrame()
@@ -143,18 +148,33 @@ void Window::PullEvents()
             // Keyboard events
             case SDL_EVENT_KEY_DOWN:
             {
+                if (ImGuiContext::WantCaptureKeyboard())
+                {
+                    break;
+                }
+
                 KeyDownEvent event(SDLevent.key.scancode, SDLevent.key.mod, SDLevent.key.repeat);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_KEY_UP:
             {
+                if (ImGuiContext::WantCaptureKeyboard())
+                {
+                    break;
+                }
+
                 KeyUpEvent event(SDLevent.key.scancode);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_TEXT_INPUT:
             {
+                if (ImGuiContext::WantCaptureKeyboard())
+                {
+                    break;
+                }
+
                 KeyTypeEvent event(SDLevent.text.text);
                 m_eventCallback(event);
                 break;
@@ -163,24 +183,44 @@ void Window::PullEvents()
             // Mouse events
             case SDL_EVENT_MOUSE_MOTION:
             {
+                if (ImGuiContext::WantCaptureMouse())
+                {
+                    break;
+                }
+
                 MouseMoveEvent event(SDLevent.motion.x, SDLevent.motion.y);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_MOUSE_BUTTON_DOWN:
             {
+                if (ImGuiContext::WantCaptureMouse())
+                {
+                    break;
+                }
+
                 MouseButtonDownEvent event(SDLevent.button.button, SDLevent.button.clicks == 2);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_MOUSE_BUTTON_UP:
             {
+                if (ImGuiContext::WantCaptureMouse())
+                {
+                    break;
+                }
+
                 MouseButtonUpEvent event(SDLevent.button.button);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_MOUSE_WHEEL:
             {
+                if (ImGuiContext::WantCaptureMouse())
+                {
+                    break;
+                }
+
                 MouseScrollEvent event(SDLevent.wheel.x, SDLevent.wheel.y);
                 m_eventCallback(event);
                 break;
