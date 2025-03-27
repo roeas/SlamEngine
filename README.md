@@ -18,6 +18,8 @@
 
 [GLM](https://github.com/g-truc/glm) v1.0.1
 
+[Nameof](https://github.com/Neargye/nameof) v0.10.4
+
 [Noto Sans](https://fonts.google.com/noto)
 
 [Material Symbols](https://fonts.google.com/icons)
