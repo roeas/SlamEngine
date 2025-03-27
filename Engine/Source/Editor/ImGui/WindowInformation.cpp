@@ -3,7 +3,6 @@
 #include "ImGui/WindowInformation.h"
 
 #include "Core/Log.h"
-#include "ImGui/ImGuiData.h"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
@@ -64,8 +63,6 @@ void WindowInformation::BeginFrame()
 
 void WindowInformation::OnUpdate(float deltaTime)
 {
-    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-
     ImGui::Begin("Info");
 
     // 1. Infos

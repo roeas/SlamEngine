@@ -3,6 +3,7 @@
 #include "ImGui/ImGuiContext.h"
 #include "ImGui/MenuBar.h"
 #include "ImGui/WindowInformation.h"
+#include "ImGui/WindowLog.h"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
@@ -14,9 +15,11 @@ ImGuiLayer::ImGuiLayer()
     auto pMenuBar = std::make_unique<MenuBar>();
     pMenuBar->SetEventCallback(BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
     auto pWindowInformation = std::make_unique<WindowInformation>();
+    auto pWindowLog = std::make_unique<WindowLog>();
 
     m_stack.PushLayer(std::move(pMenuBar));
     m_stack.PushLayer(std::move(pWindowInformation));
+    m_stack.PushLayer(std::move(pWindowLog));
 }
 
 void ImGuiLayer::OnAttach()
