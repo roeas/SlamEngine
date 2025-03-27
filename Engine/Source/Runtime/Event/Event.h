@@ -5,21 +5,19 @@
 #include <format>
 #include <functional>
 
-#define SL_EVENT_CATEGORY_NONE           UINT8_C(0x00)
-#define SL_EVENT_CATEGORY_WINDOW         UINT8_C(0x01)
-#define SL_EVENT_CATEGORY_INPUT          UINT8_C(0x02)
-#define SL_EVENT_CATEGORY_KEYBOARD       UINT8_C(0x04)
-#define SL_EVENT_CATEGORY_MOUSE          UINT8_C(0x08)
-#define SL_EVENT_CATEGORY_DROP           UINT8_C(0x10)
-#define SL_EVENT_CATEGORY_SCENE_VIEWPORT UINT8_C(0x20)
+#define SL_EVENT_CATEGORY_NONE     UINT8_C(0x00)
+#define SL_EVENT_CATEGORY_INPUT    UINT8_C(0x01)
+#define SL_EVENT_CATEGORY_WINDOW   UINT8_C(0x02)
+#define SL_EVENT_CATEGORY_KEYBOARD UINT8_C(0x04)
+#define SL_EVENT_CATEGORY_MOUSE    UINT8_C(0x08)
+#define SL_EVENT_CATEGORY_DROP     UINT8_C(0x10)
 
 #define SL_EVENT_CATEGORY_ALL ( \
         SL_EVENT_CATEGORY_WINDOW | \
         SL_EVENT_CATEGORY_INPUT | \
         SL_EVENT_CATEGORY_KEYBOARD | \
         SL_EVENT_CATEGORY_MOUSE | \
-        SL_EVENT_CATEGORY_DROP | \
-        SL_EVENT_CATEGORY_SCENE_VIEWPORT)
+        SL_EVENT_CATEGORY_DROP)
 
 #define BIND_EVENT_CALLBACK(fun) std::bind_front(&fun, this)
 
@@ -42,10 +40,9 @@ enum class EventType
     None = 0,
     WindowResize, WindowMinimize, WindowMaximize, WindowRestore,
     WindowGetFocus, WindowLostFocus, WindowClose,
-    KeyPress, KeyRelease, KeyType,
+    KeyDown, KeyUp, KeyType,
     MouseMove, MouseButtonDown, MouseButtonUp, MouseScroll,
     Drop,
-    SceneViewportResize, SceneViewportGetFocus, SceneViewportLostFocus, SceneViewportHover,
 };
 
 class Event
@@ -74,7 +71,7 @@ concept DispatchableDerivedEvent = requires(T e, Fun fun)
     { e.GetEventType() } -> std::same_as<EventType>;
     { T::GetStaticEventType() } -> std::same_as<EventType>;
 
-    { e.IsHandled() } -> std::same_as<bool>;
+    { e.SetHandled(true) } -> std::same_as<void>;
     { fun(e) } -> std::same_as<bool>;
 };
 

@@ -21,7 +21,7 @@ public:
     void ForwardEvent(sl::Event &event);
 
 private:
-    ImGuiData m_data;
-    sl::LayerStack m_stack;
     sl::EventCallback m_eventCallback;
+    sl::LayerStack m_stack;
+    ImGuiData m_data;
 };

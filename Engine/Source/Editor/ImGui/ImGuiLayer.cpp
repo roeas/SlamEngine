@@ -2,8 +2,12 @@
 
 #include "ImGui/ImGuiContext.h"
 #include "ImGui/MenuBar.h"
-#include "ImGui/WindowInformation.h"
-#include "ImGui/WindowLog.h"
+#include "ImGui/PanelAssetBrowser.h"
+#include "ImGui/PanelDetails.h"
+#include "ImGui/PanelEntityList.h"
+#include "ImGui/PanelInformation.h"
+#include "ImGui/PanelLog.h"
+#include "ImGui/PanelScene.h"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
@@ -14,12 +18,20 @@ ImGuiLayer::ImGuiLayer()
 
     auto pMenuBar = std::make_unique<MenuBar>();
     pMenuBar->SetEventCallback(BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
-    auto pWindowInformation = std::make_unique<WindowInformation>();
-    auto pWindowLog = std::make_unique<WindowLog>();
+    auto pPanelInformation = std::make_unique<PanelInformation>();
+    auto pPanelLog = std::make_unique<PanelLog>();
+    auto pPanelAssetBrowser = std::make_unique<PanelAssetBrowser>();
+    auto pPanelEntityList = std::make_unique<PanelEntityList>();
+    auto pPanelDetails = std::make_unique<PanelDetails>();
+    auto pPanelScene = std::make_unique<PanelScene>();
 
     m_stack.PushLayer(std::move(pMenuBar));
-    m_stack.PushLayer(std::move(pWindowInformation));
-    m_stack.PushLayer(std::move(pWindowLog));
+    m_stack.PushLayer(std::move(pPanelInformation));
+    m_stack.PushLayer(std::move(pPanelLog));
+    m_stack.PushLayer(std::move(pPanelAssetBrowser));
+    m_stack.PushLayer(std::move(pPanelEntityList));
+    m_stack.PushLayer(std::move(pPanelDetails));
+    m_stack.PushLayer(std::move(pPanelScene));
 }
 
 void ImGuiLayer::OnAttach()
@@ -34,13 +46,13 @@ void ImGuiLayer::OnDetach()
 
 void ImGuiLayer::BeginFrame()
 {
-    sl::ImGuiContext::NewFrame();
-
     m_stack.BeginFrame();
 }
 
 void ImGuiLayer::OnUpdate(float deltaTime)
 {
+    sl::ImGuiContext::NewFrame();
+
     if (m_data.m_debugImGuiDemo)
     {
         ImGui::ShowDemoWindow(&m_data.m_debugImGuiDemo);
@@ -57,9 +69,8 @@ void ImGuiLayer::OnUpdate(float deltaTime)
 
 void ImGuiLayer::OnRender()
 {
-    sl::ImGuiContext::Submit();
-
     m_stack.OnRender();
+    sl::ImGuiContext::Submit();
 }
 
 void ImGuiLayer::EndFrame()

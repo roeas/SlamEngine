@@ -12,7 +12,7 @@ project("Build")
     {
         path.join(RootPath, "Setup.bat"),
         path.join(RootPath, "SetupThirdParty.bat"),
-        path.join(RootPath, "Script/**.lua"),
+        path.join(RootPath, "Script/*.lua"),
     }
 
     postbuildcommands

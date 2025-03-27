@@ -2,7 +2,6 @@
 
 #include "ImGui/MenuBar.h"
 
-#include "Core/Log.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiData.h"
 

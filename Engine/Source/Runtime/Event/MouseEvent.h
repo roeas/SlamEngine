@@ -48,7 +48,8 @@ public:
     }
 
 public:
-    MouseButtonDownEvent(MouseButtonType button, bool doubleClick) : m_button(button), m_isDoubleClick(doubleClick) {}
+    MouseButtonDownEvent(MouseButtonType button, bool doubleClick) :
+        m_button(button), m_isDoubleClick(doubleClick) {}
 
     EventType GetEventType() const override
     {

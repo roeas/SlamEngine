@@ -33,8 +33,8 @@ workspace("SlamEngine")
     exceptionhandling("Off") -- No exception
     fatalwarnings{ "All" } -- Treat all compiler warnings as errors
     rtti("Off") -- No RTTI
-    staticruntime("Off") -- Use /MD or /MDd
-    usestandardpreprocessor("On") -- Enable __VA_OPT__
+    staticruntime("Off") -- Use /MD and /MDd
+    usestandardpreprocessor("On") -- Enable C++20 new preprocessor
 
     defines
     {

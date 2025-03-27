@@ -2,7 +2,7 @@
 
 #include "Layer/Layer.h"
 
-class WindowLog : public sl::Layer
+class PanelEntityList : public sl::Layer
 {
 public:
     void OnAttach() override;

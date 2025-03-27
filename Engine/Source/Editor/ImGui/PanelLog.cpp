@@ -1,40 +1,40 @@
 #pragma once
 
-#include "ImGui/WindowLog.h"
+#include "ImGui/PanelLog.h"
 
 #include "Core/Log.h"
 
 #include <ImGui/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 
-void WindowLog::OnAttach()
+void PanelLog::OnAttach()
 {
 
 }
 
-void WindowLog::OnDetach()
+void PanelLog::OnDetach()
 {
 
 }
 
-void WindowLog::BeginFrame()
+void PanelLog::BeginFrame()
 {
 
 }
 
-void WindowLog::OnUpdate(float deltaTime)
+void PanelLog::OnUpdate(float deltaTime)
 {
-    // 0011 1111, which means not filtering anything.
+    // 0011 1111, which means not filtering anything
     constexpr uint8_t FullLevelFilter = 0x3f;
     static uint8_t s_levelFilter = FullLevelFilter;
     static ImGuiTextFilter s_textFilter;
 
     constexpr ImVec4 TraceColor{ 1.0f, 1.0f, 1.0f, 1.0f };
-    constexpr ImVec4 DebugColor{ 0.1f, 0.5f, 0.9f, 1.0f };
-    constexpr ImVec4 InfoColor{ 0.1f, 0.9f, 0.1f, 1.0f };
-    constexpr ImVec4 WarnColor{ 0.9f, 0.8f, 0.1f, 1.0f };
-    constexpr ImVec4 ErrorColor{ 0.9f, 0.1f, 0.1f, 1.0f };
-    constexpr ImVec4 FatalColor{ 1.0f, 0.1f, 1.0f, 1.0f };
+    constexpr ImVec4 DebugColor{ 0.1f, 0.5f, 1.0f, 1.0f };
+    constexpr ImVec4 InfoColor { 0.1f, 0.8f, 0.1f, 1.0f };
+    constexpr ImVec4 WarnColor { 0.9f, 0.8f, 0.1f, 1.0f };
+    constexpr ImVec4 ErrorColor{ 0.9f, 0.2f, 0.2f, 1.0f };
+    constexpr ImVec4 FatalColor{ 0.9f, 0.2f, 0.9f, 1.0f };
 
     auto LogLevelToColor = [](sl::LogLevel level)
     {
@@ -106,7 +106,7 @@ void WindowLog::OnUpdate(float deltaTime)
         }
     };
 
-    // Show log level filter button.
+    // Show log level filter button
     auto LevelButton = [&](sl::LogLevel level)
     {
         ImGui::SameLine();
@@ -145,13 +145,12 @@ void WindowLog::OnUpdate(float deltaTime)
 
     ImGui::Separator();
 
-    // TODO: Show time and level on log panel.
     auto &logInfos = sl::Log::GetLogInfos();
     if (ImGui::BeginChild("LogTexts", ImVec2{ 0.0f, 0.0f }, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar))
     {
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f });
 
-        // If any filter is active.
+        // If any filter is active
         if (s_levelFilter < FullLevelFilter || s_textFilter.IsActive())
         {
             for (size_t i = 0; i < logInfos.size(); ++i)
@@ -165,7 +164,7 @@ void WindowLog::OnUpdate(float deltaTime)
                 }
             }
         }
-        else // Without any filter.
+        else // Without any filter
         {
             ImGuiListClipper clipper;
             clipper.Begin((int)logInfos.size());
@@ -183,7 +182,7 @@ void WindowLog::OnUpdate(float deltaTime)
         }
         ImGui::PopStyleVar();
 
-        // Auto scrolling.
+        // Auto scrolling
         if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
         {
             ImGui::SetScrollHereY(1.0f);
@@ -194,17 +193,17 @@ void WindowLog::OnUpdate(float deltaTime)
     ImGui::End();
 }
 
-void WindowLog::OnRender()
+void PanelLog::OnRender()
 {
 
 }
 
-void WindowLog::EndFrame()
+void PanelLog::EndFrame()
 {
 
 }
 
-void WindowLog::OnEvent(sl::Event &event)
+void PanelLog::OnEvent(sl::Event &event)
 {
 
 }

@@ -49,11 +49,10 @@ private:
     bool OnWindowMinimize(sl::WindowMinimizeEvent &event);
     bool OnWindowRestore(sl::WindowRestoreEvent &event);
 
-    bool m_isRunning = true;
-    bool m_isMinimized = false;
-
     sl::Clock m_clock;
     sl::LayerStack m_layerStack;
-
     std::unique_ptr<sl::Window> m_pMainWindow;
+
+    bool m_isRunning = true;
+    bool m_isMinimized = false;
 };

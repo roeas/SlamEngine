@@ -1,0 +1,21 @@
+#pragma once
+
+#include "Layer/Layer.h"
+
+class PanelInformation : public sl::Layer
+{
+public:
+    void OnAttach() override;
+    void OnDetach() override;
+
+    void BeginFrame() override;
+    void OnUpdate(float deltaTime) override;
+    void OnRender() override;
+    void EndFrame() override;
+
+    void OnEvent(sl::Event &event) override;
+
+private:
+    void ShowFPS(float deltaTime);
+    void ShowCost(float deltaTime);
+};

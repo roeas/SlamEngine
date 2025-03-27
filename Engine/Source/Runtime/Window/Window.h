@@ -34,12 +34,12 @@ public:
 private:
     void PullEvents();
 
+    EventCallback m_eventCallback;
+
     std::string m_title;
-    uint32_t m_width, m_height;
     void *m_pNativeWindow = nullptr;
     void *m_pRenderContext = nullptr;
-
-    EventCallback m_eventCallback;
+    uint32_t m_width, m_height;
 };
 
 } // namespace sl

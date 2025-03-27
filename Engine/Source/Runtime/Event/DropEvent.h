@@ -14,7 +14,7 @@ public:
     }
 
 public:
-    DropEvent(const char *pPath) : m_path(pPath) {}
+    DropEvent(std::string_view path) : m_path(path) {}
 
     EventType GetEventType() const override
     {
@@ -28,7 +28,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("Data: {}", m_path);
+        return std::format("Path: {}", m_path);
     }
 
     std::string_view GetData() const { return m_path; }

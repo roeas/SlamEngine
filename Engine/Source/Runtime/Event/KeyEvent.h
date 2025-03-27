@@ -11,7 +11,7 @@ class KeyDownEvent : public Event
 public:
     static EventType GetStaticEventType()
     {
-        return EventType::KeyPress;
+        return EventType::KeyDown;
     }
 
 public:
@@ -30,7 +30,7 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("KeyPress: {}, modifier: {}{}", m_key, m_modifier, (m_isRepeat ? ", repeat" : ""));
+        return std::format("KeyDown: {}, modifier: {}{}", m_key, m_modifier, (m_isRepeat ? ", repeat" : ""));
     }
 
     KeyCodeType GetKey() const { return m_key; }
@@ -48,11 +48,11 @@ class KeyUpEvent : public Event
 public:
     static EventType GetStaticEventType()
     {
-        return EventType::KeyRelease;
+        return EventType::KeyUp;
     }
 
 public:
-    KeyUpEvent(uint32_t keycode) : m_key(keycode) {}
+    KeyUpEvent(KeyCodeType keycode) : m_key(keycode) {}
 
     EventType GetEventType() const override
     {
@@ -66,13 +66,13 @@ public:
 
     std::string ToString() const override
     {
-        return std::format("KeyRelease: {}", m_key);
+        return std::format("KeyUp: {}", m_key);
     }
 
-    uint32_t GetKey() const { return m_key; }
+    KeyCodeType GetKey() const { return m_key; }
 
 private:
-    uint32_t m_key;
+    KeyCodeType m_key;
 };
 
 class KeyTypeEvent : public Event
@@ -100,7 +100,7 @@ public:
     {
         return std::format("KeyType: {}", m_pText);
     }
-    const char *GetKey() const { return m_pText; }
+    const char *GetText() const { return m_pText; }
 
 private:
     const char *m_pText;

@@ -14,6 +14,8 @@ namespace sl
 
 void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
 {
+    SL_LOG_INFO("Initializing ImGui");
+
     // 1. Init ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -32,8 +34,18 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
 
     // 3. Load font
     constexpr float FontSize = 18.0f;
-    m_pRegularFont = io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Regular.ttf").data(), FontSize);
+    std::string regularFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Regular.ttf");
+    std::string boldFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Bold.ttf");
+    std::string lightFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Light.ttf");
+    std::string iconFontPath = sl::Path::FromeAsset("Font/MaterialSymbols/MaterialSymbolsOutlined.ttf");
+
+    // TODO: AddFontFromMemoryTTF
+    SL_LOG_TRACE("Loading blod font: {}", boldFontPath.data());
+    m_pBoldFont = io.Fonts->AddFontFromFileTTF(boldFontPath.data(), FontSize);
+    SL_LOG_TRACE("Loading light font: {}", lightFontPath.data());
+    m_pLightFont = io.Fonts->AddFontFromFileTTF(lightFontPath.data(), FontSize);
+    SL_LOG_TRACE("Loading regular font: {}", regularFontPath.data());
+    m_pRegularFont = io.Fonts->AddFontFromFileTTF(regularFontPath.data(), FontSize);
     io.FontDefault = m_pRegularFont;
 
     // Merge icon font
@@ -42,15 +54,11 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     fontConfig.GlyphMinAdvanceX = FontSize;
     fontConfig.MergeMode = true;
     static const ImWchar s_iconRange[] = { (ImWchar)ICON_MIN_MS, (ImWchar)ICON_MAX_MS, 0 };
-    io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/GoogleMaterialSymbols/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].ttf").data(),
-        FontSize, &fontConfig, s_iconRange);
-    m_pBoldFont = io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Bold.ttf").data(), FontSize);
-    m_pLightFont = io.Fonts->AddFontFromFileTTF(
-        sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Light.ttf").data(), FontSize);
+    SL_LOG_TRACE("Loading icon font: {}", iconFontPath.data());
+    io.Fonts->AddFontFromFileTTF(iconFontPath.data(), FontSize, &fontConfig, s_iconRange);
 
     // 4. Set color and style
+    // TODO: Apply new options
     SetColor();
     SetStyle();
 
@@ -182,32 +190,13 @@ void ImGuiContext::SetColor()
 
     colors[ImGuiCol_Tab] = itemColor;
     colors[ImGuiCol_TabHovered] = itemColorVeryLight;
-    colors[ImGuiCol_TabActive] = myColor;
+    colors[ImGuiCol_TabSelected] = myColor;
+    colors[ImGuiCol_TabSelectedOverline] = itemColorVeryLight;
     colors[ImGuiCol_TabUnfocused] = itemColor;
     colors[ImGuiCol_TabUnfocusedActive] = itemColorLight;
 
     colors[ImGuiCol_DockingPreview] = bgColorVeryLight;
     colors[ImGuiCol_DockingEmptyBg] = bgColorLight;
-
-    // colors[ImGuiCol_PlotLines] = unknownColor;
-    // colors[ImGuiCol_PlotLinesHovered] = unknownColor;
-    // colors[ImGuiCol_PlotHistogram] = unknownColor;
-    // colors[ImGuiCol_PlotHistogramHovered] = unknownColor;
-    // 
-    // colors[ImGuiCol_TableHeaderBg] = unknownColor;
-    // colors[ImGuiCol_TableBorderStrong] = unknownColor;
-    // colors[ImGuiCol_TableBorderLight] = unknownColor;
-    // colors[ImGuiCol_TableRowBg] = unknownColor;
-    // colors[ImGuiCol_TableRowBgAlt] = unknownColor;
-    // 
-    // colors[ImGuiCol_TextSelectedBg] = unknownColor;
-    // colors[ImGuiCol_DragDropTarget] = unknownColor;
-    // 
-    // colors[ImGuiCol_NavHighlight] = unknownColor;
-    // colors[ImGuiCol_NavWindowingHighlight] = unknownColor;
-    // colors[ImGuiCol_NavWindowingDimBg] = unknownColor;
-    // 
-    // colors[ImGuiCol_ModalWindowDimBg] = unknownColor;
 }
 
 void ImGuiContext::SetStyle()
