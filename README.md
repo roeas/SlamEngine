@@ -12,6 +12,8 @@
 
 [ImGui](https://github.com/ocornut/imgui) v1.91.9b
 
+[ImPlot](https://github.com/epezent/implot) 3da8bd34299965d3b0ab124df743fe3e076fa222
+
 [IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) 3eac3a08c43680cd8a5cef32001a75766126ef99
 
 [GLM](https://github.com/g-truc/glm) v1.0.1

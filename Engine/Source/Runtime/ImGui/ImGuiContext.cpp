@@ -7,6 +7,7 @@
 #include <imgui/imgui.h>
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_sdl3.h>
+#include <implot/implot.h>
 
 namespace sl
 {
@@ -16,6 +17,7 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     // 1. Init ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
 
     // 2. Setup configs
@@ -61,6 +63,7 @@ void ImGuiContext::Shutdown()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 }
 

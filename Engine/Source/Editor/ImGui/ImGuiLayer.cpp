@@ -2,8 +2,10 @@
 
 #include "ImGui/ImGuiContext.h"
 #include "ImGui/MenuBar.h"
+#include "ImGui/WindowInformation.h"
 
 #include <imgui/imgui.h>
+#include <implot/implot.h>
 
 ImGuiLayer::ImGuiLayer()
 {
@@ -11,13 +13,15 @@ ImGuiLayer::ImGuiLayer()
 
     auto pMenuBar = std::make_unique<MenuBar>();
     pMenuBar->SetEventCallback(BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
+    auto pWindowInformation = std::make_unique<WindowInformation>();
 
     m_stack.PushLayer(std::move(pMenuBar));
+    m_stack.PushLayer(std::move(pWindowInformation));
 }
 
 void ImGuiLayer::OnAttach()
 {
-    
+
 }
 
 void ImGuiLayer::OnDetach()
@@ -37,6 +41,10 @@ void ImGuiLayer::OnUpdate(float deltaTime)
     if (m_data.m_debugImGuiDemo)
     {
         ImGui::ShowDemoWindow(&m_data.m_debugImGuiDemo);
+    }
+    if (m_data.m_debugImPlotDemo)
+    {
+        ImPlot::ShowDemoWindow(&m_data.m_debugImPlotDemo);
     }
 
     ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);

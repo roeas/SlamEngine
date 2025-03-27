@@ -16,13 +16,15 @@ project("Slam")
         path.join(ThirdPartyPath, "glad/**.*");
         path.join(ThirdPartyPath, "imgui/*.h");
         path.join(ThirdPartyPath, "imgui/*.cpp");
+        path.join(ThirdPartyPath, "implot/*.cpp");
+        path.join(ThirdPartyPath, "implot/*.h");
     }
 
     includedirs
     {
         path.join(ThirdPartyPath, "sdl/include"),
         path.join(ThirdPartyPath, "glad/include"),
-        path.join(ThirdPartyPath, "imgui"),
+        path.join(ThirdPartyPath, "implot"),
     }
 
     filter{ "configurations:Debug" }
