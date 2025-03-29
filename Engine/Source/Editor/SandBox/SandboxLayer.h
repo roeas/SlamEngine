@@ -17,4 +17,7 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
+
+private:
+    uint32_t m_vb, m_ib, m_va;
 };

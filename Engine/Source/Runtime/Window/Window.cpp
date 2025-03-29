@@ -74,10 +74,6 @@ Window::~Window()
 
 void Window::BeginFrame()
 {
-    // TMP
-    glClearColor(1.0f, 0.5f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
     PullEvents();
 }
 
