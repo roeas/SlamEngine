@@ -39,7 +39,7 @@ private:
     EventCallback m_eventCallback;
 
     std::string m_title;
-    void *m_pNativeWindow;
+    void *m_pNativeWindow = nullptr;
     std::unique_ptr<RenderContext> m_pContext;
     uint32_t m_width, m_height;
 };

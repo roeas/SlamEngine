@@ -25,9 +25,9 @@ OpenGLContext::OpenGLContext(void *pWindow) : m_pWindow(pWindow)
 
     gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
 
-    SL_LOG_TRACE("Vendor: {}", (const char *)glGetString(GL_VENDOR));
-    SL_LOG_TRACE("Renderer: {}", (const char *)glGetString(GL_RENDERER));
-    SL_LOG_TRACE("Version: {}", (const char *)glGetString(GL_VERSION));
+    SL_LOG_TRACE("Vendor: {}", (char *)glGetString(GL_VENDOR));
+    SL_LOG_TRACE("Renderer: {}", (char *)glGetString(GL_RENDERER));
+    SL_LOG_TRACE("Version: {}", (char *)glGetString(GL_VERSION));
 }
 
 OpenGLContext::~OpenGLContext()

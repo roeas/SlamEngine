@@ -2,6 +2,13 @@
 
 #include "Layer/Layer.h"
 
+namespace sl
+{
+
+class Shader;
+
+}
+
 class SandboxLayer : public sl::Layer
 {
 public:
@@ -20,4 +27,5 @@ public:
 
 private:
     uint32_t m_vb, m_ib, m_va;
+    std::unique_ptr<sl::Shader> m_pShader;
 };

@@ -15,4 +15,11 @@ enum class GraphicsBackend : uint8_t
     Metal,
 };
 
+enum class ShaderType : uint8_t
+{
+    VertexShader = 0,
+    FragmentShader,
+    ComputeShader,
+};
+
 } // namespace sl
