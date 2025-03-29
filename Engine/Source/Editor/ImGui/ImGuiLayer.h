@@ -22,6 +22,7 @@ public:
 
 private:
     sl::EventCallback m_eventCallback;
+
     sl::LayerStack m_stack;
     ImGuiData m_data;
 };

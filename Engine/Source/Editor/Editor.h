@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Defines.h"
 #include "Core/Time.hpp"
 #include "Layer/LayerStack.h"
 
@@ -22,6 +23,7 @@ struct EditorInitor
     const char *m_title;
     uint32_t m_width;
     uint32_t m_height;
+    sl::GraphicsBackend m_backend;
 };
 
 class Editor final

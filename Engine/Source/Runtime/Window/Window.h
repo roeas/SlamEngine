@@ -7,6 +7,8 @@
 namespace sl
 {
 
+class RenderContext;
+
 class Window final
 {
 public:
@@ -24,10 +26,10 @@ public:
     void BeginFrame();
     void EndFrame();
 
+    void *GetNativeWindow() const;
+    void *GetRenderContext() const;
     std::string_view GetTitlke() const { return m_title; }
     glm::u32vec2 GetSize() const { return { m_width, m_height }; }
-    void *GetNativeWindow() const { return m_pNativeWindow; }
-    void *GetRenderContext() const { return m_pRenderContext; }
 
     void SetEventCallback(auto fun) { m_eventCallback = fun; }
 
@@ -37,8 +39,8 @@ private:
     EventCallback m_eventCallback;
 
     std::string m_title;
-    void *m_pNativeWindow = nullptr;
-    void *m_pRenderContext = nullptr;
+    void *m_pNativeWindow;
+    std::unique_ptr<RenderContext> m_pContext;
     uint32_t m_width, m_height;
 };
 

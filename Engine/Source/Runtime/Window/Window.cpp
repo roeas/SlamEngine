@@ -6,6 +6,8 @@
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
+#include "Render/RenderContext.h"
+#include "Render/RenderCore.h"
 
 #include <glad/gl.h>
 #include <SDL3/SDL.h>
@@ -17,14 +19,7 @@ void Window::Init()
 {
 
     SL_LOG_INFO("Initializing SDL");
-
     SL_ASSERT(SDL_Init(SDL_INIT_EVENTS), "Failed to initialize SDL: {}", SDL_GetError());
-
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 }
 
 void Window::Quit()
@@ -35,10 +30,28 @@ void Window::Quit()
 Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_title(title), m_width(width), m_height(height)
 {
-    SL_LOG_TRACE("Creating window \"{}\"", title);
+    SL_LOG_INFO("Creating window \"{}\"", title);
 
     uint64_t windowFlags = SDL_WINDOW_RESIZABLE;
-    windowFlags |= SDL_WINDOW_OPENGL;
+    switch (RenderCore::GetBackend())
+    {
+        case GraphicsBackend::OpenGL:
+        {
+            windowFlags |= SDL_WINDOW_OPENGL;
+
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+            SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
+            SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+            SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+            break;
+        }
+        default:
+        {
+            SL_ASSERT(false, "Only support OpenGL backend for now!");
+            break;
+        }
+    }
 
     SDL_Window *pWindow = SDL_CreateWindow(m_title.data(), m_width, m_height, windowFlags);
     if (!pWindow)
@@ -47,24 +60,7 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
         return;
     }
     m_pNativeWindow = pWindow;
-
-    { // TMP
-        SL_LOG_TRACE("Creating OpenGL context");
-
-        SDL_GLContext pContext = SDL_GL_CreateContext(pWindow);
-        if (!pContext)
-        {
-            SL_LOG_ERROR("Failed to creat OpenGL context: {}", SDL_GetError());
-            return;
-        }
-        m_pRenderContext = pContext;
-
-        SDL_GL_MakeCurrent(pWindow, pContext);
-        SDL_GL_SetSwapInterval(1);
-
-        int version = gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-        SL_LOG_TRACE("\tVersion: {}.{}", GLAD_VERSION_MAJOR(version), GLAD_VERSION_MINOR(version));
-    }
+    m_pContext.reset(RenderContext::Create(pWindow));
 
     SDL_SetWindowPosition(pWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 
@@ -73,7 +69,6 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
 
 Window::~Window()
 {
-    SDL_GL_DestroyContext(static_cast<SDL_GLContext>(m_pRenderContext));
     SDL_DestroyWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
@@ -88,8 +83,18 @@ void Window::BeginFrame()
 
 void Window::EndFrame()
 {
-    SDL_GL_MakeCurrent(static_cast<SDL_Window *>(m_pNativeWindow), static_cast<SDL_GLContext>(m_pRenderContext));
-    SDL_GL_SwapWindow(static_cast<SDL_Window *>(m_pNativeWindow));
+    m_pContext->MakeCurrent();
+    m_pContext->SwapBuffers();
+}
+
+void *Window::GetNativeWindow() const
+{
+    return m_pNativeWindow;
+}
+
+void *Window::GetRenderContext() const
+{
+    return m_pContext->GetContext();
 }
 
 void Window::PullEvents()
