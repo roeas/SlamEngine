@@ -5,7 +5,9 @@
 namespace sl
 {
 
+class IndexBuffer;
 class Shader;
+class VertexBuffer;
 
 }
 
@@ -27,5 +29,7 @@ public:
 
 private:
     uint32_t m_vb, m_ib, m_va;
+    std::unique_ptr<sl::IndexBuffer> m_pIndexBuffer;
+    std::unique_ptr<sl::VertexBuffer> m_pVertexBUffer;
     std::unique_ptr<sl::Shader> m_pShader;
 };

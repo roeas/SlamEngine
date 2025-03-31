@@ -1,6 +1,8 @@
 #include "SandboxLayer.h"
 
+#include "Render/IndexBuffer.h"
 #include "Render/Shader.h"
+#include "Render/VertexBuffer.h"
 
 #include <glad/include/glad/gl.h>
 
@@ -42,15 +44,12 @@ SandboxLayer::SandboxLayer()
     glGenVertexArrays(1, &m_va);
     glBindVertexArray(m_va);
 
-    glGenBuffers(1, &m_vb);
-    glBindBuffer(GL_ARRAY_BUFFER, m_vb);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    m_pVertexBUffer.reset(sl::VertexBuffer::Create(vertices, sizeof(vertices)));
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
 
-    glGenBuffers(1, &m_ib);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ib);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    m_pIndexBuffer.reset(sl::IndexBuffer::Create(indices, sizeof(indices)));
 
     m_pShader.reset(sl::Shader::Create(vs, fs));
 }
@@ -80,10 +79,10 @@ void SandboxLayer::OnUpdate(float deltaTime)
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    m_pShader->Bind();
     glBindVertexArray(m_va);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
-    m_pShader->Unbind();
+    m_pShader->Bind();
+
+    glDrawElements(GL_TRIANGLES, m_pIndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
 void SandboxLayer::OnRender()
