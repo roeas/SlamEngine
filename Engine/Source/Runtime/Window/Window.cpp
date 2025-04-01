@@ -19,7 +19,9 @@ void Window::Init()
 {
 
     SL_LOG_INFO("Initializing SDL");
-    SL_ASSERT(SDL_Init(SDL_INIT_EVENTS), "Failed to initialize SDL: {}", SDL_GetError());
+
+    bool success = SDL_Init(SDL_INIT_EVENTS);
+    SL_ASSERT(success, "Failed to initialize SDL: {}", SDL_GetError());
 }
 
 void Window::Quit()

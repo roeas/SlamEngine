@@ -7,27 +7,27 @@ workspace("SlamEngine")
 
     -- Debug mode, no optimization
     filter{ "configurations:Debug" }
-        defines{ "SL_DEBUG" }
+        defines{ "SL_DEBUG", "DEBUG" }
         symbols("On")
-        optimize("Off")
+        optimize("Debug")
+        runtime("Debug")
         linktimeoptimization("Off")
-        runtime("Debug") -- /MDd
 
     -- Release mode
     filter{ "configurations:Release" }
-        defines{ "SL_RELEASE" }
+        defines{ "SL_RELEASE", "NDEBUG" }
         symbols("On")
         optimize("On")
+        runtime("Release")
         linktimeoptimization("Off")
-        runtime("Release") -- /MD
 
     -- Final maode, full optimization
     filter{ "configurations:Final" }
-        defines{ "SL_FINAL" }
-        symbols("Off")
+        defines{ "SL_FINAL", "NDEBUG" }
+        symbols("On")
         optimize("Speed")
+        runtime("Release")
         linktimeoptimization("On")
-        runtime("Release") -- /MD
 
     filter{}
     exceptionhandling("Off") -- No exception

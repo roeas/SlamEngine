@@ -1,6 +1,18 @@
 # SlamEngine
 [![MSBuild](https://github.com/roeas/SlamEngine/actions/workflows/MSBuild.yml/badge.svg?branch=main)](https://github.com/roeas/SlamEngine/actions/workflows/MSBuild.yml)
 
+# Config diff
+||Debug|Release|Final|
+|:-|:-:|:-:|:-:|
+|Macro|`SL_DEBUG`, `DEBUG`|`SL_RELEASE`, `NDEBUG`|`SL_FINAL`, `NDEBUG`|
+|Symbol|On|On|On|
+|Optimization|Debug|On|Speed|
+|CRT|/MDd|/MD|/MD|
+|LTO|Off|Off|On|
+|Assertion|On|On|Off|
+|Break Point|On|On|On|
+|Force Inlining|Off|Off|On|
+
 # Third party
 [Premake](https://github.com/premake/premake-core) v5.0.0-beta5
 

@@ -1,6 +1,6 @@
 #pragma once
 
-// Platforms and compilers
+// Platform and compiler
 #if defined(_WIN64)
     #if !defined(_MSC_VER)
         #error "Use Visual Studio on Windows."
@@ -9,11 +9,11 @@
     #error "Only support Windows for now."
 #endif
 
-// Debug break
+// Break point
 #if defined(_MSC_VER)
-    #define SL_DEBUGBREAK() __debugbreak()
+    #define SL_BREAKPOINT() __debugbreak()
 #else
-    #define SL_DEBUGBREAK()
+    #define SL_BREAKPOINT()
 #endif
 
 // Force inline
