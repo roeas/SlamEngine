@@ -14,7 +14,9 @@ public:
 
     void Bind() const override;
     void Unbind() const override;
-    
+
+    uint32_t GetHandle() const override { return m_programHandle; }
+
     void UploadUniform(int location, float value) const override;
     void UploadUniform(int location, const glm::vec2 &value) const override;
     void UploadUniform(int location, const glm::vec3 &value) const override;

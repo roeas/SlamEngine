@@ -28,7 +28,7 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
-    uint32_t m_vb, m_ib, m_va;
+    uint32_t m_vao = 0;
     std::unique_ptr<sl::IndexBuffer> m_pIndexBuffer;
     std::unique_ptr<sl::VertexBuffer> m_pVertexBUffer;
     std::unique_ptr<sl::Shader> m_pShader;

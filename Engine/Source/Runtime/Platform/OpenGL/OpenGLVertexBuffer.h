@@ -13,8 +13,7 @@ public:
     OpenGLVertexBuffer(const float *pVertices, size_t size);
     ~OpenGLVertexBuffer() override;
 
-    void Bind() const override;
-    void Unbind() const override;
+    uint32_t GetHandle() const override { return m_handle; }
 
 private:
     uint32_t m_handle = 0;

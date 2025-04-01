@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace sl
 {
 
@@ -11,8 +13,7 @@ public:
 public:
     virtual ~VertexBuffer() = default;
 
-    virtual void Bind() const = 0;
-    virtual void Unbind() const = 0;
+    virtual uint32_t GetHandle() const = 0;
 };
 
 } // namespace sl

@@ -21,6 +21,8 @@ public:
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
+    virtual uint32_t GetHandle() const = 0;
+
     virtual void UploadUniform(int location, float value) const = 0;
     virtual void UploadUniform(int location, const glm::vec2 &value) const = 0;
     virtual void UploadUniform(int location, const glm::vec3 &value) const = 0;
