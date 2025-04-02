@@ -15,6 +15,19 @@ enum class GraphicsBackend : uint8_t
     Metal,
 };
 
+enum class AttribType : uint8_t
+{
+    Int8 = 0,
+    Uint8,
+    Int16,
+    Uint16,
+    Int32,
+    Uint32,
+    Half,
+    Float,
+    Double,
+};
+
 enum class ShaderType : uint8_t
 {
     VertexShader = 0,

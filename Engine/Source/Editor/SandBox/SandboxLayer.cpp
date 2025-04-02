@@ -1,6 +1,7 @@
 #include "SandboxLayer.h"
 
 #include "Render/IndexBuffer.h"
+#include "Render/Layout.h"
 #include "Render/Shader.h"
 #include "Render/VertexBuffer.h"
 
@@ -10,13 +11,13 @@
 
 SandboxLayer::SandboxLayer()
 {
+    static uint32_t indices[3] = { 0, 1, 2 };
     static float vertices[3 * 6] =
     {
          0.0f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
-    static uint32_t indices[3] = { 0, 1, 2 };
 
     static std::string vs =
     R"(
@@ -47,8 +48,15 @@ SandboxLayer::SandboxLayer()
         }
     )";
 
-    m_pVertexBUffer.reset(sl::VertexBuffer::Create(vertices, sizeof(vertices)));
     m_pIndexBuffer.reset(sl::IndexBuffer::Create(indices, sizeof(indices)));
+    m_pVertexBUffer.reset(sl::VertexBuffer::Create(vertices, sizeof(vertices)));
+    sl::VertexLayout layout
+    {
+        { 3, sl::AttribType::Float, false, "Position" },
+        { 3, sl::AttribType::Float, false, "Color" },
+    };
+
+    // m_pVertexArrayBuffer.reset(sl::VertexArrayBuffer::Create(std::move(pIndexBuffer), std::move(pVertexBUffer), std::move(layout)));
 
     glCreateVertexArrays(1, &m_vao);
     glVertexArrayVertexBuffer(m_vao, 0, m_pVertexBUffer->GetHandle(), 0, 6 * sizeof(float));
