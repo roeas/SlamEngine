@@ -15,9 +15,7 @@ namespace
 uint32_t UploadShader(const char *pSource, size_t size, ShaderType type)
 {
     const GLint GLsize = (GLint)size;
-
     GLuint shaderHandle = glCreateShader(GLShaderType[(size_t)type]);
-    SL_LOG_TRACE("Compiling shader: {}", shaderHandle);
 
     glShaderSource(shaderHandle, 1, &pSource, &GLsize);
     glCompileShader(shaderHandle);
@@ -44,7 +42,6 @@ uint32_t UploadShader(const char *pSource, size_t size, ShaderType type)
 uint32_t UploadProgram(uint32_t VSHandle, std::optional<uint32_t> optFSHandle = std::nullopt)
 {
     uint32_t programHandle = glCreateProgram();
-    SL_LOG_TRACE("Linking shader program: {}", programHandle);
 
     glAttachShader(programHandle, VSHandle);
     if (optFSHandle)

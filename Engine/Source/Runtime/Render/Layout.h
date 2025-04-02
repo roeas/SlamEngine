@@ -13,7 +13,6 @@ struct VertexLayoutElement
     VertexLayoutElement(uint32_t count, AttribType type, bool normalize, std::string_view name);
 
     std::string m_name;
-    uint32_t m_location;
     uint32_t m_count;
     uint32_t m_size;
     uint32_t m_offset;
@@ -24,6 +23,7 @@ struct VertexLayoutElement
 class VertexLayout final
 {
 public:
+    VertexLayout() = default;
     VertexLayout(std::initializer_list<VertexLayoutElement> elements);
 
     uint32_t GetStride() const { return m_stride; }
