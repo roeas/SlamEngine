@@ -14,7 +14,7 @@
 |Force Inlining|Off|Off|On|
 
 # Third party
-[Premake](https://github.com/premake/premake-core) v5.0.0-beta5
+[Premake](https://github.com/premake/premake-core) v5.0.0-beta6
 
 [spdlog](https://github.com/gabime/spdlog) v1.15.1
 
