@@ -1,5 +1,8 @@
 #include "RenderCore.h"
 
+#include "Renderer/Shader.h"
+#include "Renderer/VertexArray.h"
+
 namespace sl
 {
 
@@ -29,9 +32,15 @@ void RenderCore::Clear()
     m_pRenderAPI->Clear();
 }
 
-void RenderCore::DrawIndexed(uint32_t count)
+void RenderCore::Submit(VertexArray *pVertexArray, Shader *pShader)
 {
-    m_pRenderAPI->DrawIndexed(count);
+    pVertexArray->Bind();
+    pShader->Bind();
+
+    m_pRenderAPI->DrawIndexed(pVertexArray->GetIndexCount());
+
+    pVertexArray->Unbind();
+    pShader->Unbind();
 }
 
 } // namespace sl

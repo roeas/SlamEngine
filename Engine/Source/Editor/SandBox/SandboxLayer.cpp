@@ -8,27 +8,28 @@
 
 SandboxLayer::SandboxLayer()
 {
-    static float vertices[3 * 6] =
+    static float vertices[4 * 5] =
     {
-         // position        // color
-         0.0f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+        // position         // uv
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+         0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
     };
-    static uint32_t indices[3] = { 0, 1, 2 };
+    static uint32_t indices[6] = { 0, 1, 2, 2, 3, 0 };
 
     static std::string vs =
     R"(
         #version 460 core
 
         layout(location = 0) in vec3 a_position;
-        layout(location = 1) in vec3 a_color;
+        layout(location = 1) in vec2 a_uv;
 
         layout(location = 0) out vec3 v_color;
 
         void main()
         {
-            v_color = a_color;
+            v_color = vec3(a_uv, 0.0f);
             gl_Position = vec4(a_position, 1.0);
         }
     )";
@@ -51,7 +52,7 @@ SandboxLayer::SandboxLayer()
     sl::VertexLayout layout
     {
         { 3, sl::AttribType::Float, false, "Position" },
-        { 3, sl::AttribType::Float, false, "Color" },
+        { 2, sl::AttribType::Float, false, "UV" },
     };
 
     m_pVertexArray.reset(sl::VertexArray::Create(pVertexBUffer, pIndexBuffer, std::move(layout)));
@@ -83,13 +84,7 @@ void SandboxLayer::OnUpdate(float deltaTime)
     sl::RenderCore::SetClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     sl::RenderCore::Clear();
 
-    m_pVertexArray->Bind();
-    m_pShader->Bind();
-
-    sl::RenderCore::DrawIndexed(m_pVertexArray->GetIndexCount());
-
-    m_pVertexArray->Unbind();
-    m_pShader->Unbind();
+    sl::RenderCore::Submit(m_pVertexArray.get(), m_pShader.get());
 }
 
 void SandboxLayer::OnRender()

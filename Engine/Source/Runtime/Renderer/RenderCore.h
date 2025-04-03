@@ -8,6 +8,9 @@
 namespace sl
 {
 
+class Shader;
+class VertexArray;
+
 class RenderCore final
 {
 public:
@@ -26,7 +29,7 @@ public:
     static void SetClearStencil(int stencil);
     static void Clear();
 
-    static void DrawIndexed(uint32_t count);
+    static void Submit(VertexArray *pVertexArray, Shader *pShader);
 
 private:
     inline static GraphicsBackend m_backend = GraphicsBackend::None;
