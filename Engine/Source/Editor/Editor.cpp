@@ -12,7 +12,7 @@
 Editor::Editor(const EditorInitor &initor)
 {
     sl::Log::Init();
-    sl::RenderCore::SetBackend(initor.m_backend);
+    sl::RenderCore::Init(initor.m_backend);
 
     sl::Window::Init();
     m_pMainWindow = std::make_unique<sl::Window>(initor.m_title, initor.m_width, initor.m_height);

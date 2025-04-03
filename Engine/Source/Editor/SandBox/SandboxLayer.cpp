@@ -2,8 +2,7 @@
 
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
-
-#include <glad/include/glad/gl.h>
+#include "Renderer/RenderCore.h"
 
 // Just some temporary codes here
 
@@ -81,13 +80,14 @@ void SandboxLayer::BeginFrame()
 
 void SandboxLayer::OnUpdate(float deltaTime)
 {
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    sl::RenderCore::SetClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
+    sl::RenderCore::Clear();
 
     m_pVertexArray->Bind();
     m_pShader->Bind();
 
-    glDrawElements(GL_TRIANGLES, m_pVertexArray->GetIndexCount(), GL_UNSIGNED_INT, nullptr);
+    sl::RenderCore::DrawIndexed(m_pVertexArray->GetIndexCount());
+
     m_pVertexArray->Unbind();
     m_pShader->Unbind();
 }

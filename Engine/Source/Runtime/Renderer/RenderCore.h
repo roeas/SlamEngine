@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core/Defines.h"
+#include "Renderer/RenderAPI.h"
+
+#include <memory>
 
 namespace sl
 {
@@ -15,13 +18,19 @@ public:
     RenderCore &operator=(RenderCore &&) = delete;
     ~RenderCore() = delete;
 
-    static void Init();
-
-    static void SetBackend(GraphicsBackend backend) { m_backend = backend; }
+    static void Init(GraphicsBackend backend);
     static GraphicsBackend GetBackend() { return m_backend; }
+
+    static void SetClearColor(const glm::vec4 &color);
+    static void SetClearDepth(float depth);
+    static void SetClearStencil(int stencil);
+    static void Clear();
+
+    static void DrawIndexed(uint32_t count);
 
 private:
     inline static GraphicsBackend m_backend = GraphicsBackend::None;
+    inline static std::unique_ptr<RenderAPI> m_pRenderAPI;
 };
 
 } // namespace sl
