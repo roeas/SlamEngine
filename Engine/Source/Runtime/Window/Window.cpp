@@ -6,8 +6,8 @@
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
-#include "Render/RenderContext.h"
-#include "Render/RenderCore.h"
+#include "Renderer/RenderContext.h"
+#include "Renderer/RenderCore.h"
 
 #include <glad/gl.h>
 #include <SDL3/SDL.h>

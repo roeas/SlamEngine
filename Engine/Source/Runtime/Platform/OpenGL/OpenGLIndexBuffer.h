@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Render/IndexBuffer.h"
+#include "Renderer/IndexBuffer.h"
 
 namespace sl
 {

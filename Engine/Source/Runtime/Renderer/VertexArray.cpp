@@ -2,7 +2,7 @@
 
 #include "Core/Log.h"
 #include "Platform/OpenGL/OpenGlVertexArray.h"
-#include "Render/RenderCore.h"
+#include "Renderer/RenderCore.h"
 
 namespace sl
 {

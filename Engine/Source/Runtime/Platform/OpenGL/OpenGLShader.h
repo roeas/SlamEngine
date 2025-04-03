@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Render/Shader.h"
+#include "Renderer/Shader.h"
 
 namespace sl
 {

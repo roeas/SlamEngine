@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Render/IndexBuffer.h"
-#include "Render/Layout.h"
-#include "Render/VertexBuffer.h"
+#include "Renderer/IndexBuffer.h"
+#include "Renderer/Layout.h"
+#include "Renderer/VertexBuffer.h"
 
 namespace sl
 {

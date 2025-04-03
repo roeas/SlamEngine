@@ -1,7 +1,7 @@
 #include "SandboxLayer.h"
 
-#include "Render/Shader.h"
-#include "Render/VertexArray.h"
+#include "Renderer/Shader.h"
+#include "Renderer/VertexArray.h"
 
 #include <glad/include/glad/gl.h>
 

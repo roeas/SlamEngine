@@ -1,13 +1,13 @@
-#include "IndexBuffer.h"
+#include "VertexBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLIndexBuffer.h"
-#include "Render/RenderCore.h"
+#include "Platform/OpenGL/OpenGLVertexBuffer.h"
+#include "Renderer/RenderCore.h"
 
 namespace sl
 {
 
-IndexBuffer *IndexBuffer::Create(const uint32_t *pIndicies, size_t size)
+VertexBuffer *VertexBuffer::Create(const float *pVertices, size_t size)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ IndexBuffer *IndexBuffer::Create(const uint32_t *pIndicies, size_t size)
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLIndexBuffer{ pIndicies, size };
+            return new OpenGLVertexBuffer{ pVertices, size };
             break;
         }
         default:

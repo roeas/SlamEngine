@@ -1,13 +1,13 @@
-#include "RenderContext.h"
+#include "IndexBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLContext.h"
-#include "Render/RenderCore.h"
+#include "Platform/OpenGL/OpenGLIndexBuffer.h"
+#include "Renderer/RenderCore.h"
 
 namespace sl
 {
 
-RenderContext *RenderContext::Create(void *pWindow)
+IndexBuffer *IndexBuffer::Create(const uint32_t *pIndicies, size_t size)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ RenderContext *RenderContext::Create(void *pWindow)
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLContext{ pWindow };
+            return new OpenGLIndexBuffer{ pIndicies, size };
             break;
         }
         default:

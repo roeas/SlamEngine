@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Render/VertexBuffer.h"
+#include "Renderer/VertexBuffer.h"
 
 #include <cstdint>
 

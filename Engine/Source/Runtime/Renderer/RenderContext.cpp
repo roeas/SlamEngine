@@ -1,13 +1,13 @@
-#include "VertexBuffer.h"
+#include "RenderContext.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLVertexBuffer.h"
-#include "Render/RenderCore.h"
+#include "Platform/OpenGL/OpenGLContext.h"
+#include "Renderer/RenderCore.h"
 
 namespace sl
 {
 
-VertexBuffer *VertexBuffer::Create(const float *pVertices, size_t size)
+RenderContext *RenderContext::Create(void *pWindow)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ VertexBuffer *VertexBuffer::Create(const float *pVertices, size_t size)
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLVertexBuffer{ pVertices, size };
+            return new OpenGLContext{ pWindow };
             break;
         }
         default:
