@@ -1,13 +1,13 @@
-#include "VertexArray.h"
+#include "Texture.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGlVertexArray.h"
+#include "Platform/OpenGL/OpenGLTexture.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl
 {
 
-VertexArray *VertexArray::Create(VertexBuffer *pVertexBuffer, IndexBuffer *pIndexBuffer, VertexLayout vertexLayout)
+Texture2D *Texture2D::Create(uint32_t width, uint32_t height, bool mipmap, TextureFormat format, uint32_t flags, const void *pData)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ VertexArray *VertexArray::Create(VertexBuffer *pVertexBuffer, IndexBuffer *pInde
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLVertexArray{ pVertexBuffer, pIndexBuffer, std::move(vertexLayout) };
+            return new OpenGLTexture2D{ width, height, mipmap, format, flags, pData };
             break;
         }
         default:

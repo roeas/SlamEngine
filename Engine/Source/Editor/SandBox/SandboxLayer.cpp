@@ -1,8 +1,12 @@
 #include "SandboxLayer.h"
 
-#include "Renderer/Shader.h"
-#include "Renderer/VertexArray.h"
+#include "Core/Path.hpp"
 #include "Renderer/RenderCore.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Texture.h"
+#include "Renderer/VertexArray.h"
+
+#include <stb/stb_image.h>
 
 // Just some temporary codes here
 
@@ -25,11 +29,11 @@ SandboxLayer::SandboxLayer()
         layout(location = 0) in vec3 a_position;
         layout(location = 1) in vec2 a_uv;
 
-        layout(location = 0) out vec3 v_color;
+        layout(location = 0) out vec2 v_uv;
 
         void main()
         {
-            v_color = vec3(a_uv, 0.0f);
+            v_uv = a_uv;
             gl_Position = vec4(a_position, 1.0);
         }
     )";
@@ -37,13 +41,15 @@ SandboxLayer::SandboxLayer()
     R"(
         #version 460 core
 
-        layout(location = 0) in vec3 v_color;
+        layout(location = 0) in vec2 v_uv;
 
         layout(location = 0) out vec4 color;
 
+        layout(binding = 0) uniform sampler2D debugTexture;
+
         void main()
         {
-            color = vec4(v_color, 1.0);
+            color = texture(debugTexture, v_uv);
         }
     )";
 
@@ -57,6 +63,12 @@ SandboxLayer::SandboxLayer()
 
     m_pVertexArray.reset(sl::VertexArray::Create(pVertexBUffer, pIndexBuffer, std::move(layout)));
     m_pShader.reset(sl::Shader::Create(vs, fs));
+
+    int width, height, channel;
+    stbi_set_flip_vertically_on_load(1);
+    unsigned char *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
+    m_pTexture.reset(sl::Texture2D::Create(width, height, false, sl::TextureFormat::RGB8, 0, pData));
+    stbi_image_free(pData);
 }
 
 SandboxLayer::~SandboxLayer()
@@ -84,6 +96,7 @@ void SandboxLayer::OnUpdate(float deltaTime)
     sl::RenderCore::SetClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     sl::RenderCore::Clear();
 
+    m_pTexture->Bind(0);
     sl::RenderCore::Submit(m_pVertexArray.get(), m_pShader.get());
 }
 

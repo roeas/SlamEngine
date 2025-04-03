@@ -7,6 +7,7 @@ namespace sl
 
 class Shader;
 class VertexArray;
+class Texture2D;
 
 }
 
@@ -29,4 +30,5 @@ public:
 private:
     std::unique_ptr<sl::VertexArray> m_pVertexArray;
     std::unique_ptr<sl::Shader> m_pShader;
+    std::unique_ptr<sl::Texture2D> m_pTexture;
 };
