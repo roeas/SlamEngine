@@ -217,4 +217,29 @@ constexpr GLenum GLShaderType[nameof::enum_count<ShaderType>()] =
     GL_COMPUTE_SHADER,  // ShaderType::ComputeShader
 };
 
+constexpr GLint GLTextureWrap[] =
+{
+    0,
+    GL_REPEAT,
+    GL_MIRRORED_REPEAT,
+    GL_CLAMP_TO_EDGE,
+    GL_CLAMP_TO_BORDER,
+};
+
+constexpr GLint GLTextureFilter[] =
+{
+    0,
+    GL_NEAREST,
+    GL_LINEAR,
+};
+
+constexpr GLint GLTextureMipmapFilter[] =
+{
+    0,
+    GL_NEAREST_MIPMAP_NEAREST,
+    GL_NEAREST_MIPMAP_LINEAR,
+    GL_LINEAR_MIPMAP_NEAREST,
+    GL_LINEAR_MIPMAP_LINEAR,
+};
+
 } // namespace sl
