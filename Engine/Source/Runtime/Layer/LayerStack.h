@@ -25,10 +25,10 @@ public:
     auto cbegin() const { return m_pLayers.cbegin(); }
     auto cend() const { return m_pLayers.cend(); }
 
-    auto rbegin() { return std::make_reverse_iterator(m_pLayers.begin()); }
-    auto rend() { return std::make_reverse_iterator(m_pLayers.end()); }
-    auto crbegin() const { return std::make_reverse_iterator(m_pLayers.cbegin()); }
-    auto crend() const { return std::make_reverse_iterator(m_pLayers.cend()); }
+    auto rbegin() { return m_pLayers.rbegin(); }
+    auto rend() { return m_pLayers.rend(); }
+    auto crbegin() const { return m_pLayers.crbegin(); }
+    auto crend() const { return m_pLayers.crend(); }
 
 private:
     std::vector<std::unique_ptr<Layer>> m_pLayers;

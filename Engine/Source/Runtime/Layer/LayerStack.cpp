@@ -47,7 +47,7 @@ void LayerStack::EndFrame()
 void LayerStack::OnEvent(Event &event)
 {
     // Iterate layers from top to bottom / from end to begin
-    for (auto it = rend(); it != rbegin(); ++it)
+    for (auto it = rbegin(); it != rend(); ++it)
     {
         if (event.IsHandled())
         {

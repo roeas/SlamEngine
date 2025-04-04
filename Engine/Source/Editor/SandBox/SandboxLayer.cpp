@@ -66,7 +66,7 @@ SandboxLayer::SandboxLayer()
 
     int width, height, channel;
     stbi_set_flip_vertically_on_load(1);
-    unsigned char *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
+    auto *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
     m_pTexture.reset(sl::Texture2D::Create(width, height, false, sl::TextureFormat::RGB8, 0, pData));
     stbi_image_free(pData);
 }
