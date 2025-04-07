@@ -23,14 +23,14 @@ public:
     void UploadUniform(int location, const glm::vec4 &value) const override;
 
     void UploadUniform(int location, int32_t value) const override;
-    void UploadUniform(int location, const glm::i32vec2 &value) const override;
-    void UploadUniform(int location, const glm::i32vec3 &value) const override;
-    void UploadUniform(int location, const glm::i32vec4 &value) const override;
+    void UploadUniform(int location, const glm::ivec2 &value) const override;
+    void UploadUniform(int location, const glm::ivec3 &value) const override;
+    void UploadUniform(int location, const glm::ivec4 &value) const override;
 
     void UploadUniform(int location, uint32_t value) const override;
-    void UploadUniform(int location, const glm::u32vec2 &value) const override;
-    void UploadUniform(int location, const glm::u32vec3 &value) const override;
-    void UploadUniform(int location, const glm::u32vec4 &value) const override;
+    void UploadUniform(int location, const glm::uvec2 &value) const override;
+    void UploadUniform(int location, const glm::uvec3 &value) const override;
+    void UploadUniform(int location, const glm::uvec4 &value) const override;
 
     void UploadUniform(int location, const float *pValue, size_t count) const override;
     void UploadUniform(int location, const glm::vec2 *pValue, size_t count) const override;
@@ -38,14 +38,14 @@ public:
     void UploadUniform(int location, const glm::vec4 *pValue, size_t count) const override;
 
     void UploadUniform(int location, const int32_t *pValue, size_t count) const override;
-    void UploadUniform(int location, const glm::i32vec2 *pValue, size_t count) const override;
-    void UploadUniform(int location, const glm::i32vec3 *pValue, size_t count) const override;
-    void UploadUniform(int location, const glm::i32vec4 *pValue, size_t count) const override;
+    void UploadUniform(int location, const glm::ivec2 *pValue, size_t count) const override;
+    void UploadUniform(int location, const glm::ivec3 *pValue, size_t count) const override;
+    void UploadUniform(int location, const glm::ivec4 *pValue, size_t count) const override;
 
     void UploadUniform(int location, const uint32_t *pValue, size_t count) const override;
-    void UploadUniform(int location, const glm::u32vec2 *pValue, size_t count) const override;
-    void UploadUniform(int location, const glm::u32vec3 *pValue, size_t count) const override;
-    void UploadUniform(int location, const glm::u32vec4 *pValue, size_t count) const override;
+    void UploadUniform(int location, const glm::uvec2 *pValue, size_t count) const override;
+    void UploadUniform(int location, const glm::uvec3 *pValue, size_t count) const override;
+    void UploadUniform(int location, const glm::uvec4 *pValue, size_t count) const override;
 
     void UploadUniform(int location, const glm::mat2 &value, bool transpose) const override;
     void UploadUniform(int location, const glm::mat3 &value, bool transpose) const override;

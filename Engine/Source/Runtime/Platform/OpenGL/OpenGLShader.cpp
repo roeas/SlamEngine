@@ -133,17 +133,17 @@ void OpenGLShader::UploadUniform(int location, int32_t value) const
     glUniform1i(location, value);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::i32vec2 &value) const
+void OpenGLShader::UploadUniform(int location, const glm::ivec2 &value) const
 {
     glUniform2i(location, value.x, value.y);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::i32vec3 &value) const
+void OpenGLShader::UploadUniform(int location, const glm::ivec3 &value) const
 {
     glUniform3i(location, value.x, value.y, value.z);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::i32vec4 &value) const
+void OpenGLShader::UploadUniform(int location, const glm::ivec4 &value) const
 {
     glUniform4i(location, value.x, value.y, value.z, value.w);
 }
@@ -153,17 +153,17 @@ void OpenGLShader::UploadUniform(int location, uint32_t value) const
     glUniform1ui(location, value);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::u32vec2 &value) const
+void OpenGLShader::UploadUniform(int location, const glm::uvec2 &value) const
 {
     glUniform2ui(location, value.x, value.y);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::u32vec3 &value) const
+void OpenGLShader::UploadUniform(int location, const glm::uvec3 &value) const
 {
     glUniform3ui(location, value.x, value.y, value.z);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::u32vec4 &value) const
+void OpenGLShader::UploadUniform(int location, const glm::uvec4 &value) const
 {
     glUniform4ui(location, value.x, value.y, value.z, value.w);
 }
@@ -193,17 +193,17 @@ void OpenGLShader::UploadUniform(int location, const int32_t *pValue, size_t cou
     glUniform1iv(location, (GLsizei)count, pValue);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::i32vec2 *pValue, size_t count) const
+void OpenGLShader::UploadUniform(int location, const glm::ivec2 *pValue, size_t count) const
 {
     glUniform2iv(location, (GLsizei)count, glm::value_ptr(*pValue));
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::i32vec3 *pValue, size_t count) const
+void OpenGLShader::UploadUniform(int location, const glm::ivec3 *pValue, size_t count) const
 {
     glUniform3iv(location, (GLsizei)count, glm::value_ptr(*pValue));
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::i32vec4 *pValue, size_t count) const
+void OpenGLShader::UploadUniform(int location, const glm::ivec4 *pValue, size_t count) const
 {
     glUniform4iv(location, (GLsizei)count, glm::value_ptr(*pValue));
 }
@@ -213,17 +213,17 @@ void OpenGLShader::UploadUniform(int location, const uint32_t *pValue, size_t co
     glUniform1uiv(location, (GLsizei)count, pValue);
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::u32vec2 *pValue, size_t count) const
+void OpenGLShader::UploadUniform(int location, const glm::uvec2 *pValue, size_t count) const
 {
     glUniform2uiv(location, (GLsizei)count, glm::value_ptr(*pValue));
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::u32vec3 *pValue, size_t count) const
+void OpenGLShader::UploadUniform(int location, const glm::uvec3 *pValue, size_t count) const
 {
     glUniform3uiv(location, (GLsizei)count, glm::value_ptr(*pValue));
 }
 
-void OpenGLShader::UploadUniform(int location, const glm::u32vec4 *pValue, size_t count) const
+void OpenGLShader::UploadUniform(int location, const glm::uvec4 *pValue, size_t count) const
 {
     glUniform4uiv(location, (GLsizei)count, glm::value_ptr(*pValue));
 }

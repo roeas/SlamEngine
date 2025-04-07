@@ -4,6 +4,8 @@
 #include "Platform/OpenGL/OpenGLDefines.h"
 #include "Renderer/RenderCore.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 namespace sl
 {
 
@@ -18,9 +20,9 @@ OpenGLTexture2D::~OpenGLTexture2D()
     glDeleteTextures(1, &m_handle);
 }
 
-void OpenGLTexture2D::SetBorderColor(const float *pColor) const
+void OpenGLTexture2D::SetBorderColor(const glm::vec4 &color) const
 {
-    glTextureParameterfv(m_handle, GL_TEXTURE_BORDER_COLOR, pColor);
+    glTextureParameterfv(m_handle, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(color));
 }
 
 void OpenGLTexture2D::Clear(const void *pClearData) const
@@ -62,7 +64,7 @@ void OpenGLTexture2D::Create(const void *pData)
     }
 
     glCreateTextures(GL_TEXTURE_2D, 1, &m_handle);
-    glTextureStorage2D(m_handle, 1, GLInternalTextureFormat[(size_t)m_format], m_width, m_height);
+    glTextureStorage2D(m_handle, 1, GLTextureInternalFormat[(size_t)m_format], m_width, m_height);
     if (pData)
     {
         glTextureSubImage2D(m_handle, 0, 0, 0, m_width, m_height, GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pData);
@@ -77,8 +79,8 @@ void OpenGLTexture2D::Create(const void *pData)
     glTextureParameteri(m_handle, GL_TEXTURE_MAG_FILTER, GLTextureFilter[(m_flags & SL_SAMPLER_MAG_MASK) >> SL_SAMPLER_MAG_SHIFT]);
     if (m_hasMip)
     {
-        glGenerateTextureMipmap(m_handle);
         glTextureParameteri(m_handle, GL_TEXTURE_MIN_FILTER, GLTextureMipmapFilter[(m_flags & SL_SAMPLER_MIPMAP_MASK) >> SL_SAMPLER_MIPMAP_SHIFT]);
+        glGenerateTextureMipmap(m_handle);
     }
 }
 

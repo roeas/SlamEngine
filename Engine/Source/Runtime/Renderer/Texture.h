@@ -2,6 +2,8 @@
 
 #include "Core/Defines.h"
 
+#include <glm/vec4.hpp>
+
 namespace sl
 {
 
@@ -15,7 +17,7 @@ public:
 
     virtual void Bind(uint32_t slot) const = 0;
 
-    virtual void SetBorderColor(const float *pColor) const = 0;
+    virtual void SetBorderColor(const glm::vec4 &color) const = 0;
     virtual void Clear(const void *pClearData) const = 0;
     virtual void Resize(uint32_t width, uint32_t height, const void *pData = nullptr) = 0;
 

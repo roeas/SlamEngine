@@ -21,7 +21,7 @@ constexpr GLenum GLAttribType[nameof::enum_count<AttribType>()] =
     GL_DOUBLE,         // AttribType::Double
 };
 
-constexpr GLenum GLInternalTextureFormat[nameof::enum_count<TextureFormat>()] =
+constexpr GLenum GLTextureInternalFormat[nameof::enum_count<TextureFormat>()] =
 {
     GL_R8,                 // TextureFormat::R8
     GL_R8_SNORM,           // TextureFormat::R8S
@@ -77,8 +77,8 @@ constexpr GLenum GLInternalTextureFormat[nameof::enum_count<TextureFormat>()] =
 
     GL_DEPTH_COMPONENT16,  // TextureFormat::D16
     GL_DEPTH_COMPONENT24,  // TextureFormat::D24
-    GL_DEPTH_COMPONENT32F, // TextureFormat::D32F
     GL_DEPTH_COMPONENT32,  // TextureFormat::D32
+    GL_DEPTH_COMPONENT32F, // TextureFormat::D32F
     GL_DEPTH24_STENCIL8,   // TextureFormat::D24S8
     GL_DEPTH32F_STENCIL8,  // TextureFormat::D32FS8
     GL_STENCIL_INDEX8,     // TextureFormat::S8
@@ -140,8 +140,8 @@ constexpr GLenum GLTextureFormat[nameof::enum_count<TextureFormat>()] =
 
     GL_DEPTH_COMPONENT, // TextureFormat::D16
     GL_DEPTH_COMPONENT, // TextureFormat::D24
-    GL_DEPTH_COMPONENT, // TextureFormat::D32F
     GL_DEPTH_COMPONENT, // TextureFormat::D32
+    GL_DEPTH_COMPONENT, // TextureFormat::D32F
     GL_DEPTH_STENCIL,   // TextureFormat::D24S8
     GL_DEPTH_STENCIL,   // TextureFormat::D32FS8
     GL_STENCIL_INDEX,   // TextureFormat::S8
@@ -210,13 +210,6 @@ constexpr GLenum GLDataType[nameof::enum_count<TextureFormat>()] =
     GL_UNSIGNED_BYTE,                  // TextureFormat::S8
 };
 
-constexpr GLenum GLShaderType[nameof::enum_count<ShaderType>()] =
-{
-    GL_VERTEX_SHADER,   // ShaderType::VertexShader
-    GL_FRAGMENT_SHADER, // ShaderType::FragmentShader
-    GL_COMPUTE_SHADER,  // ShaderType::ComputeShader
-};
-
 constexpr GLint GLTextureWrap[] =
 {
     0,
@@ -240,6 +233,13 @@ constexpr GLint GLTextureMipmapFilter[] =
     GL_NEAREST_MIPMAP_LINEAR,
     GL_LINEAR_MIPMAP_NEAREST,
     GL_LINEAR_MIPMAP_LINEAR,
+};
+
+constexpr GLenum GLShaderType[nameof::enum_count<ShaderType>()] =
+{
+    GL_VERTEX_SHADER,   // ShaderType::VertexShader
+    GL_FRAGMENT_SHADER, // ShaderType::FragmentShader
+    GL_COMPUTE_SHADER,  // ShaderType::ComputeShader
 };
 
 } // namespace sl

@@ -14,7 +14,7 @@ public:
 
     void Bind(uint32_t slot) const override;
 
-    void SetBorderColor(const float *pColor) const override;
+    void SetBorderColor(const glm::vec4 &color) const override;
     void Clear(const void *pClearData) const override;
     void Resize(uint32_t width, uint32_t height, const void *pData = nullptr) override;
 
