@@ -12,6 +12,11 @@ void RenderCore::Init(GraphicsBackend backend)
     m_pRenderAPI.reset(RenderAPI::Create());
 }
 
+void RenderCore::SetMainFramebuffer(FrameBuffer *pFrameBuffer)
+{
+    m_pMainFrameBuffer.reset(pFrameBuffer);
+}
+
 void RenderCore::SetClearColor(const glm::vec4 &color)
 {
     m_pRenderAPI->SetClearColor(color);

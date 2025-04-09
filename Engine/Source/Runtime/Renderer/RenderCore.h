@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Defines.h"
+#include "Renderer/FrameBuffer.h"
 #include "Renderer/RenderAPI.h"
 
 #include <memory>
@@ -24,6 +25,9 @@ public:
     static void Init(GraphicsBackend backend);
     static GraphicsBackend GetBackend() { return m_backend; }
 
+    static void SetMainFramebuffer(FrameBuffer *pFrameBuffer);
+    static FrameBuffer *GetMainFramebuffer() { return m_pMainFrameBuffer.get(); }
+
     static void SetClearColor(const glm::vec4 &color);
     static void SetClearDepth(float depth);
     static void SetClearStencil(int stencil);
@@ -34,6 +38,7 @@ public:
 private:
     inline static GraphicsBackend m_backend = GraphicsBackend::None;
     inline static std::unique_ptr<RenderAPI> m_pRenderAPI;
+    inline static std::unique_ptr<FrameBuffer> m_pMainFrameBuffer;
 };
 
 } // namespace sl

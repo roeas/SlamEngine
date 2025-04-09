@@ -25,7 +25,6 @@ ImGuiLayer::ImGuiLayer()
     auto pPanelDetails = std::make_unique<PanelDetails>();
     auto pPanelScene = std::make_unique<PanelScene>();
 
-#if 0
     m_stack.PushLayer(std::move(pMenuBar));
     m_stack.PushLayer(std::move(pPanelInformation));
     m_stack.PushLayer(std::move(pPanelLog));
@@ -33,7 +32,6 @@ ImGuiLayer::ImGuiLayer()
     m_stack.PushLayer(std::move(pPanelEntityList));
     m_stack.PushLayer(std::move(pPanelDetails));
     m_stack.PushLayer(std::move(pPanelScene));
-#endif
 }
 
 void ImGuiLayer::OnAttach()
@@ -64,7 +62,7 @@ void ImGuiLayer::OnUpdate(float deltaTime)
         ImPlot::ShowDemoWindow(&m_data.m_debugImPlotDemo);
     }
 
-    // ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);
+    ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);
 
     m_stack.OnUpdate(deltaTime);
 }

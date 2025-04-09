@@ -1,6 +1,7 @@
 #include "SandboxLayer.h"
 
 #include "Core/Path.hpp"
+#include "Renderer/FrameBuffer.h"
 #include "Renderer/RenderCore.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
@@ -69,6 +70,12 @@ SandboxLayer::SandboxLayer()
     auto *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
     m_pTexture.reset(sl::Texture2D::Create(width, height, sl::TextureFormat::RGB8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData));
     stbi_image_free(pData);
+
+    sl::RenderCore::SetMainFramebuffer(sl::FrameBuffer::Create(
+    {
+        sl::Texture2D::Create(1280, 720, sl::TextureFormat::RGB8, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1280, 720, sl::TextureFormat::D32, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+    }));
 }
 
 SandboxLayer::~SandboxLayer()
@@ -93,11 +100,15 @@ void SandboxLayer::BeginFrame()
 
 void SandboxLayer::OnUpdate(float deltaTime)
 {
+    sl::RenderCore::GetMainFramebuffer()->Bind();
+
     sl::RenderCore::SetClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     sl::RenderCore::Clear();
 
     m_pTexture->Bind(0);
     sl::RenderCore::Submit(m_pVertexArray.get(), m_pShader.get());
+
+    sl::RenderCore::GetMainFramebuffer()->Unbind();
 }
 
 void SandboxLayer::OnRender()

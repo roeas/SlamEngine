@@ -235,6 +235,14 @@ constexpr GLint GLTextureMipmapFilter[] =
     GL_LINEAR_MIPMAP_LINEAR,
 };
 
+constexpr GLenum GLAttachmentPoint[nameof::enum_count<AttachmentType>()] =
+{
+    GL_COLOR_ATTACHMENT0,        // AttachmentType::Color
+    GL_DEPTH_ATTACHMENT,         // AttachmentType::Depth
+    GL_STENCIL_ATTACHMENT,       // AttachmentType::Stencil
+    GL_DEPTH_STENCIL_ATTACHMENT, // AttachmentType::DepthAndStencil
+};
+
 constexpr GLenum GLShaderType[nameof::enum_count<ShaderType>()] =
 {
     GL_VERTEX_SHADER,   // ShaderType::VertexShader
