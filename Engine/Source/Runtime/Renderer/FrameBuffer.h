@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Renderer/Texture.h"
+
 #include <cstdint>
 #include <vector>
 
 namespace sl
 {
-
-class Texture2D;
 
 class FrameBuffer
 {

@@ -13,7 +13,7 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(std::vector<Texture2D *> pTextures, bool de
 {
     if (pTextures.empty())
     {
-        SL_LOG_ERROR("Failed to create framebuffer: No attachment!");
+        SL_LOG_ERROR("Cannot create framebuffer without any attachment!");
         return;
     }
 
@@ -105,7 +105,7 @@ void OpenGLFrameBuffer::Clear(uint32_t attachmentIndex, const void *pClearData) 
 {
     if (attachmentIndex >= m_attachments.size())
     {
-        SL_LOG_ERROR("Failed to clear attachment: Index out of range!");
+        SL_LOG_ERROR("Attachment index out of range!");
         return;
     }
 
@@ -116,7 +116,7 @@ int OpenGLFrameBuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t 
 {
     if (attachmentIndex >= m_attachments.size())
     {
-        SL_LOG_ERROR("Failed to read attachment: Index out of range!");
+        SL_LOG_ERROR("Attachment index out of range!");
         return 0;
     }
 
@@ -137,7 +137,7 @@ uint32_t OpenGLFrameBuffer::GetAttachmentHandle(size_t attachmentIndex) const
 {
     if (attachmentIndex >= m_attachments.size())
     {
-        SL_LOG_ERROR("Failed to get attachment handle: Index out of range!");
+        SL_LOG_ERROR("Attachment index out of range!");
         return 0;
     }
 

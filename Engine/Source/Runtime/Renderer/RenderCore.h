@@ -3,7 +3,9 @@
 #include "Core/Defines.h"
 #include "Renderer/FrameBuffer.h"
 #include "Renderer/RenderAPI.h"
+#include "Renderer/UniformBuffer.h"
 
+#include <map>
 #include <memory>
 
 namespace sl
@@ -28,6 +30,9 @@ public:
     static void SetMainFramebuffer(FrameBuffer *pFrameBuffer);
     static FrameBuffer *GetMainFramebuffer() { return m_pMainFrameBuffer.get(); }
 
+    static void SetUniformBuffer(std::string_view name, UniformBuffer *pUniformBuffer);
+    static UniformBuffer *GetUniformBuffer(std::string_view name);
+
     static void SetClearColor(const glm::vec4 &color);
     static void SetClearDepth(float depth);
     static void SetClearStencil(int stencil);
@@ -39,6 +44,7 @@ private:
     inline static GraphicsBackend m_backend = GraphicsBackend::None;
     inline static std::unique_ptr<RenderAPI> m_pRenderAPI;
     inline static std::unique_ptr<FrameBuffer> m_pMainFrameBuffer;
+    inline static std::map<std::string, std::unique_ptr<UniformBuffer>> m_UniformBuffers;
 };
 
 } // namespace sl

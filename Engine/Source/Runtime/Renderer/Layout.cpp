@@ -1,5 +1,6 @@
 #include "Layout.h"
 
+#include "Core/Log.h"
 #include "Utils/EnumOf.hpp"
 
 namespace sl
@@ -39,6 +40,32 @@ VertexLayout::VertexLayout(std::initializer_list<VertexLayoutElement> elements) 
         element.m_offset = offset;
         offset += element.m_size;
         m_stride += element.m_size;
+    }
+}
+
+void UniformBufferLayout::AddElement(std::string_view name, const UniformBufferLayoutElement &element)
+{
+    auto it = m_elements.find(name.data());
+    if (it == m_elements.end())
+    {
+        m_elements[name.data()] = element;
+    }
+    else
+    {
+        SL_LOG_ERROR("Uniform buffer element {} already exists!", name.data());
+    }
+}
+
+std::optional<UniformBufferLayoutElement> UniformBufferLayout::GetElement(std::string_view name) const
+{
+    auto it = m_elements.find(name.data());
+    if (it != m_elements.end())
+    {
+        return it->second;
+    }
+    else
+    {
+        return std::nullopt;
     }
 }
 

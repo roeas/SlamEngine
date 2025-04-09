@@ -1,10 +1,8 @@
 #include "SandboxLayer.h"
 
 #include "Core/Path.hpp"
-#include "Renderer/FrameBuffer.h"
 #include "Renderer/RenderCore.h"
 #include "Renderer/Shader.h"
-#include "Renderer/Texture.h"
 #include "Renderer/VertexArray.h"
 
 #include <stb/stb_image.h>
@@ -26,6 +24,22 @@ SandboxLayer::SandboxLayer()
     static std::string vs =
     R"(
         #version 460 core
+
+        layout(std140, binding = 0) uniform UBCamera
+        {
+            vec4 ub_cameraPos;
+            mat4 ub_viewProjection;
+        };
+
+        vec3 GetCameraPos()
+        {
+            return ub_cameraPos.xyz;
+        }
+        
+        mat4 GetViewProjectionMat()
+        {
+            return ub_viewProjection;
+        }
 
         layout(location = 0) in vec3 a_position;
         layout(location = 1) in vec2 a_uv;
@@ -70,13 +84,6 @@ SandboxLayer::SandboxLayer()
     auto *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
     m_pTexture.reset(sl::Texture2D::Create(width, height, sl::TextureFormat::RGB8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData));
     stbi_image_free(pData);
-
-    sl::RenderCore::SetMainFramebuffer(sl::FrameBuffer::Create(
-    {
-        // Size is meaningless here
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
-    }));
 }
 
 SandboxLayer::~SandboxLayer()

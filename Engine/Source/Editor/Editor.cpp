@@ -19,6 +19,21 @@ Editor::Editor(const EditorInitor &initor)
     m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
     sl::ImGuiContext::Init(m_pMainWindow->GetNativeWindow(), m_pMainWindow->GetRenderContext());
 
+    // Create main frame buffer, size is meaningless here
+    sl::RenderCore::SetMainFramebuffer(sl::FrameBuffer::Create(
+    {
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+    }));
+
+    // Create camera uniform buffer
+    sl::UniformBufferLayout cameraUniformBufferLayout;
+    cameraUniformBufferLayout.AddElement("ub_cameraPos", sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
+    cameraUniformBufferLayout.AddElement("ub_viewProjection", sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
+    cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
+    auto pCameraUniformBuffer = sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout));
+    sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", std::move(pCameraUniformBuffer));
+
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     pImGuiLayer->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
