@@ -44,12 +44,6 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(std::vector<Texture2D *> pTextures, bool de
         }
     }
 
-    if (colorAttachmentIndex < 1)
-    {
-        SL_LOG_ERROR("Failed to create framebuffer: No color attachment!");
-        return;
-    }
-
     m_width = minWidth;
     m_height = minHeight;
     m_colorAttachmentCount = colorAttachmentIndex;
@@ -157,9 +151,8 @@ void OpenGLFrameBuffer::Create()
         return;
     }
 
-    glCreateFramebuffers(1, &m_handle);
+    glGenFramebuffers(1, &m_handle);
     glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
-
     for (const auto &attachment : m_attachments)
     {
         glFramebufferTexture2D(GL_FRAMEBUFFER, attachment.m_point, GL_TEXTURE_2D, attachment.m_pTexture->GetHandle(), 0);
@@ -184,6 +177,8 @@ void OpenGLFrameBuffer::Create()
         glDeleteFramebuffers(1, &m_handle);
         m_handle = 0;
     }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 } // namespace sl

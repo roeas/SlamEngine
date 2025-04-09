@@ -14,4 +14,8 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
+
+private:
+    uint32_t m_width = 0;
+    uint32_t m_height = 0;
 };

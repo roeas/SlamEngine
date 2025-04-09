@@ -93,14 +93,12 @@ bool Editor::OnWindowClose(sl::WindowCloseEvent &event)
 
 bool Editor::OnWindowMinimize(sl::WindowMinimizeEvent &event)
 {
-    SL_LOG_TRACE("Window minimise");
     m_isMinimized = true;
     return true;
 }
 
 bool Editor::OnWindowRestore(sl::WindowRestoreEvent &event)
 {
-    SL_LOG_TRACE("Window restore");
     m_isMinimized = false;
     return true;
 }

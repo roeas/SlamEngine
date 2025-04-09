@@ -79,9 +79,9 @@ constexpr GLenum GLTextureInternalFormat[nameof::enum_count<TextureFormat>()] =
     GL_DEPTH_COMPONENT24,  // TextureFormat::D24
     GL_DEPTH_COMPONENT32,  // TextureFormat::D32
     GL_DEPTH_COMPONENT32F, // TextureFormat::D32F
+    GL_STENCIL_INDEX8,     // TextureFormat::S8
     GL_DEPTH24_STENCIL8,   // TextureFormat::D24S8
     GL_DEPTH32F_STENCIL8,  // TextureFormat::D32FS8
-    GL_STENCIL_INDEX8,     // TextureFormat::S8
 };
 
 constexpr GLenum GLTextureFormat[nameof::enum_count<TextureFormat>()] =
@@ -142,9 +142,9 @@ constexpr GLenum GLTextureFormat[nameof::enum_count<TextureFormat>()] =
     GL_DEPTH_COMPONENT, // TextureFormat::D24
     GL_DEPTH_COMPONENT, // TextureFormat::D32
     GL_DEPTH_COMPONENT, // TextureFormat::D32F
+    GL_STENCIL_INDEX,   // TextureFormat::S8
     GL_DEPTH_STENCIL,   // TextureFormat::D24S8
     GL_DEPTH_STENCIL,   // TextureFormat::D32FS8
-    GL_STENCIL_INDEX,   // TextureFormat::S8
 };
 
 constexpr GLenum GLDataType[nameof::enum_count<TextureFormat>()] =
@@ -205,9 +205,9 @@ constexpr GLenum GLDataType[nameof::enum_count<TextureFormat>()] =
     GL_UNSIGNED_INT,                   // TextureFormat::D24
     GL_UNSIGNED_INT,                   // TextureFormat::D32
     GL_FLOAT,                          // TextureFormat::D32F
+    GL_UNSIGNED_BYTE,                  // TextureFormat::S8
     GL_UNSIGNED_INT_24_8,              // TextureFormat::D24S8
     GL_FLOAT_32_UNSIGNED_INT_24_8_REV, // TextureFormat::D32FS8
-    GL_UNSIGNED_BYTE,                  // TextureFormat::S8
 };
 
 constexpr GLint GLTextureWrap[] =

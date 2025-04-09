@@ -73,8 +73,9 @@ SandboxLayer::SandboxLayer()
 
     sl::RenderCore::SetMainFramebuffer(sl::FrameBuffer::Create(
     {
-        sl::Texture2D::Create(1280, 720, sl::TextureFormat::RGB8, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
-        sl::Texture2D::Create(1280, 720, sl::TextureFormat::D32, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+        // Size is meaningless here
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
     }));
 }
 
