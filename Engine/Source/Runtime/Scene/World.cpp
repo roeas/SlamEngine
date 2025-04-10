@@ -1,5 +1,8 @@
 #include "World.h"
 
+#include "Scene/TagComponent.h"
+#include "Scene/TransformComponent.h"
+
 #include <format>
 
 namespace sl
@@ -7,18 +10,9 @@ namespace sl
 
 Entity World::CreateEntity(std::string_view name)
 {
-    uint32_t index = 0;
-    if (auto it = m_names.find(name.data()); it != m_names.end())
-    {
-        index = ++it->second;
-    }
-    else
-    {
-        m_names[name.data()] = 0;
-    }
-
     Entity entity{ m_registry.create() };
-    std::string newName = index ? std::format("{} ({})", name.data(), index) : name.data();
+    entity.AddComponent<TagComponent>(name.data());
+    entity.AddComponent<TransformComponent>();
 
     return entity;
 }

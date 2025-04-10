@@ -4,6 +4,7 @@
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/RenderCore.h"
+#include "Scene/World.h"
 #include "Window/Window.h"
 
 #include "ImGui/ImGuiLayer.h"
@@ -40,6 +41,8 @@ Editor::Editor(const EditorInitor &initor)
 
     m_layerStack.PushLayer(std::move(pImGuiLayer));
     m_layerStack.PushLayer(std::move(pSandBoxLayer));
+
+    sl::Entity mainCameraEntity = sl::World::CreateEntity("Main Camera");
 
     m_clock.Tick();
 }
