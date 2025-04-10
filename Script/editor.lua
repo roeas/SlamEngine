@@ -19,7 +19,6 @@ project("Editor")
     includedirs
     {
         EditorPath,
-        path.join(ThirdPartyPath, "glad/include"), -- TMP
     }
 
     libdirs

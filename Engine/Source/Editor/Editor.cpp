@@ -22,8 +22,8 @@ Editor::Editor(const EditorInitor &initor)
     // Create main frame buffer, size is meaningless here
     sl::RenderCore::SetMainFramebuffer(sl::FrameBuffer::Create(
     {
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_LINEAR),
     }));
 
     // Create camera uniform buffer

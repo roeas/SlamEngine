@@ -49,6 +49,7 @@ workspace("SlamEngine")
         ThirdPartyPath,
         path.join(ThirdPartyPath, "spdlog/include"),
         path.join(ThirdPartyPath, "imgui"),
+        path.join(ThirdPartyPath, "entt/src"),
     }
 
     flags

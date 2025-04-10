@@ -34,6 +34,8 @@
 
 [stb](https://github.com/nothings/stb) f0569113c93ad095470c54bf34a17b36646bbbb5
 
+[EnTT](https://github.com/skypjack/entt) v3.15.0
+
 [Noto Sans](https://fonts.google.com/noto)
 
 [Material Symbols](https://fonts.google.com/icons)
