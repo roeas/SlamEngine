@@ -2,9 +2,13 @@
 
 #include "Core/Core.h"
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 #include <spdlog/spdlog.h>
 
 #include <cstdint>
+#include <format>
 #include <memory>
 #include <string>
 #include <vector>
@@ -62,3 +66,35 @@ private:
 #else
     #define SL_ASSERT(...)
 #endif
+
+// GLM vector std::formatter specialize
+#define SL_FMT_PLACEHOLDER_1
+#define SL_FMT_PLACEHOLDER_2 "{}" ", " "{}"
+#define SL_FMT_PLACEHOLDER_3 SL_FMT_PLACEHOLDER_2 ", " "{}"
+#define SL_FMT_PLACEHOLDER_4 SL_FMT_PLACEHOLDER_3 ", " "{}"
+#define SL_FMT_PLACEHOLDER(N) SL_FMT_PLACEHOLDER_##N
+
+#define SL_COMPONENT_VEC_1 vec.x
+#define SL_COMPONENT_VEC_2 SL_COMPONENT_VEC_1, vec.y
+#define SL_COMPONENT_VEC_3 SL_COMPONENT_VEC_2, vec.z
+#define SL_COMPONENT_VEC_4 SL_COMPONENT_VEC_3, vec.w
+#define SL_COMPONENT_VEC(N) SL_COMPONENT_VEC_##N
+
+#define SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(PREFIX, N) \
+template <> \
+struct std::formatter<glm::PREFIX##vec##N> : std::formatter<std::string> { \
+    auto format(const glm::PREFIX##vec##N& vec, std::format_context& ctx) const { \
+        return std::formatter<std::string>::format( \
+            std::format(#PREFIX "vec" #N "(" SL_FMT_PLACEHOLDER(N) ")", SL_COMPONENT_VEC(N)), ctx); \
+    } \
+};
+
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(, 2);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(, 3);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(, 4);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(i, 2);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(i, 3);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(i, 4);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(u, 2);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(u, 3);
+SL_GLM_VECTOR_FORMATTER_SPECIALIZATION(u, 4);
