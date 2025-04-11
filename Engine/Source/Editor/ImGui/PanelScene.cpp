@@ -1,6 +1,7 @@
 #include "ImGui/PanelScene.h"
 
 #include "Renderer/RenderCore.h"
+#include "Scene/World.h"
 
 #include <imgui/imgui.h>
 
@@ -30,7 +31,16 @@ void PanelScene::OnUpdate(float deltaTime)
     {
         m_width = (uint32_t)size.x;
         m_height = (uint32_t)size.y;
+
+        // Resize main framebuffer
         sl::RenderCore::GetMainFramebuffer()->Resize(m_width, m_height);
+
+        // Update main camera aspect
+        float aspect = (float)m_width / (float)m_height;
+        auto &camera = sl::World::GetMainCameraComponent();
+        camera.m_aspect = aspect;
+        camera.m_fovMultiplier = aspect * 9.0f / 16.0f;
+        camera.m_isDirty = true;
     }
 
     // Draw main frame buffer color attachment

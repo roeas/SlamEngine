@@ -4,7 +4,6 @@
 
 #include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>
-#include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
 namespace sl
@@ -31,9 +30,6 @@ struct CameraComponent
     void Recalculate();
     bool IsUsing() const;
 
-    void SetPosition(const glm::vec3 &position) { m_position = position; }
-    void SetRotation(const glm::vec3 &rotation) { m_rotation = rotation; }
-
     const glm::vec3 &GetFront();
     const glm::vec3 &GetUp();
     const glm::mat4 &GetView();
@@ -43,12 +39,12 @@ struct CameraComponent
     // Base
     bool m_isMainCamera = false;
     ProjectionType m_projectionType = ProjectionType::Perspective;
-    CameraControllerMode m_controllerMode = CameraControllerMode::None;
+    CameraControllerMode m_controllerMode = CameraControllerMode::FPS;
     
     // Cache
     bool m_isDirty = true;
-    glm::vec3 m_position{ 0.0f, 0.0f, 0.0f };
-    glm::vec3 m_rotation{ 0.0f, 0.0f, 0.0f };
+    glm::vec3 m_position{ 0.0f };
+    glm::vec3 m_rotation{ 0.0f };
     glm::vec3 m_frontDir{ 0.0f, 0.0f, 1.0f };
     glm::vec3 m_upDir{ 0.0f, 1.0f, 0.0f };
     glm::vec3 m_rightDir{ 1.0f, 0.0f, 0.0f };
@@ -71,6 +67,8 @@ struct CameraComponent
     // Camera controlling
     float m_moveSpeed = 0.01f;
     float m_rotateSpeed = glm::radians(0.05f);
+    float m_moveSpeedKeyShiftMultiplier = 4.0f;
+    float m_moveSpeedMouseScrollMultiplier = 1.0f;
 };
 
 } // namespace sl

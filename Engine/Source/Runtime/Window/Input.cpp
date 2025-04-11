@@ -8,7 +8,7 @@ namespace sl
 bool Input::IsKeyDown(KeyCodeType key)
 {
     const auto *pStates = SDL_GetKeyboardState(nullptr);
-    return pStates[static_cast<size_t>(key)];
+    return pStates[(size_t)key];
 }
 
 bool Input::IsKeyModifierDown(KeyModifierType mod)

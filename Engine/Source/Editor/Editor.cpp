@@ -1,5 +1,6 @@
 #include "Editor.h"
 
+#include "CameraController/CameraControllerLayer.h"
 #include "Core/Log.h"
 #include "Core/Path.h"
 #include "Event/WindowEvent.h"
@@ -37,12 +38,14 @@ Editor::Editor(const EditorInitor &initor)
     sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", std::move(pCameraUniformBuffer));
 
     // Create and attach layers
+    auto pCameraControllerLayer = std::make_unique<CameraControllerLayer>();
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
+    m_layerStack.PushLayer(std::move(pCameraControllerLayer));
     m_layerStack.PushLayer(std::move(pImGuiLayer));
     m_layerStack.PushLayer(std::move(pSandBoxLayer));
-
+    
     // Main camrea entity
     sl::World::CreateEntity("Main Camera").AddComponent<sl::CameraComponent>().m_isMainCamera = true;
 

@@ -19,6 +19,8 @@ void CameraComponent::Reset()
     m_orthoFarClip = 10.0f;
     m_moveSpeed = 0.01f;
     m_rotateSpeed = glm::radians(0.05f);
+    m_moveSpeedKeyShiftMultiplier = 4.0f;
+    m_moveSpeedMouseScrollMultiplier = 1.0f;
 }
 
 void CameraComponent::Recalculate()
