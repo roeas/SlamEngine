@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Defines.h"
-#include "Core/Time.hpp"
+#include "Core/Time.h"
 #include "Layer/LayerStack.h"
 
 #include <cstdint>

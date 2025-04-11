@@ -1,6 +1,6 @@
 #include "SandboxLayer.h"
 
-#include "Core/Path.hpp"
+#include "Core/Path.h"
 #include "Renderer/RenderCore.h"
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"

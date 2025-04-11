@@ -1,7 +1,7 @@
 #include "ImGuiContext.h"
 
 #include "Core/Log.h"
-#include "Core/Path.hpp"
+#include "Core/Path.h"
 
 #include <ImGui/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
