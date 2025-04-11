@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Core/Log.h"
+#include "Scene/CameraComponent.h"
+#include "Scene/TagComponent.h"
+#include "Scene/TransformComponent.h"
 #include "Utils/NameOf.hpp"
 
 #include <entt/entt.hpp>
@@ -22,8 +25,12 @@ public:
     World &operator=(World &&) = delete;
     ~World() = delete;
 
-    static Entity CreateEntity(std::string_view name = "New Entity");
     static entt::registry &GetRegistry() { return m_registry; }
+    static Entity CreateEntity(std::string_view name = "New Entity");
+
+    static Entity GetMainCameraEntity();
+    static CameraComponent &GetMainCameraComponent();
+    static TransformComponent &GetMainCameraTransformComponent();
 
     template<typename T>
     static void Clear() { m_registry.clear<T>(); }

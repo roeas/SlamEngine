@@ -36,14 +36,15 @@ Editor::Editor(const EditorInitor &initor)
     auto pCameraUniformBuffer = sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout));
     sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", std::move(pCameraUniformBuffer));
 
+    // Create and attach layers
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
-
     m_layerStack.PushLayer(std::move(pImGuiLayer));
     m_layerStack.PushLayer(std::move(pSandBoxLayer));
 
-    sl::Entity mainCameraEntity = sl::World::CreateEntity("Main Camera");
+    // Main camrea entity
+    sl::World::CreateEntity("Main Camera").AddComponent<sl::CameraComponent>().m_isMainCamera = true;
 
     m_clock.Tick();
 }

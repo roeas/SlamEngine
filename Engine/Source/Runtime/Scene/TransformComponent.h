@@ -8,12 +8,7 @@ namespace sl
 
 struct TransformComponent
 {
-    void Reset()
-    {
-        m_position = glm::vec3{ 0.0f, 0.0f , 0.0f };
-        m_rotation = glm::vec3{ 0.0f, 0.0f , 0.0f };
-        m_scale = glm::vec3{ 1.0f, 1.0f , 1.0f };
-    }
+    void Reset();
 
     void SetRotationDegrees(const glm::vec3 &degrees);
     glm::vec3 GetRotationDegrees() const;

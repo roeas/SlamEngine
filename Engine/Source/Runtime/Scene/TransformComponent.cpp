@@ -8,6 +8,13 @@
 namespace sl
 {
 
+void TransformComponent::Reset()
+{
+    m_position = glm::vec3{ 0.0f, 0.0f , 0.0f };
+    m_rotation = glm::vec3{ 0.0f, 0.0f , 0.0f };
+    m_scale = glm::vec3{ 1.0f, 1.0f , 1.0f };
+}
+
 void TransformComponent::SetRotationDegrees(const glm::vec3 &degrees)
 {
     m_rotation = glm::radians(degrees);
