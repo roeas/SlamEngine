@@ -31,8 +31,8 @@ void CameraComponent::Recalculate()
     }
 
     m_frontDir.x = glm::cos(m_rotation.y) * glm::cos(m_rotation.x);
-    m_frontDir.y = glm::sin(m_rotation.x);
-    m_frontDir.z = glm::sin(m_rotation.y) * glm::cos(m_rotation.x);
+    m_frontDir.y = glm::sin(m_rotation.y);
+    m_frontDir.z = glm::cos(m_rotation.y) * glm::sin(m_rotation.x);
     m_frontDir = glm::normalize(m_frontDir);
     m_rightDir = glm::normalize(glm::cross(m_frontDir, WorldUp));
     m_upDir = glm::normalize(glm::cross(m_rightDir, m_frontDir));
