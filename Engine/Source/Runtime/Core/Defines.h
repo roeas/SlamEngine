@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/EnumOf.hpp"
+#include "Utils/NameOf.hpp"
 
 #include <cstdint>
 

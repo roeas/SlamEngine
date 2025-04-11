@@ -44,17 +44,23 @@ public:
 
     SL_FORCEINLINE static std::string FromeRoot(std::string_view path = "")
     {
-        return (std::filesystem::path{ SL_ROOT_PATH } / path).generic_string();
+        std::filesystem::path result{ SL_ROOT_PATH };
+        result /= path;
+        return result.generic_string();
     }
 
     SL_FORCEINLINE static std::string FromeAsset(std::string_view path = "")
     {
-        return (std::filesystem::path{ SL_ASSET_PATH } / path).generic_string();
+        std::filesystem::path result{ SL_ASSET_PATH };
+        result /= path;
+        return result.generic_string();
     }
 
     SL_FORCEINLINE static std::string Join(auto &&...args)
     {
-        return (... / std::filesystem::path{ std::forward<decltype(args)>(args) }).generic_string();
+        std::filesystem::path result;
+        (result /= ... /= std::filesystem::path(args));
+        return result.generic_string();
     }
 };
 

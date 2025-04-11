@@ -15,10 +15,6 @@ struct TransformComponent
         m_scale = glm::vec3{ 1.0f, 1.0f , 1.0f };
     }
 
-    TransformComponent() = default;
-    TransformComponent(const glm::vec3 &position, const glm::vec3 &rotation, const glm::vec3 &scale) :
-        m_position(position), m_rotation(rotation), m_scale(scale) {}
-
     void SetRotationDegrees(const glm::vec3 &degrees);
     glm::vec3 GetRotationDegrees() const;
 

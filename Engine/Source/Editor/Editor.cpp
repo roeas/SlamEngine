@@ -1,6 +1,7 @@
 #include "Editor.h"
 
 #include "Core/Log.h"
+#include "Core/Path.hpp"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/RenderCore.h"
