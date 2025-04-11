@@ -22,13 +22,13 @@
 #define SL_BIND_EVENT_CALLBACK(fun) [this](auto &&...args) -> decltype(auto) { return this->fun(std::forward<decltype(args)>(args)...); }
 
 // Use it in the global namespace
-#define SL_EVENT_FORMATTER_SPECIALIZE(event) \
+#define SL_EVENT_FORMATTER_SPECIALIZATION(Event) \
 template <> \
-struct std::formatter<event> : std::formatter<std::string> \
+struct std::formatter<Event> : std::formatter<std::string> \
 { \
-    auto format(const event &e, format_context &ctx) const \
+    auto format(const Event &e, std::format_context &ctx) const \
     { \
-        return formatter<string>::format(e.ToString(), ctx); \
+        return std::formatter<string>::format(e.ToString(), ctx); \
     } \
 }
 
@@ -100,4 +100,4 @@ using EventCallback = std::function<void(Event &)>;
 
 } // namespace sl
 
-SL_EVENT_FORMATTER_SPECIALIZE(sl::Event);
+SL_EVENT_FORMATTER_SPECIALIZATION(sl::Event);
