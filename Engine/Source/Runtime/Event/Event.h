@@ -19,10 +19,10 @@
         SL_EVENT_CATEGORY_MOUSE | \
         SL_EVENT_CATEGORY_DROP)
 
-#define BIND_EVENT_CALLBACK(fun) std::bind_front(&fun, this)
+#define SL_BIND_EVENT_CALLBACK(fun) [this](auto &&...args) -> decltype(auto) { return this->fun(std::forward<decltype(args)>(args)...); }
 
 // Use it in the global namespace
-#define EVENT_FORMATTER_SPECIALIZE(event) \
+#define SL_EVENT_FORMATTER_SPECIALIZE(event) \
 template <> \
 struct std::formatter<event> : std::formatter<std::string> \
 { \
@@ -100,4 +100,4 @@ using EventCallback = std::function<void(Event &)>;
 
 } // namespace sl
 
-EVENT_FORMATTER_SPECIALIZE(sl::Event);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::Event);

@@ -190,10 +190,10 @@ public:
 
 } // namespace sl
 
-EVENT_FORMATTER_SPECIALIZE(sl::WindowResizeEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowMinimizeEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowMaximizeEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowRestoreEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowGetFocusEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowLossFocusEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::WindowCloseEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowResizeEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowMinimizeEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowMaximizeEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowRestoreEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowGetFocusEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowLossFocusEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::WindowCloseEvent);

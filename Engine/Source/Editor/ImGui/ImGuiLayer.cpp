@@ -17,7 +17,7 @@ ImGuiLayer::ImGuiLayer()
     ImGui::GetIO().UserData = &m_data;
 
     auto pMenuBar = std::make_unique<MenuBar>();
-    pMenuBar->SetEventCallback(BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
+    pMenuBar->SetEventCallback(SL_BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
     auto pPanelInformation = std::make_unique<PanelInformation>();
     auto pPanelLog = std::make_unique<PanelLog>();
     auto pPanelAssetBrowser = std::make_unique<PanelAssetBrowser>();

@@ -18,7 +18,7 @@ Editor::Editor(const EditorInitor &initor)
 
     sl::Window::Init();
     m_pMainWindow = std::make_unique<sl::Window>(initor.m_title, initor.m_width, initor.m_height);
-    m_pMainWindow->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
+    m_pMainWindow->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     sl::ImGuiContext::Init(m_pMainWindow->GetNativeWindow(), m_pMainWindow->GetRenderContext());
 
     // Create main frame buffer, size is meaningless here
@@ -37,7 +37,7 @@ Editor::Editor(const EditorInitor &initor)
     sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", std::move(pCameraUniformBuffer));
 
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
-    pImGuiLayer->SetEventCallback(BIND_EVENT_CALLBACK(Editor::OnEvent));
+    pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
 
     m_layerStack.PushLayer(std::move(pImGuiLayer));
@@ -96,9 +96,9 @@ void Editor::EndFrame()
 void Editor::OnEvent(sl::Event &event)
 {
     sl::EventDispatcher dispatcher{ event };
-    dispatcher.Dispatch<sl::WindowCloseEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowClose));
-    dispatcher.Dispatch<sl::WindowMinimizeEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowMinimize));
-    dispatcher.Dispatch<sl::WindowRestoreEvent>(BIND_EVENT_CALLBACK(Editor::OnWindowRestore));
+    dispatcher.Dispatch<sl::WindowCloseEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowClose));
+    dispatcher.Dispatch<sl::WindowMinimizeEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowMinimize));
+    dispatcher.Dispatch<sl::WindowRestoreEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowRestore));
 
     m_layerStack.OnEvent(event);
 }

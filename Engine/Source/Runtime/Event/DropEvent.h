@@ -39,4 +39,4 @@ private:
 
 } // namespace sl
 
-EVENT_FORMATTER_SPECIALIZE(sl::DropEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::DropEvent);

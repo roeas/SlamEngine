@@ -141,7 +141,7 @@ private:
 
 } // namespace sl
 
-EVENT_FORMATTER_SPECIALIZE(sl::MouseMoveEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonDownEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonUpEvent);
-EVENT_FORMATTER_SPECIALIZE(sl::MouseScrollEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::MouseMoveEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonDownEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::MouseButtonUpEvent);
+SL_EVENT_FORMATTER_SPECIALIZE(sl::MouseScrollEvent);
