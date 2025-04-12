@@ -121,6 +121,8 @@ void CameraControllerLayer::UpdateFPSMode(float deltaTime)
     camera.m_position = transform.m_position;
     camera.m_rotation = transform.m_rotation;
     camera.m_isDirty = true;
+
+    SL_LOG_DEBUG("Pos: {}", camera.m_position);
 }
 
 void CameraControllerLayer::UpdateEditorMode(float deltaTime)

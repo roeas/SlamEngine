@@ -6,6 +6,7 @@
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/RenderCore.h"
+#include "Renderer/RendererLayer.h"
 #include "Scene/World.h"
 #include "Window/Window.h"
 
@@ -37,17 +38,19 @@ Editor::Editor(const EditorInitor &initor)
     auto pCameraUniformBuffer = sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout));
     sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", std::move(pCameraUniformBuffer));
 
+    // Main camrea entity
+    sl::World::CreateEntity("Main Camera").AddComponent<sl::CameraComponent>().m_isMainCamera = true;
+
     // Create and attach layers
+    auto pRendererLayer = std::make_unique<RendererLayer>();
     auto pCameraControllerLayer = std::make_unique<CameraControllerLayer>();
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
+    m_layerStack.PushLayer(std::move(pRendererLayer));
     m_layerStack.PushLayer(std::move(pCameraControllerLayer));
     m_layerStack.PushLayer(std::move(pImGuiLayer));
     m_layerStack.PushLayer(std::move(pSandBoxLayer));
-    
-    // Main camrea entity
-    sl::World::CreateEntity("Main Camera").AddComponent<sl::CameraComponent>().m_isMainCamera = true;
 
     m_clock.Tick();
 }

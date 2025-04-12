@@ -4,7 +4,9 @@
 #include "Renderer/RenderCore.h"
 #include "Renderer/Shader.h"
 #include "Renderer/VertexArray.h"
+#include "Scene/World.h"
 
+#include <glm/glm.hpp>
 #include <stb/stb_image.h>
 
 // Just some temporary codes here
@@ -13,11 +15,11 @@ SandboxLayer::SandboxLayer()
 {
     static float vertices[4 * 5] =
     {
-        // position         // uv
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-         0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-        -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        // Position      // uv
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+         1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+        -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
     };
     static uint32_t indices[6] = { 0, 1, 2, 2, 3, 0 };
 
@@ -42,21 +44,21 @@ SandboxLayer::SandboxLayer()
         }
 
         layout(location = 0) in vec3 a_position;
-        layout(location = 1) in vec2 a_uv;
+        layout(location = 1) in vec2 a_uv0;
 
-        layout(location = 0) out vec2 v_uv;
+        layout(location = 0) out vec2 v_uv0;
 
         void main()
         {
-            v_uv = a_uv;
-            gl_Position = vec4(a_position, 1.0);
+            v_uv0 = a_uv0;
+            gl_Position = GetViewProjectionMat() * vec4(a_position, 1.0);
         }
     )";
     static std::string fs =
     R"(
         #version 460 core
 
-        layout(location = 0) in vec2 v_uv;
+        layout(location = 0) in vec2 v_uv0;
 
         layout(location = 0) out vec4 color;
 
@@ -64,7 +66,7 @@ SandboxLayer::SandboxLayer()
 
         void main()
         {
-            color = texture(debugTexture, v_uv);
+            color = texture(debugTexture, v_uv0);
         }
     )";
 
@@ -84,6 +86,10 @@ SandboxLayer::SandboxLayer()
     auto *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
     m_pTexture.reset(sl::Texture2D::Create(width, height, sl::TextureFormat::RGB8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData));
     stbi_image_free(pData);
+
+    auto &mainCameraTransform = sl::World::GetMainCameraTransformComponent();
+    mainCameraTransform.m_position = { 0.0f, 0.0f, 4.0f };
+    mainCameraTransform.m_rotation = { glm::radians(-90.0f), 0.0f, 0.0f };
 }
 
 SandboxLayer::~SandboxLayer()
