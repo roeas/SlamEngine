@@ -28,7 +28,6 @@ public:
 
     static void SetMousePos(void *pWindow, glm::vec2 pos);
     static bool SetMouseGlobalPos(glm::vec2 pos);
-
     static bool SetMouseRelativeMode(void *pWindow, bool enable, bool restoreMousePos = true);
 
 private:

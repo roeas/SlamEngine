@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ImGui/PanelEntityList.h"
 
 #include <imgui/imgui.h>

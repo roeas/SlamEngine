@@ -18,7 +18,7 @@ VertexArray *VertexArray::Create(VertexBuffer *pVertexBuffer, IndexBuffer *pInde
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLVertexArray{ pVertexBuffer, pIndexBuffer, std::move(vertexLayout) };
+            return new OpenGLVertexArray{ pVertexBuffer, pIndexBuffer, vertexLayout };
             break;
         }
         default:

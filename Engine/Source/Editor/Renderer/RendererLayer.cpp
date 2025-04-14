@@ -1,13 +1,16 @@
 #include "RendererLayer.h"
 
-#include "Core/Path.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
-#include "Utils/NameOf.hpp"
 
 #include <glm/gtc/type_ptr.hpp>
 
 RendererLayer::RendererLayer()
+{
+
+}
+
+RendererLayer::~RendererLayer()
 {
 
 }
@@ -18,11 +21,6 @@ void RendererLayer::OnAttach()
 }
 
 void RendererLayer::OnDetach()
-{
-
-}
-
-void RendererLayer::OnEvent(sl::Event &event)
 {
 
 }
@@ -52,6 +50,11 @@ void RendererLayer::OnRender()
 }
 
 void RendererLayer::EndFrame()
+{
+
+}
+
+void RendererLayer::OnEvent(sl::Event &event)
 {
 
 }

@@ -5,7 +5,8 @@
 namespace sl
 {
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(const float *pVertices, size_t size)
+OpenGLVertexBuffer::OpenGLVertexBuffer(const float *pVertices, size_t size) :
+    m_handle(0)
 {
     glCreateBuffers(1, &m_handle);
     glNamedBufferStorage(m_handle, size, pVertices, 0);

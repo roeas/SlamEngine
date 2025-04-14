@@ -17,8 +17,8 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
-    void SetEventCallback(auto fun) { m_eventCallback = fun; }
     void ForwardEvent(sl::Event &event);
+    void SetEventCallback(auto fun) { m_eventCallback = fun; }
 
 private:
     sl::EventCallback m_eventCallback;

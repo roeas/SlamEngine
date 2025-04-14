@@ -2,8 +2,6 @@
 
 #include "Utils/NameOf.hpp"
 
-#include <cstdint>
-
 namespace sl
 {
 

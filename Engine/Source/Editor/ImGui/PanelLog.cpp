@@ -5,6 +5,7 @@
 #include "Core/Log.h"
 
 #include <ImGui/IconsMaterialSymbols.h>
+
 #include <imgui/imgui.h>
 
 void PanelLog::OnAttach()
@@ -70,7 +71,6 @@ void PanelLog::OnUpdate(float deltaTime)
             }
         }
     };
-
     auto LevelToIcon = [](sl::LogLevel level)
     {
         switch (level)
@@ -126,7 +126,6 @@ void PanelLog::OnUpdate(float deltaTime)
     {
         sl::Log::GetLogInfos().clear();
     }
-
     ImGui::SameLine();
     if (ImGui::Button("Copy"))
     {
@@ -144,7 +143,6 @@ void PanelLog::OnUpdate(float deltaTime)
     s_textFilter.Draw("##TextFilter", -ImGui::GetStyle().ScrollbarSize);
 
     ImGui::Separator();
-
     auto &logInfos = sl::Log::GetLogInfos();
     if (ImGui::BeginChild("LogTexts", ImVec2{ 0.0f, 0.0f }, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar))
     {

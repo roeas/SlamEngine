@@ -44,7 +44,7 @@ struct CameraComponent
     // Cache
     bool m_isDirty = true;
     glm::vec3 m_position{ 0.0f };
-    glm::vec3 m_rotation{ 0.0f }; // Yaw, pitch and roll, stores in radians
+    glm::vec3 m_rotation{ 0.0f }; // Pitch, yaw and roll, stores in radians
     glm::vec3 m_frontDir{ 0.0f, 0.0f, 1.0f };
     glm::vec3 m_upDir{ 0.0f, 1.0f, 0.0f };
     glm::vec3 m_rightDir{ 1.0f, 0.0f, 0.0f };

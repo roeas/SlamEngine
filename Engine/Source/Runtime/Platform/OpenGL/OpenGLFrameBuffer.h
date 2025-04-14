@@ -5,8 +5,6 @@
 namespace sl
 {
 
-class Texture2D;
-
 struct Attachment
 {
     Texture2D *m_pTexture;

@@ -4,9 +4,10 @@
 #include "Core/Path.h"
 
 #include <ImGui/IconsMaterialSymbols.h>
-#include <imgui/imgui.h>
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_sdl3.h>
+
+#include <imgui/imgui.h>
 #include <implot/implot.h>
 
 namespace sl
@@ -59,8 +60,8 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
 
     // 4. Set color and style
     // TODO: Apply new options
-    SetColor();
     SetStyle();
+    SetColor();
 
     // 5. Setup Platform / Renderer backends
     ImGui_ImplSDL3_InitForOpenGL(static_cast<SDL_Window *>(pNativeWindow), pRenderContext);
@@ -106,7 +107,7 @@ bool ImGuiContext::WantCaptureKeyboard()
     return ImGui::GetIO().WantCaptureKeyboard;
 }
 
-void ImGuiContext::SetUsingMouse(bool enable)
+void ImGuiContext::SetMouseUsing(bool enable)
 {
     auto &io = ImGui::GetIO();
     if (enable)
@@ -117,6 +118,21 @@ void ImGuiContext::SetUsingMouse(bool enable)
     {
         io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
     }
+}
+
+void ImGuiContext::SetStyle()
+{
+    ImGuiStyle &style = ImGui::GetStyle();
+
+    style.WindowRounding = 4.0f;
+    style.ChildRounding = 4.0f;
+    style.FrameRounding = 4.0f;
+    style.PopupRounding = 4.0f;
+    style.ScrollbarRounding = 4.0f;
+    style.GrabRounding = 4.0f;
+    style.TabRounding = 4.0f;
+    style.WindowMenuButtonPosition = ImGuiDir_None;
+    style.DockingSeparatorSize = 1.0f;
 }
 
 void ImGuiContext::SetColor()
@@ -197,21 +213,6 @@ void ImGuiContext::SetColor()
 
     colors[ImGuiCol_DockingPreview] = bgColorVeryLight;
     colors[ImGuiCol_DockingEmptyBg] = bgColorLight;
-}
-
-void ImGuiContext::SetStyle()
-{
-    ImGuiStyle &style = ImGui::GetStyle();
-
-    style.WindowRounding = 4.0f;
-    style.ChildRounding = 4.0f;
-    style.FrameRounding = 4.0f;
-    style.PopupRounding = 4.0f;
-    style.ScrollbarRounding = 4.0f;
-    style.GrabRounding = 4.0f;
-    style.TabRounding = 4.0f;
-    style.WindowMenuButtonPosition = ImGuiDir_None;
-    style.DockingSeparatorSize = 1.0f;
 }
 
 } // namespace sl

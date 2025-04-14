@@ -29,7 +29,6 @@ public:
 
     static void SetMainFramebuffer(FrameBuffer *pFrameBuffer);
     static FrameBuffer *GetMainFramebuffer() { return m_pMainFrameBuffer.get(); }
-
     static void SetUniformBuffer(std::string_view name, UniformBuffer *pUniformBuffer);
     static UniformBuffer *GetUniformBuffer(std::string_view name);
 

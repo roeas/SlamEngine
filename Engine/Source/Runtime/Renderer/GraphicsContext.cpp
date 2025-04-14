@@ -1,4 +1,4 @@
-#include "RenderContext.h"
+#include "GraphicsContext.h"
 
 #include "Core/Log.h"
 #include "Platform/OpenGL/OpenGLContext.h"
@@ -7,7 +7,7 @@
 namespace sl
 {
 
-RenderContext *RenderContext::Create(void *pWindow)
+GraphicsContext *GraphicsContext::Create(void *pWindow)
 {
     switch (RenderCore::GetBackend())
     {

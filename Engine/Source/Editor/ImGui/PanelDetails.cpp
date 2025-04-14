@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ImGui/PanelDetails.h"
 
 #include <imgui/imgui.h>

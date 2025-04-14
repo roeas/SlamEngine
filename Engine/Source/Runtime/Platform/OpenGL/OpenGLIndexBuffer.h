@@ -15,7 +15,7 @@ public:
     uint32_t GetCount() const override { return m_count; }
 
 private:
-    uint32_t m_handle = 0;
+    uint32_t m_handle;
     uint32_t m_count;
 };
 

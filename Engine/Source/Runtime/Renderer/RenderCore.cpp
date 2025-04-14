@@ -20,7 +20,7 @@ void RenderCore::SetMainFramebuffer(FrameBuffer *pFrameBuffer)
 
 void RenderCore::SetUniformBuffer(std::string_view name, UniformBuffer *pUniformBuffer)
 {
-    if (auto it = m_UniformBuffers.find(name.data()); m_UniformBuffers.end() != it)
+    if (m_UniformBuffers.find(name.data()) != m_UniformBuffers.end())
     {
         SL_LOG_ERROR("Uniform buffer {} already exists!", name.data());
         return;

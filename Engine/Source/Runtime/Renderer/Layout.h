@@ -24,7 +24,6 @@ struct VertexLayoutElement
 class VertexLayout final
 {
 public:
-    VertexLayout() = default;
     VertexLayout(std::initializer_list<VertexLayoutElement> elements);
 
     uint32_t GetStride() const { return m_stride; }

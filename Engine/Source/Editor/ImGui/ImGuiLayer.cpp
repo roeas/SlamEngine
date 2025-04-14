@@ -17,13 +17,13 @@ ImGuiLayer::ImGuiLayer()
     ImGui::GetIO().UserData = &m_data;
 
     auto pMenuBar = std::make_unique<MenuBar>();
-    pMenuBar->SetEventCallback(SL_BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
     auto pPanelInformation = std::make_unique<PanelInformation>();
     auto pPanelLog = std::make_unique<PanelLog>();
     auto pPanelAssetBrowser = std::make_unique<PanelAssetBrowser>();
     auto pPanelEntityList = std::make_unique<PanelEntityList>();
     auto pPanelDetails = std::make_unique<PanelDetails>();
     auto pPanelScene = std::make_unique<PanelScene>();
+    pMenuBar->SetEventCallback(SL_BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
 
     m_stack.PushLayer(std::move(pMenuBar));
     m_stack.PushLayer(std::move(pPanelInformation));
@@ -46,13 +46,12 @@ void ImGuiLayer::OnDetach()
 
 void ImGuiLayer::BeginFrame()
 {
+    sl::ImGuiContext::NewFrame();
     m_stack.BeginFrame();
 }
 
 void ImGuiLayer::OnUpdate(float deltaTime)
 {
-    sl::ImGuiContext::NewFrame();
-
     if (m_data.m_debugImGuiDemo)
     {
         ImGui::ShowDemoWindow(&m_data.m_debugImGuiDemo);
@@ -63,7 +62,6 @@ void ImGuiLayer::OnUpdate(float deltaTime)
     }
 
     ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);
-
     m_stack.OnUpdate(deltaTime);
 }
 

@@ -89,7 +89,7 @@ SandboxLayer::SandboxLayer()
 
     auto &mainCameraTransform = sl::World::GetMainCameraTransformComponent();
     mainCameraTransform.m_position = { 0.0f, 0.0f, 4.0f };
-    mainCameraTransform.m_rotation = { glm::radians(-90.0f), 0.0f, 0.0f };
+    mainCameraTransform.m_rotation = { 0.0f, glm::radians(-90.0f), 0.0f };
 }
 
 SandboxLayer::~SandboxLayer()

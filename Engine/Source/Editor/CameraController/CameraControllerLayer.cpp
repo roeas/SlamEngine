@@ -1,13 +1,9 @@
 #include "CameraControllerLayer.h"
 
-#include "Event/KeyEvent.h"
 #include "Event/MouseEvent.h"
-#include "ImGui/ImGuiContext.h"
 #include "Scene/World.h"
 #include "Window/Input.h"
-#include "Window/Window.h"
 
-#include <algorithm>
 #include <array>
 
 void CameraControllerLayer::OnAttach()
@@ -18,12 +14,6 @@ void CameraControllerLayer::OnAttach()
 void CameraControllerLayer::OnDetach()
 {
 
-}
-
-void CameraControllerLayer::OnEvent(sl::Event &event)
-{
-    sl::EventDispatcher dispatcher(event);
-    dispatcher.Dispatch<sl::MouseScrollEvent>(SL_BIND_EVENT_CALLBACK(CameraControllerLayer::OnMouseScroll));
 }
 
 void CameraControllerLayer::BeginFrame()
@@ -59,6 +49,12 @@ void CameraControllerLayer::EndFrame()
 
 }
 
+void CameraControllerLayer::OnEvent(sl::Event &event)
+{
+    sl::EventDispatcher dispatcher(event);
+    dispatcher.Dispatch<sl::MouseScrollEvent>(SL_BIND_EVENT_CALLBACK(CameraControllerLayer::OnMouseScroll));
+}
+
 void CameraControllerLayer::UpdateFPSMode(float deltaTime)
 {
     auto [camera, transform] = sl::World::GetMainCameraEntity().GetComponents<sl::CameraComponent, sl::TransformComponent>();
@@ -66,52 +62,40 @@ void CameraControllerLayer::UpdateFPSMode(float deltaTime)
     // Rotation
     {
         glm::vec2 offset = sl::Input::GetMouseDelta();
-        transform.m_rotation += glm::vec3{ glm::vec2{ offset.x , -offset.y } * camera.m_rotateSpeed, 0.0f };
-        transform.m_rotation.y = std::clamp(transform.m_rotation.y, glm::radians(-89.9f), glm::radians(89.9f));
+        transform.m_rotation += glm::vec3{ glm::vec2{ -offset.y, offset.x } * camera.m_rotateSpeed, 0.0f };
+        transform.m_rotation.x = std::clamp(transform.m_rotation.x, glm::radians(-89.9f), glm::radians(89.9f));
 
         camera.m_isDirty = true;
     }
 
     // Movement
-    constexpr std::array<uint32_t, 6> CamraMoveKey =
+    constexpr size_t MoveDirCount = 6;
+    constexpr std::array<uint32_t, MoveDirCount> MoveKeys =
     {
         SL_KEY_W, SL_KEY_A, SL_KEY_S, SL_KEY_D, SL_KEY_Q, SL_KEY_E,
     };
-
-    uint8_t moveKeyMask = 0x00;
-    for (size_t i = 0; i < CamraMoveKey.size(); ++i)
+    const std::array<glm::vec3, MoveDirCount> MoveDirs =
     {
-        if (sl::Input::IsKeyDown(CamraMoveKey[i]))
-        {
-            moveKeyMask |= UINT8_C(1 << i);
-        }
-    }
+        camera.m_frontDir,  // SL_KEY_W
+        -camera.m_rightDir, // SL_KEY_A
+        -camera.m_frontDir, // SL_KEY_S
+        camera.m_rightDir,  // SL_KEY_D
+        -camera.m_upDir,    // SL_KEY_Q
+        camera.m_upDir,     // SL_KEY_E
+    };
 
     glm::vec3 finalMoveDir{ 0.0f };
-    if (moveKeyMask)
+    for (size_t i = 0; i < MoveDirCount; ++i)
     {
-        const std::array<glm::vec3, 6> moveBehaviors =
+        if (sl::Input::IsKeyDown(MoveKeys[i]))
         {
-            camera.m_frontDir,  // SL_KEY_W
-            -camera.m_rightDir, // SL_KEY_A
-            -camera.m_frontDir, // SL_KEY_S
-            camera.m_rightDir,  // SL_KEY_D
-            -camera.m_upDir,    // SL_KEY_Q
-            camera.m_upDir,     // SL_KEY_E
-        };
-        for (size_t i = 0; i < CamraMoveKey.size(); ++i)
-        {
-            if (moveKeyMask & UINT8_C(1 << i))
-            {
-                finalMoveDir += moveBehaviors[i];
-            }
+            finalMoveDir += MoveDirs[i];
         }
-        finalMoveDir = glm::normalize(finalMoveDir);
-
-        if (glm::any(glm::isnan(finalMoveDir)))
-        {
-            finalMoveDir = glm::vec3{ 0.0f, 0.0f, 0.0f };
-        }
+    }
+    finalMoveDir = glm::normalize(finalMoveDir);
+    if (glm::any(glm::isnan(finalMoveDir)))
+    {
+        finalMoveDir = glm::vec3{ 0.0f, 0.0f, 0.0f };
     }
 
     float moveSpeedKeyShiftMultiplier = sl::Input::IsKeyDown(SL_KEY_LSHIFT) ? camera.m_moveSpeedKeyShiftMultiplier : 1.0f;
@@ -121,8 +105,6 @@ void CameraControllerLayer::UpdateFPSMode(float deltaTime)
     camera.m_position = transform.m_position;
     camera.m_rotation = transform.m_rotation;
     camera.m_isDirty = true;
-
-    SL_LOG_DEBUG("Pos: {}", camera.m_position);
 }
 
 void CameraControllerLayer::UpdateEditorMode(float deltaTime)

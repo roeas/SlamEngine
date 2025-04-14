@@ -6,7 +6,7 @@
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
-#include "Renderer/RenderContext.h"
+#include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCore.h"
 
 #include <glad/gl.h>
@@ -17,7 +17,6 @@ namespace sl
 
 void Window::Init()
 {
-
     SL_LOG_INFO("Initializing SDL");
 
     bool success = SDL_Init(SDL_INIT_EVENTS);
@@ -30,7 +29,7 @@ void Window::Quit()
 }
 
 Window::Window(std::string_view title, uint32_t width, uint32_t height) :
-    m_title(title), m_width(width), m_height(height)
+    m_pNativeWindow(nullptr), m_title(title), m_width(width), m_height(height)
 {
     SL_LOG_INFO("Creating window \"{}\"", title);
 
@@ -62,11 +61,10 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
         return;
     }
     m_pNativeWindow = pWindow;
-    m_pContext.reset(RenderContext::Create(pWindow));
 
-    SDL_SetWindowPosition(pWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-
-    SDL_ShowWindow(pWindow);
+    m_pContext.reset(GraphicsContext::Create(static_cast<SDL_Window *>(m_pNativeWindow)));
+    SDL_SetWindowPosition(static_cast<SDL_Window *>(m_pNativeWindow), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
+    SDL_ShowWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
 Window::~Window()

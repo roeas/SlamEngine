@@ -24,29 +24,24 @@ project("Slam")
     {
         path.join(ThirdPartyPath, "sdl/include"),
         path.join(ThirdPartyPath, "glad/include"),
-        path.join(ThirdPartyPath, "implot"),
     }
 
     filter{ "configurations:Debug" }
         libdirs
         {
-            path.join(ThirdPartyPath, "spdlog/build/Debug"),
             path.join(ThirdPartyPath, "sdl/build/Debug"),
         }
         links
         {
-            "spdlogd",
             "SDL3",
         }
     filter{ "configurations:Release or configurations:Final" }
         libdirs
         {
-            path.join(ThirdPartyPath, "spdlog/build/Release"),
             path.join(ThirdPartyPath, "sdl/build/Release"),
         }
         links
         {
-            "spdlog",
             "SDL3",
         }
     filter{}

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Defines.h"
 #include "Renderer/Texture.h"
 
 namespace sl
@@ -21,6 +20,7 @@ public:
     uint32_t GetHandle() const override { return m_handle; }
     uint32_t GetWidth() const override { return m_width; }
     uint32_t GetHeight() const override { return m_height; }
+    uint32_t GetFlags() const override { return m_flags; }
     TextureFormat GetFormat() const override { return m_format; }
 
 private:

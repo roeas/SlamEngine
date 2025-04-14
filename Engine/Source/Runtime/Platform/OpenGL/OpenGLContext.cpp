@@ -20,11 +20,10 @@ OpenGLContext::OpenGLContext(void *pWindow) : m_pWindow(pWindow)
     }
     m_pContext = pContext;
 
-    SDL_GL_MakeCurrent(static_cast<SDL_Window *>(m_pWindow), pContext);
+    SDL_GL_MakeCurrent(static_cast<SDL_Window *>(m_pWindow), static_cast<SDL_GLContext>(m_pContext));
     SDL_GL_SetSwapInterval(1);
 
     gladLoadGL((GLADloadfunc)SDL_GL_GetProcAddress);
-
     SL_LOG_TRACE("Vendor: {}", (char *)glGetString(GL_VENDOR));
     SL_LOG_TRACE("Renderer: {}", (char *)glGetString(GL_RENDERER));
     SL_LOG_TRACE("Version: {}", (char *)glGetString(GL_VERSION));

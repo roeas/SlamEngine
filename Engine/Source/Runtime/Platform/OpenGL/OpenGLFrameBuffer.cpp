@@ -82,21 +82,20 @@ void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
         SL_LOG_ERROR("Invalid frame bufferr size: ({}, {})", width, height);
         return;
     }
-
     if (m_width == width && m_height == height)
     {
         return;
     }
 
+    m_width = width;
+    m_height = height;
     for (auto &attachment : m_attachments)
     {
-        attachment.m_pTexture->Resize(width, height);
+        attachment.m_pTexture->Resize(m_width, m_height);
     }
 
     glDeleteFramebuffers(1, &m_handle);
     m_handle = 0;
-    m_width = width;
-    m_height = height;
 
     Create();
 }
@@ -125,7 +124,7 @@ int OpenGLFrameBuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t 
 
     int data;
     TextureFormat format = m_attachments.at(attachmentIndex).m_pTexture->GetFormat();
-    // We assume that the origin of the texture is on the upper left,
+    // We assume that origin of texture is on the upper left,
     // but the origin of OpenGL texture is on the lower left.
     glReadPixels(x, m_height - y, 1, 1, GLTextureFormat[(size_t)format], GLDataType[(size_t)format], &data);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

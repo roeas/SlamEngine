@@ -1,8 +1,5 @@
 #include "LayerStack.h"
 
-#include "Event/Event.h"
-#include "Layer/Layer.h"
-
 namespace sl
 {
 

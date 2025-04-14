@@ -4,9 +4,6 @@
 #include "Core/Time.h"
 #include "Layer/LayerStack.h"
 
-#include <cstdint>
-#include <memory>
-
 namespace sl
 {
 
@@ -20,7 +17,7 @@ class WindowRestoreEvent;
 
 struct EditorInitor
 {
-    const char *m_title;
+    std::string_view m_title;
     uint32_t m_width;
     uint32_t m_height;
     sl::GraphicsBackend m_backend;

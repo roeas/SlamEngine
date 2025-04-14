@@ -8,7 +8,7 @@ namespace sl
 {
 
 OpenGLVertexArray::OpenGLVertexArray(VertexBuffer *pVertexBuffer, IndexBuffer *pIndexBuffer, VertexLayout vertexLayout) :
-    m_vertexLayout(std::move(vertexLayout)), m_pVertexBuffer(pVertexBuffer), m_pIndexBuffer(pIndexBuffer)
+    m_vertexLayout(std::move(vertexLayout)), m_pVertexBuffer(pVertexBuffer), m_pIndexBuffer(pIndexBuffer), m_handle(0)
 {
     glCreateVertexArrays(1, &m_handle);
     glVertexArrayVertexBuffer(m_handle, 0, m_pVertexBuffer->GetHandle(), 0, m_vertexLayout.GetStride());

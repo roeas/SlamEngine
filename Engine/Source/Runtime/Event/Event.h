@@ -21,7 +21,7 @@
 
 #define SL_BIND_EVENT_CALLBACK(fun) [this](auto &&...args) -> decltype(auto) { return this->fun(std::forward<decltype(args)>(args)...); }
 
-// Use it in the global namespace
+// Use it in global namespace
 #define SL_EVENT_FORMATTER_SPECIALIZATION(Event) \
 template <> \
 struct std::formatter<Event> : std::formatter<std::string> \
@@ -63,6 +63,8 @@ private:
     bool m_handled = false;
 };
 
+using EventCallback = std::function<void(Event &)>;
+
 template<typename T, typename Fun>
 concept DispatchableDerivedEvent = requires(T e, Fun fun)
 {
@@ -95,8 +97,6 @@ public:
 private:
     Event &m_event;
 };
-
-using EventCallback = std::function<void(Event &)>;
 
 } // namespace sl
 

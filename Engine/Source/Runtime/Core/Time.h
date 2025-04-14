@@ -17,7 +17,8 @@ public:
     // Returns in milliseconds
     float GetDeltatIme() const
     {
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(m_crtTimePoint - m_preTimePoint).count();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+            m_crtTimePoint - m_preTimePoint).count();
         return (float)duration * 0.001f;
     }
 
@@ -39,9 +40,8 @@ public:
     // Returns in milliseconds
     float GetDuration() const
     {
-        auto crtTimePoint = std::chrono::steady_clock::now();
-        auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(crtTimePoint - m_startTimePoint).count();
-
+        auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(
+            std::chrono::steady_clock::now() - m_startTimePoint).count();
         return (float)deltaTime * 0.001f;
     }
 

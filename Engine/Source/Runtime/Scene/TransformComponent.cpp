@@ -1,9 +1,7 @@
 #include "TransformComponent.h"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <glm/trigonometric.hpp>
 
 namespace sl
 {

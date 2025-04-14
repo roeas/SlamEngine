@@ -22,7 +22,7 @@ private:
     VertexLayout m_vertexLayout;
     std::unique_ptr<VertexBuffer> m_pVertexBuffer;
     std::unique_ptr<IndexBuffer> m_pIndexBuffer;
-    uint32_t m_handle = 0;
+    uint32_t m_handle;
 };
 
 } // namespace sl

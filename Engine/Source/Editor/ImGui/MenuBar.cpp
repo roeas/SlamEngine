@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ImGui/MenuBar.h"
 
 #include "Event/WindowEvent.h"
@@ -24,9 +22,8 @@ void MenuBar::BeginFrame()
 
 void MenuBar::OnUpdate(float deltaTime)
 {
-    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-
     ImGui::BeginMainMenuBar();
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
 
     if (ImGui::BeginMenu("File"))
     {

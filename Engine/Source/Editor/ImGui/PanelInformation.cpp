@@ -1,8 +1,8 @@
-#pragma once
-
 #include "ImGui/PanelInformation.h"
 
 #include "Core/Log.h"
+#include "Renderer/RenderCore.h"
+#include "Utils/NameOf.hpp"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
@@ -39,9 +39,9 @@ struct ScrollingBuffer
         }
     }
 
+    ImVector<ImVec2> m_datas;
     int m_maxSize;
     int m_offset;
-    ImVector<ImVec2> m_datas;
 };
 
 } // namespace
@@ -65,10 +65,8 @@ void PanelInformation::OnUpdate(float deltaTime)
 {
     ImGui::Begin("Info");
 
-    // TODO: ImGui::Text("Backend: %s", nameof::nameof_enum(sl::RenderCore::GetBackend()).data());
-    ImGui::Text("Backend:");
+    ImGui::Text("Backend: %s", nameof::nameof_enum(sl::RenderCore::GetBackend()).data());
     ImGui::Separator();
-
     ShowFPS(deltaTime);
     ShowCost(deltaTime);
 

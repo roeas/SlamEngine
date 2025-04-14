@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/Defines.h"
-
 #include <glm/vec4.hpp>
 
 namespace sl

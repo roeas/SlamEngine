@@ -1,23 +1,25 @@
 #include "Editor.h"
 
-#include "CameraController/CameraControllerLayer.h"
 #include "Core/Log.h"
 #include "Core/Path.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/RenderCore.h"
-#include "Renderer/RendererLayer.h"
 #include "Scene/World.h"
 #include "Window/Window.h"
 
+#include "CameraController/CameraControllerLayer.h"
 #include "ImGui/ImGuiLayer.h"
+#include "Renderer/RendererLayer.h"
 #include "SandBox/SandboxLayer.h"
 
 Editor::Editor(const EditorInitor &initor)
 {
+    m_clock.Tick();
     sl::Log::Init();
     sl::RenderCore::Init(initor.m_backend);
 
+    // Init window, graphics context and GUI
     sl::Window::Init();
     m_pMainWindow = std::make_unique<sl::Window>(initor.m_title, initor.m_width, initor.m_height);
     m_pMainWindow->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
@@ -35,24 +37,21 @@ Editor::Editor(const EditorInitor &initor)
     cameraUniformBufferLayout.AddElement("ub_cameraPos", sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
     cameraUniformBufferLayout.AddElement("ub_viewProjection", sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
     cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
-    auto pCameraUniformBuffer = sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout));
-    sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", std::move(pCameraUniformBuffer));
+    sl::RenderCore::SetUniformBuffer("CameraUniformBuffer", sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout)));
 
     // Main camrea entity
     sl::World::CreateEntity("Main Camera").AddComponent<sl::CameraComponent>().m_isMainCamera = true;
 
     // Create and attach layers
-    auto pRendererLayer = std::make_unique<RendererLayer>();
     auto pCameraControllerLayer = std::make_unique<CameraControllerLayer>();
+    auto pRendererLayer = std::make_unique<RendererLayer>();
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
-    pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
-    m_layerStack.PushLayer(std::move(pRendererLayer));
+    pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     m_layerStack.PushLayer(std::move(pCameraControllerLayer));
+    m_layerStack.PushLayer(std::move(pRendererLayer));
     m_layerStack.PushLayer(std::move(pImGuiLayer));
     m_layerStack.PushLayer(std::move(pSandBoxLayer));
-
-    m_clock.Tick();
 }
 
 Editor::~Editor()
@@ -79,13 +78,14 @@ void Editor::Run()
 
 void Editor::BeginFrame()
 {
+    m_clock.Tick();
+
     m_pMainWindow->BeginFrame();
     m_layerStack.BeginFrame();
 }
 
 void Editor::Update()
 {
-    m_clock.Tick();
     m_layerStack.OnUpdate(m_clock.GetDeltatIme());
 }
 

@@ -16,7 +16,7 @@ public:
     uint32_t GetHandle() const override { return m_handle; }
 
 private:
-    uint32_t m_handle = 0;
+    uint32_t m_handle;
 };
 
 } // namespace sl

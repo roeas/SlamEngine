@@ -1,5 +1,3 @@
-#pragma once
-
 #include "ImGui/PanelAssetBrowser.h"
 
 #include <imgui/imgui.h>

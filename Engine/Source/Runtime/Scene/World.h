@@ -8,8 +8,6 @@
 
 #include <entt/entt.hpp>
 
-#include <map>
-
 namespace sl
 {
 
@@ -26,7 +24,7 @@ public:
     ~World() = delete;
 
     static entt::registry &GetRegistry() { return m_registry; }
-    static Entity CreateEntity(std::string_view name = "New Entity");
+    static Entity CreateEntity(std::string_view name = "Entity");
 
     static Entity GetMainCameraEntity();
     static CameraComponent &GetMainCameraComponent();

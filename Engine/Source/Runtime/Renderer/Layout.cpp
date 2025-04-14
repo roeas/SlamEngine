@@ -45,8 +45,7 @@ VertexLayout::VertexLayout(std::initializer_list<VertexLayoutElement> elements) 
 
 void UniformBufferLayout::AddElement(std::string_view name, const UniformBufferLayoutElement &element)
 {
-    auto it = m_elements.find(name.data());
-    if (it == m_elements.end())
+    if (m_elements.find(name.data()) == m_elements.end())
     {
         m_elements[name.data()] = element;
     }
@@ -58,8 +57,7 @@ void UniformBufferLayout::AddElement(std::string_view name, const UniformBufferL
 
 std::optional<UniformBufferLayoutElement> UniformBufferLayout::GetElement(std::string_view name) const
 {
-    auto it = m_elements.find(name.data());
-    if (it != m_elements.end())
+    if (auto it = m_elements.find(name.data()); it != m_elements.end())
     {
         return it->second;
     }

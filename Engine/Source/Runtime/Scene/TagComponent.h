@@ -9,7 +9,7 @@ struct TagComponent
 {
     void Reset()
     {
-        m_name = "New Entity";
+        m_name = "Entity";
     }
 
     std::string m_name;

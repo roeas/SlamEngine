@@ -1,20 +1,22 @@
 #pragma once
 
-#include "Renderer/RenderContext.h"
+#include "Renderer/GraphicsContext.h"
 
 namespace sl
 {
 
-class OpenGLContext : public RenderContext
+class OpenGLContext : public GraphicsContext
 {
 public:
     OpenGLContext(void *pWindow);
+    OpenGLContext(const OpenGLContext &) = delete;
+    OpenGLContext &operator=(const OpenGLContext &) = delete;
+    OpenGLContext(OpenGLContext &&) = delete;
+    OpenGLContext &operator=(OpenGLContext &&) = delete;
     ~OpenGLContext() override;
 
     void MakeCurrent() override;
     void SwapBuffers() override;
-
-    void *GetWindow() override { return m_pWindow; }
     void *GetContext() override { return m_pContext; }
 
 private:

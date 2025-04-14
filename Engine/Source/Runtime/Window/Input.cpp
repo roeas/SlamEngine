@@ -7,20 +7,17 @@ namespace sl
 
 bool Input::IsKeyDown(KeyCodeType key)
 {
-    const auto *pStates = SDL_GetKeyboardState(nullptr);
-    return pStates[(size_t)key];
+    return SDL_GetKeyboardState(nullptr)[key];
 }
 
 bool Input::IsKeyModifierDown(KeyModifierType mod)
 {
-    auto mods = SDL_GetModState();
-    return mods & mod;
+    return SDL_GetModState() & mod;
 }
 
 bool Input::IsMouseButtonDown(MouseButtonType button)
 {
-    auto state = SDL_GetMouseState(nullptr, nullptr);
-    return state & SL_MOUSE_BUTTON_MASK(button);
+    return SDL_GetMouseState(nullptr, nullptr) & SL_MOUSE_BUTTON_MASK(button);
 }
 
 glm::vec2 Input::GetMousePos()
@@ -57,7 +54,6 @@ bool Input::SetMouseGlobalPos(glm::vec2 pos)
 bool Input::SetMouseRelativeMode(void *pWindow, bool enable, bool restoreMousePos)
 {
     static float s_posX, s_posY;
-
     SDL_Window *pSDLWindow = static_cast<SDL_Window *>(pWindow);
     bool isInRelativeMode = SDL_GetWindowRelativeMouseMode(pSDLWindow);
 

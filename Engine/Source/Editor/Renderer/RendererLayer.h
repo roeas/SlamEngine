@@ -6,16 +6,17 @@ class RendererLayer : public sl::Layer
 {
 public:
     RendererLayer();
-    ~RendererLayer() override = default;
+    ~RendererLayer() override;
 
     void OnAttach() override;
     void OnDetach() override;
-    void OnEvent(sl::Event &event) override;
 
     void BeginFrame() override;
     void OnUpdate(float deltaTime) override;
     void OnRender() override;
     void EndFrame() override;
+
+    void OnEvent(sl::Event &event) override;
 
 private:
     void BasePass();

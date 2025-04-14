@@ -3,18 +3,16 @@
 namespace sl
 {
 
-class RenderContext
+class GraphicsContext
 {
 public:
-    static RenderContext *Create(void *pWindow);
+    static GraphicsContext *Create(void *pWindow);
 
 public:
-    virtual ~RenderContext() = default;
+    virtual ~GraphicsContext() = default;
 
     virtual void MakeCurrent() = 0;
     virtual void SwapBuffers() = 0;
-
-    virtual void *GetWindow() = 0;
     virtual void *GetContext() = 0;
 };
 

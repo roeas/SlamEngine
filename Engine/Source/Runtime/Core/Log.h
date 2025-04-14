@@ -29,8 +29,8 @@ enum class LogLevel : uint8_t
 
 struct LogInfo
 {
-    LogLevel m_level;
     std::string m_content;
+    LogLevel m_level;
 };
 
 class Log final
@@ -67,7 +67,7 @@ private:
     #define SL_ASSERT(...)
 #endif
 
-// GLM vector std::formatter specialize
+// GLM vectors std::formatter specialization
 #define SL_FMT_PLACEHOLDER_1
 #define SL_FMT_PLACEHOLDER_2 "{}" ", " "{}"
 #define SL_FMT_PLACEHOLDER_3 SL_FMT_PLACEHOLDER_2 ", " "{}"
