@@ -3,7 +3,7 @@
 #include "Renderer/Texture.h"
 
 #include <cstdint>
-#include <vector>
+#include <initializer_list>
 
 namespace sl
 {
@@ -11,7 +11,7 @@ namespace sl
 class FrameBuffer
 {
 public:
-    static FrameBuffer *Create(std::vector<Texture2D *> pTextures, bool destroy = true);
+    static FrameBuffer *Create(std::initializer_list<Texture2D *> pTextures, bool destroy = true);
 
 public:
     virtual ~FrameBuffer() = default;

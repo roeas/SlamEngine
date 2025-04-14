@@ -8,19 +8,20 @@
 namespace sl
 {
 
-OpenGLFrameBuffer::OpenGLFrameBuffer(std::vector<Texture2D *> pTextures, bool destroy) :
+OpenGLFrameBuffer::OpenGLFrameBuffer(std::initializer_list<Texture2D *> pTextures, bool destroy) :
     m_handle(0), m_width(0), m_height(0), m_colorAttachmentCount(0), m_destroyTextures(destroy)
 {
-    if (pTextures.empty())
+    size_t textureCount = pTextures.size();
+    if (textureCount == 0)
     {
         SL_LOG_ERROR("Cannot create framebuffer without any attachment!");
         return;
     }
 
-    uint32_t minWidth = pTextures[0]->GetWidth();
-    uint32_t minHeight = pTextures[0]->GetHeight();
+    uint32_t minWidth = (*pTextures.begin())->GetWidth();
+    uint32_t minHeight = (*pTextures.begin())->GetHeight();
     uint32_t colorAttachmentIndex = 0;
-    m_attachments.reserve(pTextures.size());
+    m_attachments.reserve(textureCount);
 
     for (auto *pTexture : pTextures)
     {

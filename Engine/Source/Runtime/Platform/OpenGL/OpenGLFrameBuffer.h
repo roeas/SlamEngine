@@ -2,6 +2,8 @@
 
 #include "Renderer/FrameBuffer.h"
 
+#include <vector>
+
 namespace sl
 {
 
@@ -14,7 +16,7 @@ struct Attachment
 class OpenGLFrameBuffer : public FrameBuffer
 {
 public:
-    OpenGLFrameBuffer(std::vector<Texture2D *> pTextures, bool destroy = false);
+    OpenGLFrameBuffer(std::initializer_list<Texture2D *> pTextures, bool destroy = false);
     ~OpenGLFrameBuffer() override;
 
     void Bind() const override;

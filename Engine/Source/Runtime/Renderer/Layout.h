@@ -2,6 +2,7 @@
 
 #include "Core/Defines.h"
 
+#include <initializer_list>
 #include <map>
 #include <string>
 #include <vector>

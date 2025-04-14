@@ -7,7 +7,7 @@
 namespace sl
 {
 
-FrameBuffer *FrameBuffer::Create(std::vector<Texture2D *> pTextures, bool destroy)
+FrameBuffer *FrameBuffer::Create(std::initializer_list<Texture2D *> pTextures, bool destroy)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ FrameBuffer *FrameBuffer::Create(std::vector<Texture2D *> pTextures, bool destro
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLFrameBuffer{ std::move(pTextures) };
+            return new OpenGLFrameBuffer{ pTextures };
             break;
         }
         default:
