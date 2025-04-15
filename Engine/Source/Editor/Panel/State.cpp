@@ -63,7 +63,11 @@ void State::BeginFrame()
 
 void State::OnUpdate(float deltaTime)
 {
-    ImGui::Begin("Info");
+    if (!ImGui::Begin("State"))
+    {
+        ImGui::End();
+        return;
+    }
 
     ImGui::Text("Backend: %s", nameof::nameof_enum(sl::RenderCore::GetBackend()).data());
     ImGui::Separator();

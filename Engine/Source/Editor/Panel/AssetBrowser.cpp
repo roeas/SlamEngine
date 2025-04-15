@@ -19,7 +19,11 @@ void AssetBrowser::BeginFrame()
 
 void AssetBrowser::OnUpdate(float deltaTime)
 {
-    ImGui::Begin("Asset Browser");
+    if (!ImGui::Begin("Asset Browser"))
+    {
+        ImGui::End();
+        return;
+    }
 
     ImGui::End();
 }

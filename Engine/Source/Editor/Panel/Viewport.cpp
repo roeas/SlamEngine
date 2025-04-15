@@ -23,7 +23,11 @@ void Viewport::BeginFrame()
 void Viewport::OnUpdate(float deltaTime)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
-    ImGui::Begin("Scene");
+    if (!ImGui::Begin("Viewport"))
+    {
+        ImGui::End();
+        return;
+    }
     ImGui::PopStyleVar();
 
     ImVec2 size = ImGui::GetContentRegionAvail();

@@ -19,7 +19,11 @@ void Details::BeginFrame()
 
 void Details::OnUpdate(float deltaTime)
 {
-    ImGui::Begin("Details");
+    if (!ImGui::Begin("Details"))
+    {
+        ImGui::End();
+        return;
+    }
 
     ImGui::End();
 }

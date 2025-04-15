@@ -117,7 +117,11 @@ void OutputLog::OnUpdate(float deltaTime)
         ImGui::PopStyleVar();
     };
 
-    ImGui::Begin("Log");
+    if (!ImGui::Begin("Output Log"))
+    {
+        ImGui::End();
+        return;
+    }
 
     if (ImGui::Button("Clear"))
     {

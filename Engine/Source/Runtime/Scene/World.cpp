@@ -54,7 +54,7 @@ Entity World::CreateEntity(std::string_view name)
     }
 
     Entity entity{ m_registry.create() };
-    entity.AddComponent<TagComponent>(name.data());
+    entity.AddComponent<TagComponent>(std::move(newName));
     entity.AddComponent<TransformComponent>();
 
     return entity;
