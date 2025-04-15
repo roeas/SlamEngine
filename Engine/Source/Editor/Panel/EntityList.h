@@ -2,7 +2,7 @@
 
 #include "Layer/Layer.h"
 
-class PanelInformation : public sl::Layer
+class EntityList : public sl::Layer
 {
 public:
     void OnAttach() override;
@@ -14,8 +14,4 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
-
-private:
-    void ShowFPS(float deltaTime);
-    void ShowCost(float deltaTime);
 };

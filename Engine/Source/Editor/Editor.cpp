@@ -8,10 +8,10 @@
 #include "Scene/World.h"
 #include "Window/Window.h"
 
-#include "CameraController/CameraControllerLayer.h"
-#include "ImGui/ImGuiLayer.h"
-#include "Renderer/RendererLayer.h"
-#include "SandBox/SandboxLayer.h"
+#include "Layer/CameraControllerLayer.h"
+#include "Layer/ImGuiLayer.h"
+#include "Layer/RendererLayer.h"
+#include "Layer/SandboxLayer.h"
 
 Editor::Editor(const EditorInitor &initor)
 {

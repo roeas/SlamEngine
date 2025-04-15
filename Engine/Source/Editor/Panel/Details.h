@@ -2,7 +2,7 @@
 
 #include "Layer/Layer.h"
 
-class PanelAssetBrowser : public sl::Layer
+class Details : public sl::Layer
 {
 public:
     void OnAttach() override;

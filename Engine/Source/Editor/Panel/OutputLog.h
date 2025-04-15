@@ -2,7 +2,7 @@
 
 #include "Layer/Layer.h"
 
-class PanelScene : public sl::Layer
+class OutputLog : public sl::Layer
 {
 public:
     void OnAttach() override;
@@ -14,8 +14,4 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
-
-private:
-    uint32_t m_width = 0;
-    uint32_t m_height = 0;
 };

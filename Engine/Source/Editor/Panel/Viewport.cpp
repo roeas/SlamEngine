@@ -1,26 +1,26 @@
-#include "ImGui/PanelScene.h"
+#include "Panel/Viewport.h"
 
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
 
 #include <imgui/imgui.h>
 
-void PanelScene::OnAttach()
+void Viewport::OnAttach()
 {
 
 }
 
-void PanelScene::OnDetach()
+void Viewport::OnDetach()
 {
 
 }
 
-void PanelScene::BeginFrame()
+void Viewport::BeginFrame()
 {
 
 }
 
-void PanelScene::OnUpdate(float deltaTime)
+void Viewport::OnUpdate(float deltaTime)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
     ImGui::Begin("Scene");
@@ -50,17 +50,17 @@ void PanelScene::OnUpdate(float deltaTime)
     ImGui::End();
 }
 
-void PanelScene::OnRender()
+void Viewport::OnRender()
 {
 
 }
 
-void PanelScene::EndFrame()
+void Viewport::EndFrame()
 {
 
 }
 
-void PanelScene::OnEvent(sl::Event &event)
+void Viewport::OnEvent(sl::Event &event)
 {
 
 }

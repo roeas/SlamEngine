@@ -1,4 +1,4 @@
-#include "ImGui/PanelInformation.h"
+#include "Panel/State.h"
 
 #include "Core/Log.h"
 #include "Renderer/RenderCore.h"
@@ -46,22 +46,22 @@ struct ScrollingBuffer
 
 } // namespace
 
-void PanelInformation::OnAttach()
+void State::OnAttach()
 {
 
 }
 
-void PanelInformation::OnDetach()
+void State::OnDetach()
 {
 
 }
 
-void PanelInformation::BeginFrame()
+void State::BeginFrame()
 {
 
 }
 
-void PanelInformation::OnUpdate(float deltaTime)
+void State::OnUpdate(float deltaTime)
 {
     ImGui::Begin("Info");
 
@@ -73,22 +73,22 @@ void PanelInformation::OnUpdate(float deltaTime)
     ImGui::End();
 }
 
-void PanelInformation::OnRender()
+void State::OnRender()
 {
 
 }
 
-void PanelInformation::EndFrame()
+void State::EndFrame()
 {
 
 }
 
-void PanelInformation::OnEvent(sl::Event &event)
+void State::OnEvent(sl::Event &event)
 {
-    // TODO: Reset ScrollingBuffers when window restoring
+
 }
 
-void PanelInformation::ShowFPS(float deltaTime)
+void State::ShowFPS(float deltaTime)
 {
     // In seconds
     static float s_sumTime = 0.0f;
@@ -124,7 +124,7 @@ void PanelInformation::ShowFPS(float deltaTime)
     }
 }
 
-void PanelInformation::ShowCost(float deltaTime)
+void State::ShowCost(float deltaTime)
 {
     // In milliseconds
     static float s_sumTime = 0.0f;

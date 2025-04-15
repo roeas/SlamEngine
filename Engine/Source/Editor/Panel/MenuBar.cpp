@@ -1,7 +1,7 @@
-#include "ImGui/MenuBar.h"
+#include "Panel/MenuBar.h"
 
 #include "Event/WindowEvent.h"
-#include "ImGui/ImGuiData.h"
+#include "Panel/ImGuiData.h"
 
 #include <imgui/imgui.h>
 

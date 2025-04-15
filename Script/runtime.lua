@@ -13,7 +13,8 @@ project("Slam")
     files
     {
         path.join(RuntimePath, "**.*"),
-        path.join(ThirdPartyPath, "glad/**.*");
+        path.join(ThirdPartyPath, "glad/**.h");
+        path.join(ThirdPartyPath, "glad/**.c");
         path.join(ThirdPartyPath, "imgui/*.h");
         path.join(ThirdPartyPath, "imgui/*.cpp");
         path.join(ThirdPartyPath, "implot/*.h");

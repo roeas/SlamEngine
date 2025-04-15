@@ -1,29 +1,26 @@
-#pragma once
-
-#include "ImGui/PanelLog.h"
+#include "Panel/OutputLog.h"
 
 #include "Core/Log.h"
-
-#include <ImGui/IconsMaterialSymbols.h>
+#include "ImGui/IconsMaterialSymbols.h"
 
 #include <imgui/imgui.h>
 
-void PanelLog::OnAttach()
+void OutputLog::OnAttach()
 {
 
 }
 
-void PanelLog::OnDetach()
+void OutputLog::OnDetach()
 {
 
 }
 
-void PanelLog::BeginFrame()
+void OutputLog::BeginFrame()
 {
 
 }
 
-void PanelLog::OnUpdate(float deltaTime)
+void OutputLog::OnUpdate(float deltaTime)
 {
     // 0011 1111, which means not filtering anything
     constexpr uint8_t FullLevelFilter = 0x3f;
@@ -191,17 +188,17 @@ void PanelLog::OnUpdate(float deltaTime)
     ImGui::End();
 }
 
-void PanelLog::OnRender()
+void OutputLog::OnRender()
 {
 
 }
 
-void PanelLog::EndFrame()
+void OutputLog::EndFrame()
 {
 
 }
 
-void PanelLog::OnEvent(sl::Event &event)
+void OutputLog::OnEvent(sl::Event &event)
 {
 
 }

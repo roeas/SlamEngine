@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Layer/LayerStack.h"
-#include "ImGui/ImGuiData.h"
+#include "Panel/ImGuiData.h"
 
 class ImGuiLayer : public sl::Layer
 {

@@ -1,13 +1,13 @@
 #include "ImGuiLayer.h"
 
 #include "ImGui/ImGuiContext.h"
-#include "ImGui/MenuBar.h"
-#include "ImGui/PanelAssetBrowser.h"
-#include "ImGui/PanelDetails.h"
-#include "ImGui/PanelEntityList.h"
-#include "ImGui/PanelInformation.h"
-#include "ImGui/PanelLog.h"
-#include "ImGui/PanelScene.h"
+#include "Panel/AssetBrowser.h"
+#include "Panel/Details.h"
+#include "Panel/EntityList.h"
+#include "Panel/MenuBar.h"
+#include "Panel/OutputLog.h"
+#include "Panel/State.h"
+#include "Panel/ViewPort.h"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
@@ -17,21 +17,21 @@ ImGuiLayer::ImGuiLayer()
     ImGui::GetIO().UserData = &m_data;
 
     auto pMenuBar = std::make_unique<MenuBar>();
-    auto pPanelInformation = std::make_unique<PanelInformation>();
-    auto pPanelLog = std::make_unique<PanelLog>();
-    auto pPanelAssetBrowser = std::make_unique<PanelAssetBrowser>();
-    auto pPanelEntityList = std::make_unique<PanelEntityList>();
-    auto pPanelDetails = std::make_unique<PanelDetails>();
-    auto pPanelScene = std::make_unique<PanelScene>();
+    auto pState = std::make_unique<State>();
+    auto pOutputLog = std::make_unique<OutputLog>();
+    auto pAssetBrowser = std::make_unique<AssetBrowser>();
+    auto pEntityList = std::make_unique<EntityList>();
+    auto pDetails = std::make_unique<Details>();
+    auto pViewport = std::make_unique<Viewport>();
     pMenuBar->SetEventCallback(SL_BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
 
     m_stack.PushLayer(std::move(pMenuBar));
-    m_stack.PushLayer(std::move(pPanelInformation));
-    m_stack.PushLayer(std::move(pPanelLog));
-    m_stack.PushLayer(std::move(pPanelAssetBrowser));
-    m_stack.PushLayer(std::move(pPanelEntityList));
-    m_stack.PushLayer(std::move(pPanelDetails));
-    m_stack.PushLayer(std::move(pPanelScene));
+    m_stack.PushLayer(std::move(pState));
+    m_stack.PushLayer(std::move(pOutputLog));
+    m_stack.PushLayer(std::move(pAssetBrowser));
+    m_stack.PushLayer(std::move(pEntityList));
+    m_stack.PushLayer(std::move(pDetails));
+    m_stack.PushLayer(std::move(pViewport));
 }
 
 void ImGuiLayer::OnAttach()
