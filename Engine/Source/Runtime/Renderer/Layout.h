@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Defines.h"
+#include "Core/Define.h"
 
 #include <initializer_list>
 #include <map>

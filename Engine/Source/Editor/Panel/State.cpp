@@ -2,7 +2,7 @@
 
 #include "Core/Log.h"
 #include "Renderer/RenderCore.h"
-#include "Utils/NameOf.hpp"
+#include "Util/NameOf.hpp"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>

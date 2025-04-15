@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/NameOf.hpp"
+#include "Util/NameOf.hpp"
 
 namespace sl
 {

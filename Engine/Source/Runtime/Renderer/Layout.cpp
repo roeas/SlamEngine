@@ -1,7 +1,7 @@
 #include "Layout.h"
 
 #include "Core/Log.h"
-#include "Utils/NameOf.hpp"
+#include "Util/NameOf.hpp"
 
 namespace sl
 {

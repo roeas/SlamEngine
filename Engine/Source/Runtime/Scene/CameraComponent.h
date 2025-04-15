@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/Defines.h"
-
 #include <glm/mat4x4.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/vec3.hpp>
