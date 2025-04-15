@@ -64,8 +64,6 @@ void CameraControllerLayer::UpdateFPSMode(float deltaTime)
         glm::vec2 offset = sl::Input::GetMouseDelta();
         transform.m_rotation += glm::vec3{ glm::vec2{ -offset.y, offset.x } * camera.m_rotateSpeed, 0.0f };
         transform.m_rotation.x = std::clamp(transform.m_rotation.x, glm::radians(-89.9f), glm::radians(89.9f));
-
-        camera.m_isDirty = true;
     }
 
     // Movement
