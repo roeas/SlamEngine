@@ -42,6 +42,22 @@ public:
         return std::filesystem::path{ path }.parent_path().generic_string();
     }
 
+    SL_FORCEINLINE static bool Contain(std::string_view base, std::string_view sub)
+    {
+        auto rel = std::filesystem::relative(sub, base);
+        return !rel.empty() && *(rel.c_str()) != '.';
+    }
+
+    SL_FORCEINLINE static std::string GetRoot()
+    {
+        return SL_ROOT_PATH;
+    }
+
+    SL_FORCEINLINE static std::string GetAsset()
+    {
+        return SL_ASSET_PATH;
+    }
+
     SL_FORCEINLINE static std::string FromeRoot(std::string_view path = "")
     {
         std::filesystem::path result{ SL_ROOT_PATH };
