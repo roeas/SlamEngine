@@ -84,6 +84,18 @@ TransformComponent &World::GetMainCameraTransformComponent()
     return GetMainCameraEntity().GetComponents<TransformComponent>();
 }
 
+void World::SetMainCameraTransform(glm::vec3 position, glm::vec3 rotation)
+{
+    auto mainCameraEntity = GetMainCameraEntity();
+    CameraComponent &camera = mainCameraEntity.GetComponents<CameraComponent>();
+    TransformComponent &transform = mainCameraEntity.GetComponents<TransformComponent>();
+    transform.m_position = position;
+    transform.m_rotation = rotation;
+    camera.m_position = position;
+    camera.m_rotation = rotation;
+    camera.m_isDirty = true;
+}
+
 bool Entity::IsValid() const
 {
     return World::m_registry.valid(m_handle);

@@ -1,5 +1,6 @@
 #include "ImGuiLayer.h"
 
+#include "Event/MouseEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Panel/AssetBrowser.h"
 #include "Panel/Details.h"

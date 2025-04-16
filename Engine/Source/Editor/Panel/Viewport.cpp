@@ -1,5 +1,6 @@
 #include "Panel/Viewport.h"
 
+#include "Panel/ImGuiData.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
 
@@ -30,11 +31,21 @@ void Viewport::OnUpdate(float deltaTime)
     }
     ImGui::PopStyleVar();
 
-    ImVec2 size = ImGui::GetContentRegionAvail();
-    if (m_width != size.x || m_height != size.y)
+    // Is mouse in viewport
+    if (ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData); ImGui::IsWindowHovered())
     {
-        m_width = (uint32_t)size.x;
-        m_height = (uint32_t)size.y;
+        pData->m_isMouseInViewport = true;
+    }
+    else
+    {
+        pData->m_isMouseInViewport = false;
+    }
+
+    ImVec2 crtSize = ImGui::GetContentRegionAvail();
+    if (m_width != crtSize.x || m_height != crtSize.y)
+    {
+        m_width = (uint32_t)crtSize.x;
+        m_height = (uint32_t)crtSize.y;
 
         // Resize main framebuffer
         sl::RenderCore::GetMainFramebuffer()->Resize(m_width, m_height);

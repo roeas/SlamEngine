@@ -87,9 +87,7 @@ SandboxLayer::SandboxLayer()
     m_pTexture.reset(sl::Texture2D::Create(width, height, sl::TextureFormat::RGB8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData));
     stbi_image_free(pData);
 
-    auto &mainCameraTransform = sl::World::GetMainCameraTransformComponent();
-    mainCameraTransform.m_position = { 0.0f, 0.0f, 4.0f };
-    mainCameraTransform.m_rotation = { 0.0f, glm::radians(-90.0f), 0.0f };
+    sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 }
 
 SandboxLayer::~SandboxLayer()

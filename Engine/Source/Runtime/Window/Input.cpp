@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "Core/Log.h"
+
 #include <SDL3/SDL.h>
 
 namespace sl
@@ -51,7 +53,7 @@ bool Input::SetMouseGlobalPos(glm::vec2 pos)
     return SDL_WarpMouseGlobal(pos.x, pos.y);
 }
 
-bool Input::SetMouseRelativeMode(void *pWindow, bool enable, bool restoreMousePos)
+bool Input::SetMouseRelativeMode(void *pWindow, bool enable)
 {
     static float s_posX, s_posY;
     SDL_Window *pSDLWindow = static_cast<SDL_Window *>(pWindow);
@@ -61,7 +63,7 @@ bool Input::SetMouseRelativeMode(void *pWindow, bool enable, bool restoreMousePo
     {
         SDL_GetMouseState(&s_posX, &s_posY);
     }
-    else if(!enable && isInRelativeMode && restoreMousePos)
+    else if(!enable && isInRelativeMode)
     {
         SDL_WarpMouseInWindow(pSDLWindow, s_posX, s_posY);
     }

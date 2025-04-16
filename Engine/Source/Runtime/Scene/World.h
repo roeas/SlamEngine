@@ -29,6 +29,7 @@ public:
     static Entity GetMainCameraEntity();
     static CameraComponent &GetMainCameraComponent();
     static TransformComponent &GetMainCameraTransformComponent();
+    static void SetMainCameraTransform(glm::vec3 position, glm::vec3 rotation);
 
     template<typename T>
     static void Clear() { m_registry.clear<T>(); }

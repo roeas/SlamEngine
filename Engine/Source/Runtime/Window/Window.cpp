@@ -184,44 +184,24 @@ void Window::PullEvents()
             // Mouse events
             case SDL_EVENT_MOUSE_MOTION:
             {
-                if (ImGuiContext::WantCaptureMouse())
-                {
-                    break;
-                }
-
                 MouseMoveEvent event(SDLevent.motion.x, SDLevent.motion.y);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_MOUSE_BUTTON_DOWN:
             {
-                if (ImGuiContext::WantCaptureMouse())
-                {
-                    break;
-                }
-
                 MouseButtonDownEvent event(SDLevent.button.button, SDLevent.button.clicks == 2);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_MOUSE_BUTTON_UP:
             {
-                if (ImGuiContext::WantCaptureMouse())
-                {
-                    break;
-                }
-
                 MouseButtonUpEvent event(SDLevent.button.button);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_MOUSE_WHEEL:
             {
-                if (ImGuiContext::WantCaptureMouse())
-                {
-                    break;
-                }
-
                 MouseScrollEvent event(SDLevent.wheel.x, SDLevent.wheel.y);
                 m_eventCallback(event);
                 break;

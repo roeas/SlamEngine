@@ -37,7 +37,7 @@ struct CameraComponent
     // Base
     bool m_isMainCamera = false;
     ProjectionType m_projectionType = ProjectionType::Perspective;
-    CameraControllerMode m_controllerMode = CameraControllerMode::FPS;
+    CameraControllerMode m_controllerMode = CameraControllerMode::None;
     
     // Cache
     bool m_isDirty = true;
