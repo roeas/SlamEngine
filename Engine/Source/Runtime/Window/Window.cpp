@@ -65,6 +65,8 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_pContext.reset(GraphicsContext::Create(static_cast<SDL_Window *>(m_pNativeWindow)));
     SDL_SetWindowPosition(static_cast<SDL_Window *>(m_pNativeWindow), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     SDL_ShowWindow(static_cast<SDL_Window *>(m_pNativeWindow));
+
+    SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, "0");
 }
 
 Window::~Window()
