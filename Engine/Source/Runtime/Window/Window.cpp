@@ -67,6 +67,7 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     SDL_ShowWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 
     SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_MODE_CENTER, "0");
+    SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SYSTEM_SCALE, "1");
 }
 
 Window::~Window()

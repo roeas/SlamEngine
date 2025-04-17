@@ -2,21 +2,17 @@
 
 #include "Core/Log.h"
 #include "Core/Path.h"
-#include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Panel/ImGuiData.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
-#include "Window/Input.h"
 #include "Window/Window.h"
 
 #include "Layer/CameraControllerLayer.h"
 #include "Layer/ImGuiLayer.h"
 #include "Layer/RendererLayer.h"
 #include "Layer/SandboxLayer.h"
-
-#include <imgui/imgui.h>
 
 Editor::Editor(const EditorInitor &initor)
 {
@@ -53,6 +49,7 @@ Editor::Editor(const EditorInitor &initor)
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
     pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
+    pImGuiLayer->SetMainWindow(m_pMainWindow->GetNativeWindow());
     m_layerStack.PushLayer(std::move(pCameraControllerLayer));
     m_layerStack.PushLayer(std::move(pRendererLayer));
     m_layerStack.PushLayer(std::move(pImGuiLayer));
@@ -108,38 +105,11 @@ void Editor::EndFrame()
 void Editor::OnEvent(sl::Event &event)
 {
     sl::EventDispatcher dispatcher{ event };
-    dispatcher.Dispatch<sl::MouseButtonDownEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnMouseButtonDown));
-    dispatcher.Dispatch<sl::MouseButtonUpEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnMouseUpDown));
     dispatcher.Dispatch<sl::WindowCloseEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowClose));
     dispatcher.Dispatch<sl::WindowMinimizeEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowMinimize));
     dispatcher.Dispatch<sl::WindowRestoreEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowRestore));
 
     m_layerStack.OnEvent(event);
-}
-
-bool Editor::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
-{
-    if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT &&
-        static_cast<ImGuiData *>(ImGui::GetIO().UserData)->m_isMouseInViewport)
-    {
-        sl::World::GetMainCameraComponent().m_controllerMode = sl::CameraControllerMode::FPS;
-        sl::Input::SetMouseRelativeMode(m_pMainWindow->GetNativeWindow(), true);
-        sl::Input::GetMouseDelta();
-    }
-
-    return true;
-}
-
-bool Editor::OnMouseUpDown(sl::MouseButtonUpEvent &event)
-{
-    if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT &&
-        sl::World::GetMainCameraComponent().m_controllerMode != sl::CameraControllerMode::None)
-    {
-        sl::World::GetMainCameraComponent().m_controllerMode = sl::CameraControllerMode::None;
-        sl::Input::SetMouseRelativeMode(m_pMainWindow->GetNativeWindow(), false);
-    }
-
-    return true;
 }
 
 bool Editor::OnWindowClose(sl::WindowCloseEvent &event)

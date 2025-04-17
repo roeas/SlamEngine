@@ -54,8 +54,7 @@ void AssetBrowser::OnUpdate(float deltaTime)
         return;
     }
 
-    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-    std::string crtPath = pData->m_assetBrowserCrtPath.generic_string();
+    std::string crtPath = m_assetBrowserCrtPath.generic_string();
     
     // Disable the back button if the current path reaches the outermost path
     const bool backButtonDisabled = !sl::Path::Contain(sl::Path::GetAsset(), crtPath);
@@ -65,7 +64,7 @@ void AssetBrowser::OnUpdate(float deltaTime)
     }
     if (ImGui::Button(ICON_MS_ARROW_BACK))
     {
-        pData->m_assetBrowserCrtPath = pData->m_assetBrowserCrtPath.parent_path();
+        m_assetBrowserCrtPath = m_assetBrowserCrtPath.parent_path();
     }
     if (backButtonDisabled)
     {
@@ -139,7 +138,7 @@ void AssetBrowser::OnUpdate(float deltaTime)
     // Show files and folders under current path
     uint32_t columIndex = 0;
     ImGui::Columns(columCount, "##AssetBrowserColums", false);
-    for (const auto &it : std::filesystem::directory_iterator(pData->m_assetBrowserCrtPath))
+    for (const auto &it : std::filesystem::directory_iterator(m_assetBrowserCrtPath))
     {
         if (columCount > 1)
         {
@@ -165,7 +164,7 @@ void AssetBrowser::OnUpdate(float deltaTime)
         // Open the folder when double clicking on the folder
         if (isDirectory && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
         {
-            pData->m_assetBrowserCrtPath = it.path();
+            m_assetBrowserCrtPath = it.path();
         }
 
         // Limit the number of lines displayed for a file or folder name

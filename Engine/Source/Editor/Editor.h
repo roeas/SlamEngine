@@ -9,8 +9,6 @@ namespace sl
 
 class Event;
 class Window;
-class MouseButtonDownEvent;
-class MouseButtonUpEvent;
 class WindowCloseEvent;
 class WindowMinimizeEvent;
 class WindowRestoreEvent;
@@ -46,8 +44,6 @@ private:
     void EndFrame();
 
     void OnEvent(sl::Event &event);
-    bool OnMouseButtonDown(sl::MouseButtonDownEvent &event);
-    bool OnMouseUpDown(sl::MouseButtonUpEvent &event);
     bool OnWindowClose(sl::WindowCloseEvent &event);
     bool OnWindowMinimize(sl::WindowMinimizeEvent &event);
     bool OnWindowRestore(sl::WindowRestoreEvent &event);

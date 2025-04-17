@@ -14,4 +14,9 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
+
+private:
+    float StartWithText(std::string_view text, float offset = 0.0f);
+
+    float m_maxTextSize = 56.0f;
 };

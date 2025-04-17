@@ -9,6 +9,7 @@
 #include "Panel/OutputLog.h"
 #include "Panel/State.h"
 #include "Panel/ViewPort.h"
+#include "Window/Input.h"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
@@ -79,10 +80,38 @@ void ImGuiLayer::EndFrame()
 
 void ImGuiLayer::OnEvent(sl::Event &event)
 {
+    sl::EventDispatcher dispatcher{ event };
+    dispatcher.Dispatch<sl::MouseButtonDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseButtonDown));
+    dispatcher.Dispatch<sl::MouseButtonUpEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseUpDown));
+
     m_stack.OnEvent(event);
 }
 
 void ImGuiLayer::ForwardEvent(sl::Event &event)
 {
     m_eventCallback(event);
+}
+
+bool ImGuiLayer::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
+{
+    if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT && m_data.m_isMouseInViewport)
+    {
+        sl::World::GetMainCameraComponent().m_controllerMode = sl::CameraControllerMode::FPS;
+        sl::Input::SetMouseRelativeMode(m_pMainWindow, true);
+        sl::Input::GetMouseDelta();
+        return true;
+    }
+    return false;
+}
+
+bool ImGuiLayer::OnMouseUpDown(sl::MouseButtonUpEvent &event)
+{
+    if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT &&
+        sl::World::GetMainCameraComponent().m_controllerMode != sl::CameraControllerMode::None)
+    {
+        sl::World::GetMainCameraComponent().m_controllerMode = sl::CameraControllerMode::None;
+        sl::Input::SetMouseRelativeMode(m_pMainWindow, false);
+        return true;
+    }
+    return false;
 }

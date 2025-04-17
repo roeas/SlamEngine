@@ -54,46 +54,6 @@ void AlignNextWidget(const char *pLabel, float align = 0.5f, float customOffset 
     }
 }
 
-float StartWithText(std::string_view text, float offset = 0.0f)
-{
-    static sl::Entity s_crtEntity;
-    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-    if (s_crtEntity != pData->m_selectedEntity)
-    {
-        /*
-         * `ImGui::CalcTextSize("Rotation").x == 56.0f`
-         * `ImGui::CalcTextSize("Position").x == 56.0f`
-         * Just a little trick to avoid tag component flickering when it is rendered the first time,
-         * as we known every entity must hold both tag and transform component.
-         */
-        pData->m_maxTextSize = 56.0f;
-        s_crtEntity = pData->m_selectedEntity;
-    }
-
-    float crtTextSize = ImGui::CalcTextSize(text.data()).x;
-    float crtOffset;
-    if (offset)
-    {
-        crtOffset = offset;
-    }
-    else
-    {
-        pData->m_maxTextSize = std::max(pData->m_maxTextSize, crtTextSize);
-        crtOffset = ImGui::GetStyle().IndentSpacing;
-    }
-
-    ImGui::SetCursorPosX(crtOffset);
-    ImGui::AlignTextToFramePadding();
-    ImGui::TextUnformatted(text.data());
-
-    float padding = ImGui::GetStyle().WindowPadding.x;
-    float nextOffset = crtOffset + pData->m_maxTextSize + padding;
-    ImGui::SameLine(nextOffset);
-    ImGui::SetNextItemWidth(-padding);
-
-    return nextOffset;
-}
-
 template<typename T>
 void DrawComponent(const char *pLabel, auto drawParameters)
 {
@@ -227,7 +187,7 @@ void Details::OnUpdate(float deltaTime)
     }
 
     // Draw tag component
-    DrawComponent<sl::TagComponent>("Tag", [pData](sl::TagComponent *pComponent)
+    DrawComponent<sl::TagComponent>("Tag", [this, pData](sl::TagComponent *pComponent)
     {
         StartWithText("ID");
         ImGui::Text("%d", (uint32_t)pData->m_selectedEntity.GetHandle());
@@ -252,7 +212,7 @@ void Details::OnUpdate(float deltaTime)
     });
 
     // Draw transform component
-    DrawComponent<sl::TransformComponent>("Transform", [pData](sl::TransformComponent *pComponent)
+    DrawComponent<sl::TransformComponent>("Transform", [this, pData](sl::TransformComponent *pComponent)
     {
         bool cameraMayBeDirty = false;
 
@@ -288,7 +248,7 @@ void Details::OnUpdate(float deltaTime)
     });
 
     // Draw Camera component
-    DrawComponent<sl::CameraComponent>("Camera", [pData](sl::CameraComponent *pComponent)
+    DrawComponent<sl::CameraComponent>("Camera", [this, pData](sl::CameraComponent *pComponent)
     {
         StartWithText("Main Camera");
         bool isMainCamera = pComponent->m_isMainCamera;
@@ -434,4 +394,44 @@ void Details::EndFrame()
 void Details::OnEvent(sl::Event &event)
 {
 
+}
+
+float Details::StartWithText(std::string_view text, float offset)
+{
+    static sl::Entity s_crtEntity;
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+    if (s_crtEntity != pData->m_selectedEntity)
+    {
+        /*
+         * `ImGui::CalcTextSize("Rotation").x == 56.0f`
+         * `ImGui::CalcTextSize("Position").x == 56.0f`
+         * Just a little trick to avoid tag component flickering when it is rendered the first time,
+         * as we known every entity must hold both tag and transform component.
+         */
+        m_maxTextSize = 56.0f;
+        s_crtEntity = pData->m_selectedEntity;
+    }
+
+    float crtTextSize = ImGui::CalcTextSize(text.data()).x;
+    float crtOffset;
+    if (offset)
+    {
+        crtOffset = offset;
+    }
+    else
+    {
+        m_maxTextSize = std::max(m_maxTextSize, crtTextSize);
+        crtOffset = ImGui::GetStyle().IndentSpacing;
+    }
+
+    ImGui::SetCursorPosX(crtOffset);
+    ImGui::AlignTextToFramePadding();
+    ImGui::TextUnformatted(text.data());
+
+    float padding = ImGui::GetStyle().WindowPadding.x;
+    float nextOffset = crtOffset + m_maxTextSize + padding;
+    ImGui::SameLine(nextOffset);
+    ImGui::SetNextItemWidth(-padding);
+
+    return nextOffset;
 }
