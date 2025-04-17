@@ -44,8 +44,7 @@ void MenuBar::OnUpdate(float deltaTime)
         
         if (ImGui::MenuItem("Exit"))
         {
-            sl::WindowCloseEvent event;
-            m_eventCallback(event);
+            pData->m_windowShouldClose = true;
         }
 
         ImGui::EndMenu();

@@ -9,4 +9,5 @@ struct ImGuiData
     bool m_isMouseInViewport = false;
     bool m_debugImGuiDemo = false;
     bool m_debugImPlotDemo = false;
+    bool m_windowShouldClose = false;
 };

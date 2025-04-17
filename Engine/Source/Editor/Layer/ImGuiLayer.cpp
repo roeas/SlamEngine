@@ -1,6 +1,7 @@
 #include "ImGuiLayer.h"
 
 #include "Event/MouseEvent.h"
+#include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Panel/AssetBrowser.h"
 #include "Panel/Details.h"
@@ -14,7 +15,7 @@
 #include <imgui/imgui.h>
 #include <implot/implot.h>
 
-ImGuiLayer::ImGuiLayer()
+ImGuiLayer::ImGuiLayer() : m_pMainWindow(nullptr)
 {
     ImGui::GetIO().UserData = &m_data;
 
@@ -25,7 +26,6 @@ ImGuiLayer::ImGuiLayer()
     auto pEntityList = std::make_unique<EntityList>();
     auto pDetails = std::make_unique<Details>();
     auto pViewport = std::make_unique<Viewport>();
-    pMenuBar->SetEventCallback(SL_BIND_EVENT_CALLBACK(ImGuiLayer::ForwardEvent));
 
     m_stack.PushLayer(std::move(pMenuBar));
     m_stack.PushLayer(std::move(pState));
@@ -65,6 +65,12 @@ void ImGuiLayer::OnUpdate(float deltaTime)
 
     ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);
     m_stack.OnUpdate(deltaTime);
+
+    if (m_data.m_windowShouldClose)
+    {
+        sl::WindowCloseEvent event;
+        m_eventCallback(event);
+    }
 }
 
 void ImGuiLayer::OnRender()
@@ -85,11 +91,6 @@ void ImGuiLayer::OnEvent(sl::Event &event)
     dispatcher.Dispatch<sl::MouseButtonUpEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseUpDown));
 
     m_stack.OnEvent(event);
-}
-
-void ImGuiLayer::ForwardEvent(sl::Event &event)
-{
-    m_eventCallback(event);
 }
 
 bool ImGuiLayer::OnMouseButtonDown(sl::MouseButtonDownEvent &event)

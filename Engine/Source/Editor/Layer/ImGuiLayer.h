@@ -25,10 +25,8 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
-    void ForwardEvent(sl::Event &event);
     void SetEventCallback(auto fun) { m_eventCallback = fun; }
-
-    void SetMainWindow(void *pWindow) { m_pMainWindow = pWindow; };
+    void SetMainWindow(void *pWindow) { m_pMainWindow = pWindow; }
 
 private:
     bool OnMouseButtonDown(sl::MouseButtonDownEvent &event);
