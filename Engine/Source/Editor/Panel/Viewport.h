@@ -16,6 +16,11 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
-    uint32_t m_width = 0;
-    uint32_t m_height = 0;
+    void ShowImGuizmoTransform();
+    void ShowImGuizmoOrientation();
+
+    uint32_t m_windowPosX = 0;
+    uint32_t m_windowPosY = 0;
+    uint32_t m_windowSizeX = 0;
+    uint32_t m_windowSizeY = 0;
 };

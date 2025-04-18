@@ -6,6 +6,7 @@
 namespace sl
 {
 
+class KeyDownEvent;
 class MouseButtonDownEvent;
 class MouseButtonUpEvent;
 
@@ -29,6 +30,7 @@ public:
     void SetMainWindow(void *pWindow) { m_pMainWindow = pWindow; }
 
 private:
+    bool OnKeyDownEvent(sl::KeyDownEvent &event);
     bool OnMouseButtonDown(sl::MouseButtonDownEvent &event);
     bool OnMouseUpDown(sl::MouseButtonUpEvent &event);
 

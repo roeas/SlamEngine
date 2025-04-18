@@ -1,5 +1,6 @@
 #include "ImGuiLayer.h"
 
+#include "Event/KeyEvent.h"
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
@@ -13,6 +14,7 @@
 #include "Window/Input.h"
 
 #include <imgui/imgui.h>
+#include <imguizmo/ImGuizmo.h>
 #include <implot/implot.h>
 
 ImGuiLayer::ImGuiLayer() : m_pMainWindow(nullptr)
@@ -62,6 +64,29 @@ void ImGuiLayer::OnUpdate(float deltaTime)
     {
         ImPlot::ShowDemoWindow(&m_data.m_debugImPlotDemo);
     }
+    if (m_data.m_debugImGuizmoState)
+    {
+        // ImGuizmo debug panel
+        ImGui::Begin("ImGuizmo State", &m_data.m_debugImGuizmoState, ImGuiWindowFlags_AlwaysAutoResize);
+
+        ImGui::TextUnformatted("Is over: ");
+        ImGui::SameLine();
+        ImGui::TextUnformatted(ImGuizmo::IsOver() ? "true" : "fasle");
+        ImGui::TextUnformatted("Is using: ");
+        ImGui::SameLine();
+        ImGui::TextUnformatted(ImGuizmo::IsUsing() ? "true" : "fasle");
+        ImGui::TextUnformatted("Is using view manipulate: ");
+        ImGui::SameLine();
+        ImGui::TextUnformatted(ImGuizmo::IsUsingViewManipulate() ? "true" : "fasle");
+        ImGui::TextUnformatted("Is view manipulate hovered: ");
+        ImGui::SameLine();
+        ImGui::TextUnformatted(ImGuizmo::IsViewManipulateHovered() ? "true" : "fasle");
+        ImGui::TextUnformatted("Is using any: ");
+        ImGui::SameLine();
+        ImGui::TextUnformatted(ImGuizmo::IsUsingAny() ? "true" : "fasle");
+
+        ImGui::End();
+    }
 
     ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);
     m_stack.OnUpdate(deltaTime);
@@ -87,10 +112,50 @@ void ImGuiLayer::EndFrame()
 void ImGuiLayer::OnEvent(sl::Event &event)
 {
     sl::EventDispatcher dispatcher{ event };
+    dispatcher.Dispatch<sl::KeyDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnKeyDownEvent));
     dispatcher.Dispatch<sl::MouseButtonDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseButtonDown));
     dispatcher.Dispatch<sl::MouseButtonUpEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseUpDown));
 
     m_stack.OnEvent(event);
+}
+
+bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
+{
+    if (sl::World::GetMainCameraComponent().IsUsing() || ImGuizmo::IsUsing())
+    {
+        return false;
+    }
+
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+    switch (event.GetKey())
+    {
+        case SL_KEY_Q:
+        {
+            pData->m_imguizmoMode = -1;
+            break;
+        }
+        case SL_KEY_W:
+        {
+            pData->m_imguizmoMode = ImGuizmo::OPERATION::TRANSLATE;
+            break;
+        }
+        case SL_KEY_E:
+        {
+            pData->m_imguizmoMode = ImGuizmo::OPERATION::ROTATE;
+            break;
+        }
+        case SL_KEY_R:
+        {
+            pData->m_imguizmoMode = ImGuizmo::OPERATION::SCALE;
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+
+    return false;
 }
 
 bool ImGuiLayer::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
@@ -116,3 +181,6 @@ bool ImGuiLayer::OnMouseUpDown(sl::MouseButtonUpEvent &event)
     }
     return false;
 }
+
+static_assert(ImGuizmo::OPERATION::TRANSLATE == 7);
+static_assert(ImGuiDockNodeFlags_None == 0);

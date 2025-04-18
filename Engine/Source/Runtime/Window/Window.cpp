@@ -152,33 +152,18 @@ void Window::PullEvents()
             // Keyboard events
             case SDL_EVENT_KEY_DOWN:
             {
-                if (ImGuiContext::WantCaptureKeyboard())
-                {
-                    break;
-                }
-
                 KeyDownEvent event(SDLevent.key.scancode, SDLevent.key.mod, SDLevent.key.repeat);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_KEY_UP:
             {
-                if (ImGuiContext::WantCaptureKeyboard())
-                {
-                    break;
-                }
-
                 KeyUpEvent event(SDLevent.key.scancode);
                 m_eventCallback(event);
                 break;
             }
             case SDL_EVENT_TEXT_INPUT:
             {
-                if (ImGuiContext::WantCaptureKeyboard())
-                {
-                    break;
-                }
-
                 KeyTypeEvent event(SDLevent.text.text);
                 m_eventCallback(event);
                 break;

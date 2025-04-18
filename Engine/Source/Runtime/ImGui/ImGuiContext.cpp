@@ -7,6 +7,7 @@
 #include "ImGui/imgui_impl_sdl3.h"
 
 #include <imgui/imgui.h>
+#include <imguizmo/ImGuizmo.h>
 #include <implot/implot.h>
 
 namespace sl
@@ -80,6 +81,7 @@ void ImGuiContext::NewFrame()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
 }
 
 void ImGuiContext::Submit()

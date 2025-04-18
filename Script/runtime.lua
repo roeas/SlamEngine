@@ -19,6 +19,8 @@ project("Slam")
         path.join(ThirdPartyPath, "imgui/*.cpp");
         path.join(ThirdPartyPath, "implot/*.h");
         path.join(ThirdPartyPath, "implot/*.cpp");
+        path.join(ThirdPartyPath, "imguizmo/*.h");
+        path.join(ThirdPartyPath, "imguizmo/*.cpp");
     }
 
     includedirs
