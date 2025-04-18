@@ -97,7 +97,7 @@ void DrawComponent(const char *pLabel, auto drawParameters)
                 {
                     if (auto pCamera = pData->m_selectedEntity.TryGetComponents<sl::CameraComponent>(); pCamera)
                     {
-                        auto &transform = pData->m_selectedEntity.GetComponents<sl::CameraComponent>();
+                        const auto &transform = pData->m_selectedEntity.GetComponents<sl::TransformComponent>();
                         pCamera->m_position = transform.m_position;
                         pCamera->m_rotation = transform.m_rotation;
                         pCamera->m_isDirty = true;
