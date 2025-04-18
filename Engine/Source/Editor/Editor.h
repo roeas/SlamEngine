@@ -13,7 +13,7 @@ class WindowCloseEvent;
 class WindowMinimizeEvent;
 class WindowRestoreEvent;
 
-}
+} // namespace sl
 
 struct EditorInitor
 {

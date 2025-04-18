@@ -9,7 +9,7 @@ class Shader;
 class Texture2D;
 class VertexArray;
 
-}
+} // namespace sl
 
 class SandboxLayer : public sl::Layer
 {

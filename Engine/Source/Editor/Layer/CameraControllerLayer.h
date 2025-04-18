@@ -7,7 +7,7 @@ namespace sl
 
 class MouseScrollEvent;
 
-}
+} // namespace sl
 
 class CameraControllerLayer : public sl::Layer
 {

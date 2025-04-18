@@ -34,7 +34,7 @@ bool EntityNameMatch(std::string_view base, std::string_view str)
     return true;
 }
 
-}
+} // namespace
 
 Entity World::CreateEntity(std::string_view name)
 {

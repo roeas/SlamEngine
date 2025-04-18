@@ -92,4 +92,4 @@ const glm::mat4 &CameraComponent::GetViewProjection()
     return m_viewProjectionMat;
 }
 
-} // nmaespace sl
+} // namespace sl

@@ -8,7 +8,7 @@ namespace sl
 using KeyCodeType = uint32_t;
 using KeyModifierType = uint16_t;
 
-}
+} // namespace sl
 
 // Copy from SL_scancode.h and SDL_keycode.h
 
