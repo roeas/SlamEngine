@@ -4,7 +4,7 @@
 #include "Scene/CameraComponent.h"
 #include "Scene/TagComponent.h"
 #include "Scene/TransformComponent.h"
-#include "Util/NameOf.hpp"
+#include "Utils/NameOf.hpp"
 
 #include <entt/entt.hpp>
 

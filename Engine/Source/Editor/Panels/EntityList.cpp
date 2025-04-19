@@ -1,6 +1,6 @@
-#include "Panel/EntityList.h"
+#include "EntityList.h"
 
-#include "Panel/ImGuiData.h"
+#include "Panels/ImGuiData.h"
 #include "Scene/World.h"
 
 #include <imgui/imgui.h>

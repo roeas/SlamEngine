@@ -1,4 +1,4 @@
-#include "Panel/OutputLog.h"
+#include "OutputLog.h"
 
 #include "Core/Log.h"
 #include "ImGui/IconsMaterialSymbols.h"

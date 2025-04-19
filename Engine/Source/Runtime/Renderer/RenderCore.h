@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Define.h"
+#include "Core/Defines.h"
 #include "Renderer/FrameBuffer.h"
 #include "Renderer/RenderAPI.h"
 #include "Renderer/UniformBuffer.h"

@@ -1,8 +1,8 @@
-#include "Panel/State.h"
+#include "State.h"
 
 #include "Core/Log.h"
 #include "Renderer/RenderCore.h"
-#include "Util/NameOf.hpp"
+#include "Utils/NameOf.hpp"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>

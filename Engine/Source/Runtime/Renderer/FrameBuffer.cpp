@@ -1,7 +1,7 @@
 #include "FrameBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLFrameBuffer.h"
+#include "Platforms/OpenGL/OpenGLFrameBuffer.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Layer/LayerStack.h"
-#include "Panel/ImGuiData.h"
+#include "Panels/ImGuiData.h"
 
 namespace sl
 {

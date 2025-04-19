@@ -1,7 +1,7 @@
 #include "OpenGLFrameBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLDefines.h"
+#include "Platforms/OpenGL/OpenGLDefines.h"
 #include "Renderer/RenderCore.h"
 #include "Renderer/Texture.h"
 

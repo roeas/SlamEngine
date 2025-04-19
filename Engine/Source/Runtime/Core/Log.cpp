@@ -1,7 +1,7 @@
 #include "Log.h"
 
 #include "Core/Path.h"
-#include "Util/NameOf.hpp"
+#include "Utils/NameOf.hpp"
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/callback_sink.h>

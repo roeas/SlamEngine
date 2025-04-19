@@ -1,6 +1,6 @@
 #include "OpenGLVertexArray.h"
 
-#include "Platform/OpenGL/OpenGLDefines.h"
+#include "Platforms/OpenGL/OpenGLDefines.h"
 
 #include <glad/gl.h>
 

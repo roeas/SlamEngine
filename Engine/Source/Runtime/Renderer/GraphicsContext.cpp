@@ -1,7 +1,7 @@
 #include "GraphicsContext.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLContext.h"
+#include "Platforms/OpenGL/OpenGLContext.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

@@ -1,8 +1,8 @@
-#include "Panel/Details.h"
+#include "Details.h"
 
 #include "ImGui/IconsMaterialSymbols.h"
 #include "ImGui/ImGuiContext.h"
-#include "Panel/ImGuiData.h"
+#include "Panels/ImGuiData.h"
 #include "Scene/World.h"
 
 #include <glm/gtc/type_ptr.hpp>

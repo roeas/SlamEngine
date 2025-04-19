@@ -1,7 +1,7 @@
 #include "UniformBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLUniformBuffer.h"
+#include "Platforms/OpenGL/OpenGLUniformBuffer.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

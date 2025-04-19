@@ -1,8 +1,8 @@
-#include "Panel/AssetBrowser.h"
+#include "AssetBrowser.h"
 
 #include "Core/Path.h"
 #include "ImGui/IconsMaterialSymbols.h"
-#include "Panel/ImGuiData.h"
+#include "Panels/ImGuiData.h"
 #include "Renderer/Texture.h"
 
 #include <imgui/imgui.h>

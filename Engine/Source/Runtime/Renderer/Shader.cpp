@@ -1,7 +1,7 @@
 #include "Shader.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "Platforms/OpenGL/OpenGLShader.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

@@ -1,7 +1,7 @@
 #include "VertexBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLVertexBuffer.h"
+#include "Platforms/OpenGL/OpenGLVertexBuffer.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Define.h"
+#include "Core/Defines.h"
 #include "Core/Time.h"
 #include "Layer/LayerStack.h"
 

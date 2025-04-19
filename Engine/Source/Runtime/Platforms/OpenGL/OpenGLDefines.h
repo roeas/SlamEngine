@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Define.h"
-#include "Util/NameOf.hpp"
+#include "Core/Defines.h"
+#include "Utils/NameOf.hpp"
 
 #include <glad/gl.h>
 

@@ -1,7 +1,7 @@
 #include "OpenGLShader.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLDefines.h"
+#include "Platforms/OpenGL/OpenGLDefines.h"
 
 #include <glad/gl.h>
 #include <glm/gtc/type_ptr.hpp>

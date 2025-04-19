@@ -1,7 +1,7 @@
 #include "OpenGLTexture.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLDefines.h"
+#include "Platforms/OpenGL/OpenGLDefines.h"
 #include "Renderer/RenderCore.h"
 
 #include <glm/gtc/type_ptr.hpp>

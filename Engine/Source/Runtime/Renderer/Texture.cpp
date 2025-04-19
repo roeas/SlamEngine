@@ -1,7 +1,7 @@
 #include "Texture.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLTexture.h"
+#include "Platforms/OpenGL/OpenGLTexture.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

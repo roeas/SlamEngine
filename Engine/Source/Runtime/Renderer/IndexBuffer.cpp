@@ -1,7 +1,7 @@
 #include "IndexBuffer.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGLIndexBuffer.h"
+#include "Platforms/OpenGL/OpenGLIndexBuffer.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

@@ -4,14 +4,15 @@
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
-#include "Panel/AssetBrowser.h"
-#include "Panel/Details.h"
-#include "Panel/EntityList.h"
-#include "Panel/MenuBar.h"
-#include "Panel/OutputLog.h"
-#include "Panel/State.h"
-#include "Panel/ViewPort.h"
 #include "Window/Input.h"
+
+#include "Panels/AssetBrowser.h"
+#include "Panels/Details.h"
+#include "Panels/EntityList.h"
+#include "Panels/MenuBar.h"
+#include "Panels/OutputLog.h"
+#include "Panels/State.h"
+#include "Panels/ViewPort.h"
 
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>

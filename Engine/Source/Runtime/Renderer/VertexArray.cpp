@@ -1,7 +1,7 @@
 #include "VertexArray.h"
 
 #include "Core/Log.h"
-#include "Platform/OpenGL/OpenGlVertexArray.h"
+#include "Platforms/OpenGL/OpenGlVertexArray.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl

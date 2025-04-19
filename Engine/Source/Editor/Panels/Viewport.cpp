@@ -1,6 +1,6 @@
-#include "Panel/Viewport.h"
+#include "Viewport.h"
 
-#include "Panel/ImGuiData.h"
+#include "Panels/ImGuiData.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
 
