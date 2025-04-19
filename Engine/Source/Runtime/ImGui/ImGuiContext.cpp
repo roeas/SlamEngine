@@ -132,88 +132,117 @@ void ImGuiContext::SetStyle()
     style.ScrollbarRounding = 4.0f;
     style.GrabRounding = 4.0f;
     style.TabRounding = 4.0f;
+
     style.WindowMenuButtonPosition = ImGuiDir_None;
     style.DockingSeparatorSize = 1.0f;
 }
 
 void ImGuiContext::SetColor()
 {
-    constexpr auto ColorFromByte = [](uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
+    auto NormalizedColor = [](uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255) consteval
     {
-        return ImVec4{ (float)r / 255.0f, (float)g / 255.0f, (float)b / 255.0f, (float)a / 255.0f };
+        return ImVec4{ r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f };
     };
 
-    constexpr ImVec4 whiteColor = ColorFromByte(255, 255, 255);
-    constexpr ImVec4 greyColor = ColorFromByte(127, 127, 127);
-    constexpr ImVec4 blackColor = ColorFromByte(0, 0, 0);
-    constexpr ImVec4 myColor = ColorFromByte(255, 50, 30);
-    constexpr ImVec4 unknownColor = ColorFromByte(255, 0, 235);
+    constexpr ImVec4 TransColor = NormalizedColor(0, 0, 0, 0);
+    constexpr ImVec4 BlackColor = NormalizedColor(0, 0, 0);
+    constexpr ImVec4 GreyColor = NormalizedColor(127, 127, 127);
+    constexpr ImVec4 WhiteColor = NormalizedColor(255, 255, 255);
+    constexpr ImVec4 MyColor = NormalizedColor(255, 20, 40);
+    constexpr ImVec4 MyColorTrans = NormalizedColor(255, 20, 40, 127);
+    constexpr ImVec4 UnknownColor = NormalizedColor(255, 0, 235);
 
-    constexpr ImVec4 bgColor = ColorFromByte(30, 30, 30);
-    constexpr ImVec4 bgColorLight = ColorFromByte(32, 31, 31);
-    constexpr ImVec4 bgColorVeryLight = ColorFromByte(68, 66, 66);
+    constexpr ImVec4 BackgroundColor = NormalizedColor(30, 30, 30);
+    constexpr ImVec4 BackgroundColor1 = NormalizedColor(32, 31, 31);
+    constexpr ImVec4 BackgroundColor2 = NormalizedColor(37, 37, 37);
+    constexpr ImVec4 BackgroundColor3 = NormalizedColor(46, 46, 46);
+    constexpr ImVec4 BackgroundColor4 = NormalizedColor(56, 56, 56);
+    constexpr ImVec4 BackgroundColor5 = NormalizedColor(61, 61, 61);
+    constexpr ImVec4 BackgroundColor6 = NormalizedColor(66, 66, 66);
 
-    constexpr ImVec4 itemColor = ColorFromByte(46, 46, 46);
-    constexpr ImVec4 itemColorLight = ColorFromByte(61, 61, 61);
-    constexpr ImVec4 itemColorVeryLight = ColorFromByte(153, 153, 153);
+    constexpr ImVec4 ItemColor1 = NormalizedColor(77, 77, 77);
+    constexpr ImVec4 ItemColor2 = NormalizedColor(112, 112, 112);
+    constexpr ImVec4 ItemColor3 = NormalizedColor(153, 153, 153);
 
     ImVec4 *colors = ImGui::GetStyle().Colors;
 
-    colors[ImGuiCol_Text] = whiteColor;
-    colors[ImGuiCol_TextDisabled] = greyColor;
+    colors[ImGuiCol_Text] = WhiteColor;
+    colors[ImGuiCol_TextDisabled] = GreyColor;
 
-    colors[ImGuiCol_WindowBg] = bgColor;
-    colors[ImGuiCol_ChildBg] = bgColor;
-    colors[ImGuiCol_PopupBg] = bgColorLight;
+    colors[ImGuiCol_WindowBg] = BackgroundColor;
+    colors[ImGuiCol_ChildBg] = BackgroundColor2;
+    colors[ImGuiCol_PopupBg] = BackgroundColor2;
 
-    colors[ImGuiCol_Border] = blackColor;
-    colors[ImGuiCol_BorderShadow] = bgColorVeryLight;
+    colors[ImGuiCol_Border] = BlackColor;
+    colors[ImGuiCol_BorderShadow] = TransColor;
 
-    colors[ImGuiCol_FrameBg] = itemColor;
-    colors[ImGuiCol_FrameBgHovered] = itemColorLight;
-    colors[ImGuiCol_FrameBgActive] = itemColorLight;
+    colors[ImGuiCol_FrameBg] = BackgroundColor3;
+    colors[ImGuiCol_FrameBgHovered] = BackgroundColor5;
+    colors[ImGuiCol_FrameBgActive] = BackgroundColor5;
 
-    colors[ImGuiCol_TitleBg] = bgColorLight;
-    colors[ImGuiCol_TitleBgActive] = bgColorLight;
-    colors[ImGuiCol_TitleBgCollapsed] = bgColorLight;
+    colors[ImGuiCol_TitleBg] = BackgroundColor1;
+    colors[ImGuiCol_TitleBgActive] = BackgroundColor1;
+    colors[ImGuiCol_TitleBgCollapsed] = UnknownColor;
+    
+    colors[ImGuiCol_MenuBarBg] = BackgroundColor;
 
-    colors[ImGuiCol_MenuBarBg] = bgColor;
+    colors[ImGuiCol_ScrollbarBg] = BackgroundColor;
+    colors[ImGuiCol_ScrollbarGrab] = ItemColor1;
+    colors[ImGuiCol_ScrollbarGrabHovered] = ItemColor3;
+    colors[ImGuiCol_ScrollbarGrabActive] = ItemColor3;
+    
+    colors[ImGuiCol_CheckMark] = WhiteColor;
 
-    colors[ImGuiCol_ScrollbarBg] = bgColorLight;
-    colors[ImGuiCol_ScrollbarGrab] = itemColorLight;
-    colors[ImGuiCol_ScrollbarGrabHovered] = itemColorVeryLight;
-    colors[ImGuiCol_ScrollbarGrabActive] = itemColorVeryLight;
+    colors[ImGuiCol_SliderGrab] = ItemColor1;
+    colors[ImGuiCol_SliderGrabActive] = ItemColor3;
 
-    colors[ImGuiCol_CheckMark] = itemColorVeryLight;
+    colors[ImGuiCol_Button] = BackgroundColor3;
+    colors[ImGuiCol_ButtonHovered] = BackgroundColor5;
+    colors[ImGuiCol_ButtonActive] = BackgroundColor6;
 
-    colors[ImGuiCol_SliderGrab] = itemColorLight;
-    colors[ImGuiCol_SliderGrabActive] = itemColorVeryLight;
+    colors[ImGuiCol_Header] = BackgroundColor3;
+    colors[ImGuiCol_HeaderHovered] = BackgroundColor5;
+    colors[ImGuiCol_HeaderActive] = BackgroundColor5;
 
-    colors[ImGuiCol_Button] = itemColor;
-    colors[ImGuiCol_ButtonHovered] = itemColorLight;
-    colors[ImGuiCol_ButtonActive] = itemColorLight;
+    colors[ImGuiCol_Separator] = BlackColor;
+    colors[ImGuiCol_SeparatorHovered] = ItemColor3;
+    colors[ImGuiCol_SeparatorActive] = ItemColor3;
 
-    colors[ImGuiCol_Header] = itemColor;
-    colors[ImGuiCol_HeaderHovered] = itemColorLight;
-    colors[ImGuiCol_HeaderActive] = itemColorLight;
+    colors[ImGuiCol_ResizeGrip] = BackgroundColor3;
+    colors[ImGuiCol_ResizeGripHovered] = ItemColor3;
+    colors[ImGuiCol_ResizeGripActive] = ItemColor3;
 
-    colors[ImGuiCol_Separator] = blackColor;
-    colors[ImGuiCol_SeparatorHovered] = itemColorVeryLight;
-    colors[ImGuiCol_SeparatorActive] = itemColorVeryLight;
+    colors[ImGuiCol_TabHovered] = MyColor;
+    colors[ImGuiCol_Tab] = BackgroundColor3;
+    colors[ImGuiCol_TabSelected] = MyColor;
+    colors[ImGuiCol_TabSelectedOverline] = TransColor;
+    colors[ImGuiCol_TabDimmed] = BackgroundColor3;
+    colors[ImGuiCol_TabDimmedSelected] = ItemColor1;
+    colors[ImGuiCol_TabDimmedSelectedOverline] = TransColor;
 
-    colors[ImGuiCol_ResizeGrip] = itemColorLight;
-    colors[ImGuiCol_ResizeGripHovered] = itemColorVeryLight;
-    colors[ImGuiCol_ResizeGripActive] = itemColorVeryLight;
+    colors[ImGuiCol_DockingPreview] = MyColorTrans;
+    colors[ImGuiCol_DockingEmptyBg] = BackgroundColor;
 
-    colors[ImGuiCol_Tab] = itemColor;
-    colors[ImGuiCol_TabHovered] = itemColorVeryLight;
-    colors[ImGuiCol_TabSelected] = myColor;
-    colors[ImGuiCol_TabSelectedOverline] = itemColorVeryLight;
-    colors[ImGuiCol_TabUnfocused] = itemColor;
-    colors[ImGuiCol_TabUnfocusedActive] = itemColorLight;
+    //colors[ImGuiCol_PlotLines] = ;
+    //colors[ImGuiCol_PlotLinesHovered] = ;
+    //colors[ImGuiCol_PlotHistogram] = ;
+    //colors[ImGuiCol_PlotHistogramHovered] = ;
+    
+    //colors[ImGuiCol_TableHeaderBg] = ;
+    //colors[ImGuiCol_TableBorderStrong] = ;
+    //colors[ImGuiCol_TableBorderLight] = ;
+    //colors[ImGuiCol_TableRowBg] = ;
+    //colors[ImGuiCol_TableRowBgAlt] = ;
 
-    colors[ImGuiCol_DockingPreview] = bgColorVeryLight;
-    colors[ImGuiCol_DockingEmptyBg] = bgColorLight;
+    colors[ImGuiCol_TextLink] = NormalizedColor(86, 156, 214);
+    colors[ImGuiCol_TextSelectedBg] = NormalizedColor(0, 120, 215);
+
+    colors[ImGuiCol_DragDropTarget] = MyColor;
+
+    colors[ImGuiCol_NavCursor] = ItemColor3;
+    //colors[ImGuiCol_NavWindowingHighlight] = ;
+    //colors[ImGuiCol_NavWindowingDimBg] = ;
+    //colors[ImGuiCol_ModalWindowDimBg] = ;
 }
 
 } // namespace sl

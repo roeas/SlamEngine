@@ -66,7 +66,7 @@ void MenuBar::OnUpdate(float deltaTime)
     if (ImGui::BeginMenu("Debug"))
     {
         ImGui::MenuItem("ImGui Demo", "", &pData->m_debugImGuiDemo);
-        ImGui::MenuItem("ImPlot Demo", "", &pData->m_debugImGuiDemo);
+        ImGui::MenuItem("ImPlot Demo", "", &pData->m_debugImPlotDemo);
         ImGui::MenuItem("ImGuizmo State", "", &pData->m_debugImGuizmoState);
         ImGui::EndMenu();
     }
