@@ -16,6 +16,7 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
+    void ShowToolOverlay();
     void ShowImGuizmoTransform();
     void ShowImGuizmoOrientation();
 

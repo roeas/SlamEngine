@@ -3,6 +3,7 @@
 #include "Panels/ImGuiData.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
+#include "ImGui/IconsMaterialSymbols.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
@@ -77,6 +78,8 @@ void Viewport::OnUpdate(float deltaTime)
     ShowImGuizmoOrientation();
 
     ImGui::End(); // Viewport
+
+    ShowToolOverlay();
 }
 
 void Viewport::OnRender()
@@ -92,6 +95,44 @@ void Viewport::EndFrame()
 void Viewport::OnEvent(sl::Event &event)
 {
 
+}
+
+void Viewport::ShowToolOverlay()
+{
+    // Display transform tools on the upper left corner
+    constexpr size_t ToolCount = 4;
+    constexpr std::array<int, ToolCount> Operations =
+    {
+        -1, // No ImGuizmo tramsform
+        ImGuizmo::OPERATION::TRANSLATE,
+        ImGuizmo::OPERATION::ROTATE,
+        ImGuizmo::OPERATION::SCALE,
+    };
+    constexpr std::array<const char *, ToolCount> Icons =
+    {
+        ICON_MS_ARROW_SELECTOR_TOOL, ICON_MS_DRAG_PAN, ICON_MS_CACHED, ICON_MS_ZOOM_OUT_MAP,
+    };
+
+    auto ToolButton = [](size_t index)
+    {
+        const int op = Operations[index];
+        ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, pData->m_imguizmoMode == op ? 1.0f : 0.5f);
+        if (ImGui::Button(Icons[index], ImVec2{ 32.0f, 32.0f }))
+        {
+            pData->m_imguizmoMode = op;
+        }
+        ImGui::PopStyleVar();
+    };
+
+    ImGui::SetNextWindowPos(ImVec2{ (float)m_windowPosX + 16.0f, (float)m_windowPosY + 16.0f + GetTitleBarSize() });
+    ImGui::Begin("Tools", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBackground);
+    for (size_t i = 0; i < ToolCount; ++i)
+    {
+        ToolButton(i);
+    }
+    ImGui::End(); // Tools
 }
 
 void Viewport::ShowImGuizmoTransform()
