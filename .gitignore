@@ -1,7 +1,7 @@
 /.vs/
-/Project/
 /Engine/Binary/
 /Engine/Log/
+/Engine/Project/
 /*.sln
 
 build/
