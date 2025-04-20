@@ -13,6 +13,7 @@ bool EntityNameMatch(std::string_view base, std::string_view str)
         return true;
     }
 
+    // Check if name "ABCD" match "ABCD (X)", X is integer
     size_t baseSize = base.size();
     size_t strSize = str.size();
     if (strSize < baseSize + 4 ||

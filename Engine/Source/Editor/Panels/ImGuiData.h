@@ -2,12 +2,17 @@
 
 #include "Scene/World.h"
 
+#include <filesystem>
+
 struct ImGuiData
 {
-    sl::Entity m_selectedEntity = 0;
-    int m_dockspaceFlag = 0; // ImGuiDockNodeFlags_None
+    std::filesystem::path m_assetBrowserCrtPath = SL_ASSET_PATH;
+    sl::Entity m_selectedEntity = 0; // Main camera entity
+    uint32_t m_dockspaceFlag = 0; // ImGuiDockNodeFlags_None
     int m_imguizmoMode = 7; // ImGuizmo::OPERATION::TRANSLATE
-    bool m_isMouseInViewport = false;
+    float m_maxTextSize = 56.0f; // ImGui::CalcTextSize("Position").x
+    bool m_isMouseHoverViewport = false;
+    bool m_isMouseHoverAssetBrowser = false;
     bool m_debugImGuiDemo = false;
     bool m_debugImPlotDemo = false;
     bool m_debugImGuizmoState = false;

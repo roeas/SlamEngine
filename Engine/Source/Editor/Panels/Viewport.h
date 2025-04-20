@@ -16,9 +16,9 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
-    void ShowToolOverlay();
     void ShowImGuizmoTransform();
     void ShowImGuizmoOrientation();
+    void ShowToolOverlay();
 
     uint32_t m_windowPosX = 0;
     uint32_t m_windowPosY = 0;

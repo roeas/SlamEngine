@@ -30,16 +30,15 @@ public:
     void *GetRenderContext() const;
     std::string_view GetTitle() const { return m_title; }
     glm::uvec2 GetSize() const { return { m_width, m_height }; }
-
     void SetEventCallback(auto fun) { m_eventCallback = fun; }
 
 private:
     void PullEvents();
 
-    void *m_pNativeWindow;
     EventCallback m_eventCallback;
     std::unique_ptr<GraphicsContext> m_pContext;
     
+    void *m_pNativeWindow;
     std::string m_title;
     uint32_t m_width, m_height;
 };

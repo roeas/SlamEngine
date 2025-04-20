@@ -64,7 +64,7 @@ struct CameraComponent
 
     // Camera controlling
     float m_moveSpeed = 0.01f;
-    float m_rotateSpeed = glm::radians(0.05f);
+    float m_rotateSpeed = glm::radians(0.0625f);
     float m_moveSpeedKeyShiftMultiplier = 4.0f;
     float m_moveSpeedMouseScrollMultiplier = 1.0f;
 };

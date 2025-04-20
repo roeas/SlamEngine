@@ -41,7 +41,6 @@ void MenuBar::OnUpdate(float deltaTime)
         }
 
         ImGui::Separator();
-        
         if (ImGui::MenuItem("Exit"))
         {
             pData->m_windowShouldClose = true;
@@ -60,6 +59,7 @@ void MenuBar::OnUpdate(float deltaTime)
         {
             pData->m_dockspaceFlag ^= ImGuiDockNodeFlags_NoResize;
         }
+
         ImGui::EndMenu();
     }
 
@@ -68,6 +68,7 @@ void MenuBar::OnUpdate(float deltaTime)
         ImGui::MenuItem("ImGui Demo", "", &pData->m_debugImGuiDemo);
         ImGui::MenuItem("ImPlot Demo", "", &pData->m_debugImPlotDemo);
         ImGui::MenuItem("ImGuizmo State", "", &pData->m_debugImGuizmoState);
+
         ImGui::EndMenu();
     }
 

@@ -32,11 +32,10 @@ public:
 private:
     bool OnKeyDownEvent(sl::KeyDownEvent &event);
     bool OnMouseButtonDown(sl::MouseButtonDownEvent &event);
-    bool OnMouseUpDown(sl::MouseButtonUpEvent &event);
+    bool OnMouseButtonUp(sl::MouseButtonUpEvent &event);
 
     sl::EventCallback m_eventCallback;
-
-    sl::LayerStack m_stack;
+    sl::LayerStack m_panelStack;
     void *m_pMainWindow;
     ImGuiData m_data;
 };

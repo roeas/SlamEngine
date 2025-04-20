@@ -1,5 +1,6 @@
 #include "ImGuiLayer.h"
 
+#include "Core/Path.h"
 #include "Event/KeyEvent.h"
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
@@ -30,13 +31,13 @@ ImGuiLayer::ImGuiLayer() : m_pMainWindow(nullptr)
     auto pDetails = std::make_unique<Details>();
     auto pViewport = std::make_unique<Viewport>();
 
-    m_stack.PushLayer(std::move(pMenuBar));
-    m_stack.PushLayer(std::move(pState));
-    m_stack.PushLayer(std::move(pOutputLog));
-    m_stack.PushLayer(std::move(pAssetBrowser));
-    m_stack.PushLayer(std::move(pEntityList));
-    m_stack.PushLayer(std::move(pDetails));
-    m_stack.PushLayer(std::move(pViewport));
+    m_panelStack.PushLayer(std::move(pMenuBar));
+    m_panelStack.PushLayer(std::move(pState));
+    m_panelStack.PushLayer(std::move(pOutputLog));
+    m_panelStack.PushLayer(std::move(pAssetBrowser));
+    m_panelStack.PushLayer(std::move(pEntityList));
+    m_panelStack.PushLayer(std::move(pDetails));
+    m_panelStack.PushLayer(std::move(pViewport));
 }
 
 void ImGuiLayer::OnAttach()
@@ -52,7 +53,7 @@ void ImGuiLayer::OnDetach()
 void ImGuiLayer::BeginFrame()
 {
     sl::ImGuiContext::NewFrame();
-    m_stack.BeginFrame();
+    m_panelStack.BeginFrame();
 }
 
 void ImGuiLayer::OnUpdate(float deltaTime)
@@ -86,11 +87,11 @@ void ImGuiLayer::OnUpdate(float deltaTime)
         ImGui::SameLine();
         ImGui::TextUnformatted(ImGuizmo::IsUsingAny() ? "true" : "fasle");
 
-        ImGui::End();
+        ImGui::End(); // ImGuizmo State
     }
 
     ImGui::DockSpaceOverViewport(ImGui::GetID("MainDockSpace"), ImGui::GetMainViewport(), m_data.m_dockspaceFlag);
-    m_stack.OnUpdate(deltaTime);
+    m_panelStack.OnUpdate(deltaTime);
 
     if (m_data.m_windowShouldClose)
     {
@@ -101,13 +102,13 @@ void ImGuiLayer::OnUpdate(float deltaTime)
 
 void ImGuiLayer::OnRender()
 {
-    m_stack.OnRender();
+    m_panelStack.OnRender();
     sl::ImGuiContext::Submit();
 }
 
 void ImGuiLayer::EndFrame()
 {
-    m_stack.EndFrame();
+    m_panelStack.EndFrame();
 }
 
 void ImGuiLayer::OnEvent(sl::Event &event)
@@ -115,9 +116,9 @@ void ImGuiLayer::OnEvent(sl::Event &event)
     sl::EventDispatcher dispatcher{ event };
     dispatcher.Dispatch<sl::KeyDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnKeyDownEvent));
     dispatcher.Dispatch<sl::MouseButtonDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseButtonDown));
-    dispatcher.Dispatch<sl::MouseButtonUpEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseUpDown));
+    dispatcher.Dispatch<sl::MouseButtonUpEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseButtonUp));
 
-    m_stack.OnEvent(event);
+    m_panelStack.OnEvent(event);
 }
 
 bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
@@ -127,6 +128,7 @@ bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
         return false;
     }
 
+    // Change transform gizmo operation mode
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
     switch (event.GetKey())
     {
@@ -150,6 +152,11 @@ bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
             pData->m_imguizmoMode = ImGuizmo::OPERATION::SCALE;
             break;
         }
+        case SL_KEY_T:
+        {
+            pData->m_imguizmoMode = ImGuizmo::OPERATION::UNIVERSAL;
+            break;
+        }
         default:
         {
             break;
@@ -161,18 +168,27 @@ bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
 
 bool ImGuiLayer::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
 {
-    if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT && m_data.m_isMouseInViewport)
+    // Right button down to start moving camera
+    if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT && m_data.m_isMouseHoverViewport)
     {
         sl::World::GetMainCameraComponent().m_controllerMode = sl::CameraControllerMode::FPS;
         sl::Input::SetMouseRelativeMode(m_pMainWindow, true);
         sl::Input::GetMouseDelta();
         return true;
     }
+    else if (event.GetButton() == SL_MOUSE_BUTTON_X1 && m_data.m_isMouseHoverAssetBrowser &&
+        m_data.m_assetBrowserCrtPath != sl::Path::GetAsset())
+    {
+        // TODO: Go forward
+        m_data.m_assetBrowserCrtPath = m_data.m_assetBrowserCrtPath.parent_path();
+        return true;
+    }
     return false;
 }
 
-bool ImGuiLayer::OnMouseUpDown(sl::MouseButtonUpEvent &event)
+bool ImGuiLayer::OnMouseButtonUp(sl::MouseButtonUpEvent &event)
 {
+    // Left button up to stop moving camera
     if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT &&
         sl::World::GetMainCameraComponent().m_controllerMode != sl::CameraControllerMode::None)
     {

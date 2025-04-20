@@ -25,8 +25,8 @@ struct ScrollingBuffer
         }
         else
         {
-            m_datas[m_offset] = ImVec2(x, y);
-            m_offset = (m_offset + 1) % m_maxSize;
+            m_datas[m_offset++] = ImVec2(x, y);
+            m_offset = m_offset >= m_maxSize ? 0 : m_offset;
         }
     }
 
@@ -69,12 +69,53 @@ void State::OnUpdate(float deltaTime)
         return;
     }
 
-    ImGui::Text("Backend: %s", nameof::nameof_enum(sl::RenderCore::GetBackend()).data());
-    ImGui::Separator();
-    ShowFPS(deltaTime);
-    ShowCost(deltaTime);
+    constexpr float WindowSize = 0.5f; // In seconds
+    static float s_sumFrame = 0.0f;
+    static float s_sumTime = 0.0f; // In seconds
+    static float s_avgFPS = 0.0f;
+    static float s_plotSumTime = 0.0f; // In seconds
+    static ScrollingBuffer s_buffer;
 
-    ImGui::End();
+    ++s_sumFrame;
+    s_sumTime += deltaTime * 0.001f;
+    s_plotSumTime += deltaTime * 0.001f;
+    if (s_sumTime >= WindowSize)
+    {
+        s_avgFPS = s_sumFrame / s_sumTime;
+        s_buffer.AddPoint(s_plotSumTime, s_avgFPS);
+        s_sumFrame = 0.0f;
+        s_sumTime = 0.0f;
+    }
+
+    ImGui::Text("Backend: %s", nameof::nameof_enum(sl::RenderCore::GetBackend()).data());
+    ImGui::Text("Average FPS: %i", (int)std::round(s_avgFPS));
+    ImGui::Text("FPS: %i", (int)std::round(1000.0f / deltaTime));
+    ImGui::Text("Cost: %i ms", (int)std::round(deltaTime));
+
+    ImGui::Separator();
+    ImGui::TextUnformatted("Average Frame Per Second:");
+    if (ImPlot::BeginPlot("##FPSPanel", ImVec2(-1.0f, 128.0f),
+        ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs | ImPlotFlags_NoFrame))
+    {
+        ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None);
+        ImPlot::SetupAxisLimits(ImAxis_X1, s_plotSumTime - 5.0f, s_plotSumTime - WindowSize, ImGuiCond_Always);
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 200.0f, ImGuiCond_Always);
+        ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 0.5f);
+        if (!s_buffer.m_datas.empty()) [[likely]]
+        {
+            ImPlot::PlotLine("FPS",
+                &s_buffer.m_datas[0].x,
+                &s_buffer.m_datas[0].y,
+                s_buffer.m_datas.size(),
+                ImPlotLineFlags_SkipNaN | ImPlotLineFlags_Shaded,
+                s_buffer.m_offset,
+                2 * sizeof(float));
+        }
+
+        ImPlot::EndPlot();
+    }
+
+    ImGui::End(); // State
 }
 
 void State::OnRender()
@@ -90,76 +131,4 @@ void State::EndFrame()
 void State::OnEvent(sl::Event &event)
 {
 
-}
-
-void State::ShowFPS(float deltaTime)
-{
-    // In seconds
-    static float s_sumTime = 0.0f;
-    static ScrollingBuffer s_buffer;
-
-    s_sumTime += deltaTime * 0.001f;
-    if (s_sumTime > 1.0f)
-    {
-        // Waiting for programme to be stable
-        s_buffer.AddPoint(s_sumTime, 1000.0f / deltaTime);
-    }
-
-    ImGui::TextUnformatted("Frames Per Second:");
-    if (ImPlot::BeginPlot("##FPSPanel", ImVec2(-1.0f, 128.0f), ImPlotFlags_CanvasOnly |
-        ImPlotFlags_NoInputs | ImPlotFlags_NoFrame))
-    {
-        ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None);
-        ImPlot::SetupAxisLimits(ImAxis_X1, s_sumTime - 4.0f, s_sumTime, ImGuiCond_Always);
-        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 500.0f, ImGuiCond_Always);
-        ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 0.5f);
-        if (!s_buffer.m_datas.empty())
-        {
-            ImPlot::PlotLine("FPS",
-                &s_buffer.m_datas[0].x,
-                &s_buffer.m_datas[0].y,
-                s_buffer.m_datas.size(),
-                0,
-                s_buffer.m_offset,
-                2 * sizeof(float));
-        }
-
-        ImPlot::EndPlot();
-    }
-}
-
-void State::ShowCost(float deltaTime)
-{
-    // In milliseconds
-    static float s_sumTime = 0.0f;
-    static ScrollingBuffer s_buffer;
-
-    s_sumTime += deltaTime;
-    if (s_sumTime > 1000.0f)
-    {
-        // Waiting for programme to be stable
-        s_buffer.AddPoint(s_sumTime, deltaTime);
-    }
-
-    ImGui::TextUnformatted("Milliseconds Per Frame:");
-    if (ImPlot::BeginPlot("##CostPanel", ImVec2(-1.0f, 128.0f),
-        ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs | ImPlotFlags_NoFrame))
-    {
-        ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None);
-        ImPlot::SetupAxisLimits(ImAxis_X1, s_sumTime - 4000.0f, s_sumTime, ImGuiCond_Always);
-        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 50.0f, ImGuiCond_Always);
-        ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 0.5f);
-        if (!s_buffer.m_datas.empty())
-        {
-            ImPlot::PlotShaded("Coast in ms",
-                &s_buffer.m_datas[0].x,
-                &s_buffer.m_datas[0].y,
-                s_buffer.m_datas.size(),
-                0, 0,
-                s_buffer.m_offset,
-                2 * sizeof(float));
-        }
-
-        ImPlot::EndPlot();
-    }
 }

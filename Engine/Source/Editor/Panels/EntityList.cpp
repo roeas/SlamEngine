@@ -32,11 +32,13 @@ void EntityList::OnUpdate(float deltaTime)
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
 
     // Each entity holds a #TagComponent
-    auto allEntityView = sl::World::GetRegistry().view<sl::TagComponent>();
-    for (auto entity : allEntityView)
+    auto view = sl::World::GetRegistry().view<sl::TagComponent>();
+    for (auto entity : view)
     {
+        // TODO: Hierarchy
         ImGuiTreeNodeFlags treeNodeFlag =
             ImGuiTreeNodeFlags_Leaf |
+            ImGuiTreeNodeFlags_NoTreePushOnOpen |
             ImGuiTreeNodeFlags_FramePadding |
             ImGuiTreeNodeFlags_SpanAvailWidth;
         if (pData->m_selectedEntity == entity)
@@ -44,8 +46,9 @@ void EntityList::OnUpdate(float deltaTime)
             treeNodeFlag |= ImGuiTreeNodeFlags_Selected;
         }
 
-        bool nodeOpen = ImGui::TreeNodeEx((void *)(uint64_t)(uint32_t)entity,
-            treeNodeFlag, allEntityView.get<sl::TagComponent>(entity).m_name.data());
+        ImGui::PushID((uint32_t)entity);
+        ImGui::TreeNodeEx(view.get<sl::TagComponent>(entity).m_name.data(), treeNodeFlag);
+
         // Left click to select entity
         if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
         {
@@ -56,6 +59,7 @@ void EntityList::OnUpdate(float deltaTime)
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
             isEntityClicked = true;
+            pData->m_selectedEntity = entity;
             ImGui::OpenPopup("##EntityPopup");
         }
         if (ImGui::BeginPopup("##EntityPopup"))
@@ -65,8 +69,8 @@ void EntityList::OnUpdate(float deltaTime)
                 sl::Entity slEntity{ entity };
 
                 // Not allowed to destroy the main camera
-                if (auto pCameraComponent = slEntity.TryGetComponents<sl::CameraComponent>();
-                    pCameraComponent && pCameraComponent->m_isMainCamera)
+                auto pCameraComponent = slEntity.TryGetComponents<sl::CameraComponent>();
+                if (pCameraComponent && pCameraComponent->m_isMainCamera)
                 {
                     SL_LOG_WARN("Can not destroy main camera entity {}", (uint32_t)entity);
                 }
@@ -81,22 +85,17 @@ void EntityList::OnUpdate(float deltaTime)
             }
             ImGui::EndPopup();
         }
-
-        if (nodeOpen)
-        {
-            // TODO: Hierarchy
-            ImGui::TreePop();
-        }
+        ImGui::PopID();
     }
 
     if (ImGui::IsWindowHovered() && !isEntityClicked)
     {
-        // Left click on an enpty space to clear selected entity
+        // Left click on enpty space to clear selected entity
         if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
         {
             pData->m_selectedEntity.ResetHandle();
         }
-        // Right click on an enpty space to create a new entity
+        // Right click on enpty space to create a new entity
         if (ImGui::IsMouseClicked(ImGuiMouseButton_Right))
         {
             ImGui::OpenPopup("##CreateNewEntityPopup");
@@ -110,7 +109,7 @@ void EntityList::OnUpdate(float deltaTime)
         }
         ImGui::EndPopup();
     }
-    ImGui::End();
+    ImGui::End(); // Entity List
 }
 
 void EntityList::OnRender()

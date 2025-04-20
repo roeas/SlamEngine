@@ -1,8 +1,10 @@
 #include "AssetBrowser.h"
 
+#include "Core/Log.h"
 #include "Core/Path.h"
 #include "ImGui/IconsMaterialSymbols.h"
 #include "Panels/ImGuiData.h"
+#include "Panels/ImGuiUtils.h"
 #include "Renderer/Texture.h"
 
 #include <imgui/imgui.h>
@@ -54,34 +56,35 @@ void AssetBrowser::OnUpdate(float deltaTime)
         return;
     }
 
-    std::string crtPath = m_assetBrowserCrtPath.generic_string();
-    
-    // Disable the back button if the current path reaches the outermost path
-    const bool backButtonDisabled = !sl::Path::Contain(sl::Path::GetAsset(), crtPath);
-    if (backButtonDisabled)
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+    pData->m_isMouseHoverAssetBrowser = ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows);
+
+    // Disable the back button if current path reaches the outermost level
+    bool backButtonDisable = pData->m_assetBrowserCrtPath == sl::Path::GetAsset();
+    if (backButtonDisable)
     {
         ImGui::BeginDisabled();
     }
     if (ImGui::Button(ICON_MS_ARROW_BACK))
     {
-        m_assetBrowserCrtPath = m_assetBrowserCrtPath.parent_path();
+        pData->m_assetBrowserCrtPath = pData->m_assetBrowserCrtPath.parent_path();
     }
-    if (backButtonDisabled)
+    if (backButtonDisable)
     {
         ImGui::EndDisabled();
     }
 
     // Display the current path
     ImGui::SameLine();
-    ImGui::TextUnformatted(crtPath.c_str());
+    ImGui::TextUnformatted(pData->m_assetBrowserCrtPath.generic_string().c_str());
 
     // Select item size
     static size_t s_itemSizeIndex = 2;
     constexpr size_t SizeCount = 5;
-    float DPIFactor = 16.0f;
-    const std::array<float, SizeCount> BasicColumSizes =
+    SL_ASSERT(s_itemSizeIndex < SizeCount);
+    constexpr std::array<float, SizeCount> BasicColumnSizes =
     {
-        DPIFactor * 2.0f, DPIFactor * 3.0f, DPIFactor * 4.0f, DPIFactor * 5.0f, DPIFactor * 6.0f,
+        48.0f, 64.0f, 80.0f, 96.0f, 112.0f,
     };
     constexpr std::array<const char *, SizeCount> SizeNames =
     {
@@ -89,17 +92,17 @@ void AssetBrowser::OnUpdate(float deltaTime)
     };
     constexpr std::array<uint8_t, SizeCount> NameDisplayLines =
     {
-        1, 2, 3, 4, 5,
+        1, 2, 2, 2, 2,
     };
 
+    // Item size combo
     ImGui::SameLine();
-    // AlignNextWidget(SizeNames.at(s_itemSizeIndex), 1.0f, -25.0f);
-    // 25.0f is approximately the size of the triangle of the combo widget
-    if (ImGui::BeginCombo("##ItemSizeCombo", SizeNames.at(s_itemSizeIndex), ImGuiComboFlags_WidthFitPreview))
+    AlignNextWidget(SizeNames[s_itemSizeIndex], 1.0f, -27.0f);
+    if (ImGui::BeginCombo("##ItemSizeCombo", SizeNames[s_itemSizeIndex], ImGuiComboFlags_WidthFitPreview))
     {
         for (size_t i = 0; i < SizeCount; ++i)
         {
-            if (ImGui::Selectable(SizeNames.at(i), i == s_itemSizeIndex))
+            if (ImGui::Selectable(SizeNames[i], i == s_itemSizeIndex))
             {
                 s_itemSizeIndex = i;
             }
@@ -107,8 +110,9 @@ void AssetBrowser::OnUpdate(float deltaTime)
         ImGui::EndCombo();
     }
 
+    // Assets
     ImGui::Separator();
-
+    ImGui::BeginChild("##Assets");
     float available = ImGui::GetContentRegionAvail().x;
     float itemSpacing = ImGui::GetStyle().ItemSpacing.x;
     ImVec2 framePadding = ImGui::GetStyle().FramePadding;
@@ -118,39 +122,36 @@ void AssetBrowser::OnUpdate(float deltaTime)
     {
         available -= ImGui::GetStyle().ScrollbarSize;
     }
-
     if (available <= 0.0f)
     {
+        ImGui::EndChild();
         ImGui::End();
         return;
     }
 
-    available += itemSpacing;
-    uint32_t columCount = (uint32_t)available / (uint32_t)BasicColumSizes.at(s_itemSizeIndex);
-    if (columCount < 1)
-    {
-        columCount = 1;
-    }
-
-    float columSize = std::floor(available / (float)columCount);
+    // Fill item size, I hate these
+    uint32_t columnCount = std::max((uint32_t)(available / BasicColumnSizes[s_itemSizeIndex]), 1U);
+    float columSize = std::floor(available / (float)columnCount);
     float filledItemSize = columSize - itemSpacing - 1.0f;
 
-    // Show files and folders under current path
-    uint32_t columIndex = 0;
-    ImGui::Columns(columCount, "##AssetBrowserColums", false);
-    for (const auto &it : std::filesystem::directory_iterator(m_assetBrowserCrtPath))
+    // Show file and folder buttons
+    uint32_t columnIndex = 0;
+    ImGui::Columns(columnCount, "##AssetBrowserColums", false);
+    for (auto it : std::filesystem::directory_iterator(pData->m_assetBrowserCrtPath))
     {
-        if (columCount > 1)
-        {
-            if (columIndex >= columCount)
-            {
-                columIndex = 0;
-            }
-            ImGui::SetColumnWidth(columIndex++, columSize);
-        }
-
         std::string fileName = it.path().filename().generic_string();
         ImGui::PushID(fileName.data());
+
+        // Multy columns
+        if (columnCount > 1)
+        {
+            // Multy rows
+            if (columnIndex >= columnCount)
+            {
+                columnIndex = 0;
+            }
+            ImGui::SetColumnWidth(columnIndex++, columSize);
+        }
 
         bool isDirectory = it.is_directory();
         ImTextureID textureID = isDirectory ?
@@ -161,19 +162,17 @@ void AssetBrowser::OnUpdate(float deltaTime)
             ImVec2{ filledItemSize - framePadding.x * 2.0f, filledItemSize - framePadding.y * 2.0f },
             ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
 
-        // Open the folder when double clicking on the folder
-        if (isDirectory && ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+        // Open the folder when double clicking
+        if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && isDirectory)
         {
-            m_assetBrowserCrtPath = it.path();
+            pData->m_assetBrowserCrtPath = it.path();
         }
 
         // Limit the number of lines displayed for a file or folder name
-        ImGui::BeginChild(
-            "##Text",
-            ImVec2{ filledItemSize, ImGui::GetFontSize() * (float)NameDisplayLines.at(s_itemSizeIndex) },
-            ImGuiChildFlags_None,
-            ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoDecoration);
-        ImGui::TextWrapped(fileName.c_str());
+        ImGui::BeginChild("##Name",
+            ImVec2{ filledItemSize, ImGui::GetFontSize() * (float)NameDisplayLines[s_itemSizeIndex]},
+            ImGuiChildFlags_None, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs);
+        ImGui::TextWrapped(fileName.data());
         ImGui::EndChild();
 
         ImGui::PopID();
@@ -181,7 +180,8 @@ void AssetBrowser::OnUpdate(float deltaTime)
     }
 
     ImGui::Columns(1);
-    ImGui::End();
+    ImGui::EndChild(); // Assets
+    ImGui::End(); // Asset Browser
 }
 
 void AssetBrowser::OnRender()

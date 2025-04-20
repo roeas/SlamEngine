@@ -1,23 +1,14 @@
 #include "Viewport.h"
 
+#include "ImGui/IconsMaterialSymbols.h"
 #include "Panels/ImGuiData.h"
+#include "Panels/ImGuiUtils.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
-#include "ImGui/IconsMaterialSymbols.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
-
-namespace
-{
-
-float GetTitleBarSize()
-{
-    return ImGui::GetFontSize() + ImGui::GetStyle().FramePadding.y * 2.0f;
-}
-
-} // namespace
 
 void Viewport::OnAttach()
 {
@@ -45,15 +36,15 @@ void Viewport::OnUpdate(float deltaTime)
     ImGui::PopStyleVar();
 
     // Is mouse in viewport
-    static_cast<ImGuiData *>(ImGui::GetIO().UserData)->m_isMouseInViewport = ImGui::IsWindowHovered();
+    static_cast<ImGuiData *>(ImGui::GetIO().UserData)->m_isMouseHoverViewport = ImGui::IsWindowHovered();
 
     // Window position
-    auto windowPos = ImGui::GetWindowPos();
+    const auto &windowPos = ImGui::GetWindowPos();
     m_windowPosX = (uint32_t)windowPos.x;
     m_windowPosY = (uint32_t)windowPos.y;
 
     // Window size
-    ImVec2 crtSize = ImGui::GetContentRegionAvail();
+    const ImVec2 &crtSize = ImGui::GetContentRegionAvail();
     if (m_windowSizeX != crtSize.x || m_windowSizeY != crtSize.y)
     {
         m_windowSizeX = (uint32_t)crtSize.x;
@@ -72,7 +63,7 @@ void Viewport::OnUpdate(float deltaTime)
 
     // Draw main frame buffer color attachment
     uint32_t handle = sl::RenderCore::GetMainFramebuffer()->GetAttachmentHandle(0);
-    ImGui::Image((uint64_t)handle, ImGui::GetContentRegionAvail(), ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
+    ImGui::Image((ImTextureID)handle, ImGui::GetContentRegionAvail(), ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
 
     ShowImGuizmoTransform();
     ShowImGuizmoOrientation();
@@ -97,50 +88,11 @@ void Viewport::OnEvent(sl::Event &event)
 
 }
 
-void Viewport::ShowToolOverlay()
-{
-    // Display transform tools on the upper left corner
-    constexpr size_t ToolCount = 4;
-    constexpr std::array<int, ToolCount> Operations =
-    {
-        -1, // No ImGuizmo tramsform
-        ImGuizmo::OPERATION::TRANSLATE,
-        ImGuizmo::OPERATION::ROTATE,
-        ImGuizmo::OPERATION::SCALE,
-    };
-    constexpr std::array<const char *, ToolCount> Icons =
-    {
-        ICON_MS_ARROW_SELECTOR_TOOL, ICON_MS_DRAG_PAN, ICON_MS_CACHED, ICON_MS_ZOOM_OUT_MAP,
-    };
-
-    auto ToolButton = [](size_t index)
-    {
-        const int op = Operations[index];
-        ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-
-        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, pData->m_imguizmoMode == op ? 1.0f : 0.5f);
-        if (ImGui::Button(Icons[index], ImVec2{ 32.0f, 32.0f }))
-        {
-            pData->m_imguizmoMode = op;
-        }
-        ImGui::PopStyleVar();
-    };
-
-    ImGui::SetNextWindowPos(ImVec2{ (float)m_windowPosX + 16.0f, (float)m_windowPosY + 16.0f + GetTitleBarSize() });
-    ImGui::Begin("Tools", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBackground);
-    for (size_t i = 0; i < ToolCount; ++i)
-    {
-        ToolButton(i);
-    }
-    ImGui::End(); // Tools
-}
-
 void Viewport::ShowImGuizmoTransform()
 {
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
     if (pData->m_imguizmoMode < 0 || !pData->m_selectedEntity.IsValid() || pData->m_selectedEntity == sl::World::GetMainCameraEntity())
     {
-        ImGuizmo::Enable(false);
         return;
     }
 
@@ -152,21 +104,21 @@ void Viewport::ShowImGuizmoTransform()
     ImGuizmo::SetOrthographic(camera.m_projectionType == sl::ProjectionType::Orthographic);
     ImGuizmo::SetRect((float)m_windowPosX, (float)m_windowPosY + GetTitleBarSize(), (float)m_windowSizeX, (float)m_windowSizeY);
 
-    const glm::mat4 &view = camera.GetView();
-    const glm::mat4 &projection = camera.GetProjection();
+    const glm::mat4 &viewMat = camera.GetView();
+    const glm::mat4 &projectionMat = camera.GetProjection();
     auto &transform = pData->m_selectedEntity.GetComponents<sl::TransformComponent>();
-    glm::mat4 manipulatedTransform = transform.GetTransform();
+    glm::mat4 manipulatedTransformMat = transform.GetTransform();
 
     ImGuizmo::SetDrawlist();
-    ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection),
+    ImGuizmo::Manipulate(glm::value_ptr(viewMat), glm::value_ptr(projectionMat),
         (ImGuizmo::OPERATION)pData->m_imguizmoMode, ImGuizmo::LOCAL,
-        glm::value_ptr(manipulatedTransform), nullptr, nullptr);
+        glm::value_ptr(manipulatedTransformMat), nullptr, nullptr);
 
     if (ImGuizmo::IsUsing())
     {
         // Decompose transform mat to position, rotation and scale
         glm::vec3 newPosition, newRotation, newScale;
-        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(manipulatedTransform),
+        ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(manipulatedTransformMat),
             glm::value_ptr(newPosition), glm::value_ptr(newRotation), glm::value_ptr(newScale));
 
         transform.m_position = newPosition;
@@ -177,12 +129,51 @@ void Viewport::ShowImGuizmoTransform()
 
 void Viewport::ShowImGuizmoOrientation()
 {
-    // Display a cube on the upper right corner
-    float length = 100.0f;
+    constexpr float Length = 128.0f;
     ImVec2 pos = ImVec2{
-        (float)m_windowPosX + (float)m_windowSizeX - length,
+        (float)m_windowPosX + (float)m_windowSizeX - Length,
         (float)m_windowPosY + GetTitleBarSize() };
 
+    // Display a cube on the upper right corner
     auto view = sl::World::GetMainCameraComponent().GetView();
-    ImGuizmo::ViewManipulate(glm::value_ptr(view), length, pos, ImVec2{ length , length }, 0);
+    ImGuizmo::ViewManipulate(glm::value_ptr(view), Length, pos, ImVec2{ Length , Length }, 0);
+}
+
+void Viewport::ShowToolOverlay()
+{
+    constexpr size_t ToolCount = 5;
+    constexpr std::array<int, ToolCount> Operations =
+    {
+        -1, // No ImGuizmo tramsform
+        ImGuizmo::OPERATION::TRANSLATE,
+        ImGuizmo::OPERATION::ROTATE,
+        ImGuizmo::OPERATION::SCALE,
+        ImGuizmo::OPERATION::UNIVERSAL,
+    };
+    constexpr std::array<const char *, ToolCount> Icons =
+    {
+        ICON_MS_ARROW_SELECTOR_TOOL, ICON_MS_DRAG_PAN, ICON_MS_CACHED, ICON_MS_ZOOM_OUT_MAP, ICON_MS_CROP_ROTATE,
+    };
+
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+    auto ToolButton = [pData](size_t index)
+    {
+        const int op = Operations[index];
+        ImGui::PushStyleVar(ImGuiStyleVar_Alpha, pData->m_imguizmoMode == op ? 1.0f : 0.5f);
+        if (ImGui::Button(Icons[index], ImVec2{ 40.0f, 40.0f }))
+        {
+            pData->m_imguizmoMode = op;
+        }
+        ImGui::PopStyleVar();
+    };
+
+    // Display transform tools on the upper left corner
+    ImGui::SetNextWindowPos(ImVec2{ (float)m_windowPosX + 10.0f, (float)m_windowPosY + 10.0f + GetTitleBarSize() });
+    ImGui::Begin("Tools", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoBackground);
+    for (size_t i = 0; i < ToolCount; ++i)
+    {
+        ToolButton(i);
+    }
+
+    ImGui::End(); // Tools
 }

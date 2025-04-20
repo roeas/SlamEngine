@@ -104,7 +104,7 @@ void OutputLog::OnUpdate(float deltaTime)
     };
 
     // Show log level filter button
-    auto LevelButton = [&](sl::LogLevel level)
+    auto LevelButton = [&LogLevelToColor, &LevelToIcon](sl::LogLevel level)
     {
         ImGui::SameLine();
         ImGui::PushStyleColor(ImGuiCol_Text, LogLevelToColor(level));
@@ -115,6 +115,13 @@ void OutputLog::OnUpdate(float deltaTime)
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
+    };
+    // Show colored log text
+    auto LogText = [&LogLevelToColor](const sl::LogInfo &info)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Text, LogLevelToColor(info.m_level));
+        ImGui::TextUnformatted(info.m_content.data());
+        ImGui::PopStyleColor();
     };
 
     if (!ImGui::Begin("Output Log"))
@@ -145,51 +152,46 @@ void OutputLog::OnUpdate(float deltaTime)
 
     ImGui::Separator();
     auto &logInfos = sl::Log::GetLogInfos();
-    if (ImGui::BeginChild("LogTexts", ImVec2{ 0.0f, 0.0f }, ImGuiChildFlags_FrameStyle, ImGuiWindowFlags_HorizontalScrollbar))
+    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4{ 37.0f / 255.0f, 37.0f / 255.0f, 38.0f / 255.0f, 1.0f });
+    ImGui::BeginChild("##LogText", ImVec2{ 0.0f, 0.0f }, ImGuiChildFlags_None, ImGuiWindowFlags_HorizontalScrollbar);
+    ImGui::PopStyleColor();
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f });
+
+    // If any filter is active
+    if (s_levelFilter < FullLevelFilter || s_textFilter.IsActive())
     {
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f, 0.0f });
-
-        // If any filter is active
-        if (s_levelFilter < FullLevelFilter || s_textFilter.IsActive())
+        for (size_t i = 0; i < logInfos.size(); ++i)
         {
-            for (size_t i = 0; i < logInfos.size(); ++i)
+            const auto &info = logInfos[i];
+            if ((s_levelFilter & (uint8_t)info.m_level) && s_textFilter.PassFilter(info.m_content.data()))
             {
-                const auto &info = logInfos[i];
-                if ((s_levelFilter & (uint8_t)info.m_level) && s_textFilter.PassFilter(info.m_content.data()))
-                {
-                    ImGui::PushStyleColor(ImGuiCol_Text, LogLevelToColor(info.m_level));
-                    ImGui::TextUnformatted(info.m_content.data());
-                    ImGui::PopStyleColor();
-                }
+                LogText(info);
             }
         }
-        else // Without any filter
+    }
+    else // Without any filter
+    {
+        ImGuiListClipper clipper;
+        clipper.Begin((int)logInfos.size());
+        while (clipper.Step())
         {
-            ImGuiListClipper clipper;
-            clipper.Begin((int)logInfos.size());
-            while (clipper.Step())
+            for (size_t i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i)
             {
-                for (size_t i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i)
-                {
-                    const auto &info = logInfos[i];
-                    ImGui::PushStyleColor(ImGuiCol_Text, LogLevelToColor(info.m_level));
-                    ImGui::TextUnformatted(info.m_content.data());
-                    ImGui::PopStyleColor();
-                }
+                LogText(logInfos[i]);
             }
-            clipper.End();
         }
-        ImGui::PopStyleVar();
+        clipper.End();
+    }
+    ImGui::PopStyleVar();
 
-        // Auto scrolling
-        if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-        {
-            ImGui::SetScrollHereY(1.0f);
-        }
+    // Auto scrolling
+    if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+    {
+        ImGui::SetScrollHereY(1.0f);
     }
 
     ImGui::EndChild();
-    ImGui::End();
+    ImGui::End(); // Output Log
 }
 
 void OutputLog::OnRender()
