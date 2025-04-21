@@ -10,6 +10,22 @@
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
 
+namespace
+{
+
+void UpdateImGuizmoDebugState()
+{
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+
+    pData->m_debugImGuizmoIsOver = ImGuizmo::IsOver();
+    pData->m_debugImGuizmoIsUsing = ImGuizmo::IsUsing();
+    pData->m_debugImGuizmoIsUsingViewManipulate = ImGuizmo::IsUsingViewManipulate();
+    pData->m_debugImGuizmoIsViewManipulateHovered = ImGuizmo::IsViewManipulateHovered();
+    pData->m_debugImGuizmoIsUsingAny = ImGuizmo::IsUsingAny();
+}
+
+} // namespace
+
 void Viewport::OnAttach()
 {
 
@@ -36,7 +52,8 @@ void Viewport::OnUpdate(float deltaTime)
     ImGui::PopStyleVar();
 
     // Is mouse in viewport
-    static_cast<ImGuiData *>(ImGui::GetIO().UserData)->m_isMouseHoverViewport = ImGui::IsWindowHovered();
+    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+    pData->m_isMouseHoverViewport = ImGui::IsWindowHovered();
 
     // Window position
     const auto &windowPos = ImGui::GetWindowPos();
@@ -63,13 +80,14 @@ void Viewport::OnUpdate(float deltaTime)
 
     // Draw main frame buffer color attachment
     uint32_t handle = sl::RenderCore::GetMainFramebuffer()->GetAttachmentHandle(0);
-    ImGui::Image((ImTextureID)handle, ImGui::GetContentRegionAvail(), ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
+    ImGui::Image((ImTextureID)handle, ImVec2{ (float)m_windowSizeX, (float)m_windowSizeY },
+        ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
 
     ShowImGuizmoTransform();
     ShowImGuizmoOrientation();
+    UpdateImGuizmoDebugState();
 
     ImGui::End(); // Viewport
-
     ShowToolOverlay();
 }
 
@@ -116,13 +134,13 @@ void Viewport::ShowImGuizmoTransform()
 
     if (ImGuizmo::IsUsing())
     {
-        // Decompose transform mat to position, rotation and scale
+        // Decompose transform matrix to position, rotation and scale
         glm::vec3 newPosition, newRotation, newScale;
         ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(manipulatedTransformMat),
             glm::value_ptr(newPosition), glm::value_ptr(newRotation), glm::value_ptr(newScale));
 
         transform.m_position = newPosition;
-        transform.m_rotation += glm::radians(newRotation) - transform.m_rotation;
+        transform.m_rotation = glm::radians(newRotation);
         transform.m_scale = newScale;
     }
 }
