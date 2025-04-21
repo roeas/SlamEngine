@@ -25,11 +25,16 @@ Editor::Editor(const EditorInitor &initor)
     m_pMainWindow->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     sl::ImGuiContext::Init(m_pMainWindow->GetNativeWindow(), m_pMainWindow->GetRenderContext());
 
-    // Create main frame buffer, size is meaningless here
+    // Create main framebuffer and ID framebuffer, size is meaningless here
     sl::RenderCore::SetMainFramebuffer(sl::FrameBuffer::Create(
     {
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_LINEAR),
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+    }));
+    sl::RenderCore::SetEntityIDFramebuffer(sl::FrameBuffer::Create(
+    {
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::R32I, false, SL_SAMPLER_CLAMP | SL_SAMPLER_NEAREST),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
     }));
 
     // Create camera uniform buffer

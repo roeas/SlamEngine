@@ -27,7 +27,7 @@ void EntityList::OnUpdate(float deltaTime)
         ImGui::End();
         return;
     }
-    
+
     bool isEntityClicked = false;
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
 

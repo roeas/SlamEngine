@@ -30,12 +30,10 @@ SandboxLayer::SandboxLayer()
             vec4 ub_cameraPos;
             mat4 ub_viewProjection;
         };
-
         vec3 GetCameraPos()
         {
             return ub_cameraPos.xyz;
         }
-        
         mat4 GetViewProjectionMat()
         {
             return ub_viewProjection;
@@ -70,6 +68,49 @@ SandboxLayer::SandboxLayer()
         }
     )";
 
+    static std::string IDvs =
+    R"(
+        #version 460 core
+        
+        layout(std140, binding = 0) uniform UBCamera
+        {
+            vec4 ub_cameraPos;
+            mat4 ub_viewProjection;
+        };
+        vec3 GetCameraPos()
+        {
+            return ub_cameraPos.xyz;
+        }
+        mat4 GetViewProjectionMat()
+        {
+            return ub_viewProjection;
+        }
+        
+        layout(location = 0) in vec3 a_position;
+        layout(location = 1) in vec2 a_uv0;
+        
+        layout(location = 0) uniform mat4 u_model;
+        
+        void main()
+        {
+            gl_Position = GetViewProjectionMat() * u_model * vec4(a_position, 1.0);
+        }
+    )";
+
+    static std::string IDfs =
+    R"(
+        #version 460 core
+        
+        layout(location = 0) out int o_entityID;
+        
+        layout(location = 1) uniform int u_entityID;
+        
+        void main()
+        {
+            o_entityID = u_entityID;
+        }
+    )";
+
     auto *pVertexBUffer = sl::VertexBuffer::Create(vertices, sizeof(vertices));
     auto *pIndexBuffer = sl::IndexBuffer::Create(indices, sizeof(indices));
     sl::VertexLayout layout
@@ -80,6 +121,7 @@ SandboxLayer::SandboxLayer()
 
     sl::VertexArray *pVertexArray = sl::VertexArray::Create(pVertexBUffer, pIndexBuffer, std::move(layout));
     sl::Shader *pShader = sl::Shader::Create(vs, fs);
+    sl::Shader *pIDShader = sl::Shader::Create(IDvs, IDfs);
 
     int width, height, channel;
     stbi_set_flip_vertically_on_load(1);
@@ -88,7 +130,7 @@ SandboxLayer::SandboxLayer()
     stbi_image_free(pData);
 
     auto squareEntity = sl::World::CreateEntity("Square");
-    squareEntity.AddComponent<sl::RenderingComponent>(pVertexArray, pTexture, pShader);
+    squareEntity.AddComponent<sl::RenderingComponent>(pVertexArray, pTexture, pShader, pIDShader);
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 }

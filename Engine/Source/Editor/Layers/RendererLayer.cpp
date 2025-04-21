@@ -61,18 +61,16 @@ void RendererLayer::OnEvent(sl::Event &event)
 
 void RendererLayer::BasePass()
 {
-
     sl::RenderCore::GetMainFramebuffer()->Bind();
-    sl::RenderCore::SetClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
-    sl::RenderCore::Clear();
+    sl::RenderCore::ClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
+    sl::RenderCore::ClearDepth(1.0f);
 
-    auto group = sl::World::GetRegistry().group<sl::RenderingComponent>(entt::get<sl::TransformComponent>);
+    auto group = sl::World::GetRegistry().group<sl::RenderingComponent, sl::TransformComponent>();
     for (auto entity : group)
     {
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
         rendering.m_pShader->Bind();
-        glm::mat4 modelMat = transform.GetTransform();
-        rendering.m_pShader->UploadUniform(0, modelMat);
+        rendering.m_pShader->UploadUniform(0, transform.GetTransform());
         rendering.m_pTexture->Bind(0);
         rendering.m_pShader->Unbind();
 
@@ -84,5 +82,23 @@ void RendererLayer::BasePass()
 
 void RendererLayer::EntityIDPass()
 {
-    // TODO
+    constexpr int entityIDClearData = -1;
+    sl::RenderCore::GetEntityIDFramebuffer()->Bind();
+    sl::RenderCore::GetEntityIDFramebuffer()->Clear(0, &entityIDClearData);
+    sl::RenderCore::ClearDepth(1.0f);
+
+    auto group = sl::World::GetRegistry().group<sl::RenderingComponent, sl::TransformComponent>();
+    for (auto entity : group)
+    {
+        auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
+
+        rendering.m_pIDShader->Bind();
+        rendering.m_pIDShader->UploadUniform(0, transform.GetTransform());
+        rendering.m_pIDShader->UploadUniform(1, (int)entity);
+        rendering.m_pIDShader->Unbind();
+
+        sl::RenderCore::Submit(rendering.m_pVertexArray, rendering.m_pIDShader);
+    }
+
+    sl::RenderCore::GetEntityIDFramebuffer()->Unbind();
 }

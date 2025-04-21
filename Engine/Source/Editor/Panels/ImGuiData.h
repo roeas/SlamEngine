@@ -16,10 +16,10 @@ struct ImGuiData
     bool m_debugImGuiDemo = false;
     bool m_debugImPlotDemo = false;
     bool m_debugImGuizmoState = false;
-    bool m_debugImGuizmoIsOver = false;
-    bool m_debugImGuizmoIsUsing = false;
-    bool m_debugImGuizmoIsUsingViewManipulate = false;
-    bool m_debugImGuizmoIsViewManipulateHovered = false;
-    bool m_debugImGuizmoIsUsingAny = false;
+    bool m_ImGuizmoIsOver = false;
+    bool m_ImGuizmoIsUsing = false;
+    bool m_ImGuizmoIsUsingViewManipulate = false;
+    bool m_ImGuizmoIsViewManipulateHovered = false;
+    bool m_ImGuizmoIsUsingAny = false;
     bool m_windowShouldClose = false;
 };

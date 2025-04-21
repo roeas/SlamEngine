@@ -2,6 +2,13 @@
 
 #include "Layer/Layer.h"
 
+namespace sl
+{
+
+class MouseButtonDownEvent;
+
+} // namespace sl
+
 class Viewport : public sl::Layer
 {
 public:
@@ -16,6 +23,9 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
+    bool OnMouseButtonDown(sl::MouseButtonDownEvent &event);
+    bool MousePick();
+
     void ShowImGuizmoTransform();
     void ShowImGuizmoOrientation();
     void ShowToolOverlay();

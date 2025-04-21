@@ -148,8 +148,8 @@ void ImGuiContext::SetColor()
     constexpr ImVec4 BlackColor = NormalizedColor(0, 0, 0);
     constexpr ImVec4 GreyColor = NormalizedColor(127, 127, 127);
     constexpr ImVec4 WhiteColor = NormalizedColor(255, 255, 255);
-    constexpr ImVec4 MyColor = NormalizedColor(255, 20, 40);
-    constexpr ImVec4 MyColorTrans = NormalizedColor(255, 20, 40, 127);
+    constexpr ImVec4 MyColor = NormalizedColor(250, 20, 40);
+    constexpr ImVec4 MyColorTrans = NormalizedColor(250, 20, 40, 127);
     constexpr ImVec4 UnknownColor = NormalizedColor(255, 0, 235);
 
     constexpr ImVec4 BackgroundColor = NormalizedColor(30, 30, 30);

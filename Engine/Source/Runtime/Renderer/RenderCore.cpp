@@ -18,6 +18,11 @@ void RenderCore::SetMainFramebuffer(FrameBuffer *pFrameBuffer)
     m_pMainFrameBuffer.reset(pFrameBuffer);
 }
 
+void RenderCore::SetEntityIDFramebuffer(FrameBuffer *pFrameBuffer)
+{
+    m_pEntityIDFrameBuffer.reset(pFrameBuffer);
+}
+
 void RenderCore::SetUniformBuffer(std::string_view name, UniformBuffer *pUniformBuffer)
 {
     if (m_UniformBuffers.find(name.data()) != m_UniformBuffers.end())
@@ -41,24 +46,19 @@ UniformBuffer *RenderCore::GetUniformBuffer(std::string_view name)
     return it->second.get();
 }
 
-void RenderCore::SetClearColor(const glm::vec4 &color)
+void RenderCore::ClearColor(const glm::vec4 &color)
 {
-    m_pRenderAPI->SetClearColor(color);
+    m_pRenderAPI->ClearColor(color);
 }
 
-void RenderCore::SetClearDepth(float depth)
+void RenderCore::ClearDepth(float depth)
 {
-    m_pRenderAPI->SetClearDepth(depth);
+    m_pRenderAPI->ClearDepth(depth);
 }
 
-void RenderCore::SetClearStencil(int stencil)
+void RenderCore::ClearStencil(int stencil)
 {
-    m_pRenderAPI->SetClearStencil(stencil);
-}
-
-void RenderCore::Clear()
-{
-    m_pRenderAPI->Clear();
+    m_pRenderAPI->ClearStencil(stencil);
 }
 
 void RenderCore::Submit(VertexArray *pVertexArray, Shader *pShader)

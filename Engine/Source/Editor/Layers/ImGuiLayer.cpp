@@ -73,19 +73,19 @@ void ImGuiLayer::OnUpdate(float deltaTime)
 
         ImGui::TextUnformatted("Is over: ");
         ImGui::SameLine();
-        ImGui::TextUnformatted(m_data.m_debugImGuizmoIsOver ? "true" : "fasle");
+        ImGui::TextUnformatted(m_data.m_ImGuizmoIsOver ? "true" : "fasle");
         ImGui::TextUnformatted("Is using: ");
         ImGui::SameLine();
-        ImGui::TextUnformatted(m_data.m_debugImGuizmoIsUsing ? "true" : "fasle");
+        ImGui::TextUnformatted(m_data.m_ImGuizmoIsUsing ? "true" : "fasle");
         ImGui::TextUnformatted("Is using view manipulate: ");
         ImGui::SameLine();
-        ImGui::TextUnformatted(m_data.m_debugImGuizmoIsUsingViewManipulate ? "true" : "fasle");
+        ImGui::TextUnformatted(m_data.m_ImGuizmoIsUsingViewManipulate ? "true" : "fasle");
         ImGui::TextUnformatted("Is view manipulate hovered: ");
         ImGui::SameLine();
-        ImGui::TextUnformatted(m_data.m_debugImGuizmoIsViewManipulateHovered ? "true" : "fasle");
+        ImGui::TextUnformatted(m_data.m_ImGuizmoIsViewManipulateHovered ? "true" : "fasle");
         ImGui::TextUnformatted("Is using any: ");
         ImGui::SameLine();
-        ImGui::TextUnformatted(m_data.m_debugImGuizmoIsUsingAny ? "true" : "fasle");
+        ImGui::TextUnformatted(m_data.m_ImGuizmoIsUsingAny ? "true" : "fasle");
 
         ImGui::End(); // ImGuizmo State
     }

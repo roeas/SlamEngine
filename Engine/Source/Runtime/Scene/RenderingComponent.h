@@ -18,6 +18,7 @@ struct RenderingComponent
     VertexArray *m_pVertexArray = nullptr;
     Texture2D *m_pTexture = nullptr;
     Shader *m_pShader = nullptr;
+    Shader *m_pIDShader = nullptr;
 };
 
 } // namespace sl
