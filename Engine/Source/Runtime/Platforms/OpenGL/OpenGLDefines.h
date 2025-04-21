@@ -210,6 +210,15 @@ constexpr GLenum GLDataType[nameof::enum_count<TextureFormat>()] =
     GL_FLOAT_32_UNSIGNED_INT_24_8_REV, // TextureFormat::D32FS8
 };
 
+constexpr GLbitfield GLClearBufferBit[] =
+{
+    0,                     // SL_CLEAR_NONE
+    GL_COLOR_BUFFER_BIT,   // SL_CLEAR_COLOR
+    GL_DEPTH_BUFFER_BIT,   // SL_CLEAR_DEPTH
+    0,
+    GL_STENCIL_BUFFER_BIT, // SL_CLEAR_STENCIL
+};
+
 constexpr GLint GLTextureWrap[] =
 {
     0,

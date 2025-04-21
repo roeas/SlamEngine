@@ -8,9 +8,10 @@ namespace sl
 class OpenGLRenderAPI : public RenderAPI
 {
 public:
-    void ClearColor(const glm::vec4 &color) override;
-    void ClearDepth(float depth) override;
-    void ClearStencil(int stencil) override;
+    void SetClearColor(const glm::vec4 &color) override;
+    void SetClearDepth(float depth) override;
+    void SetClearStencil(int stencil) override;
+    void Clear(uint8_t bits) override;
 
     void DrawIndexed(uint32_t count) override;
 };

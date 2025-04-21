@@ -48,17 +48,20 @@ UniformBuffer *RenderCore::GetUniformBuffer(std::string_view name)
 
 void RenderCore::ClearColor(const glm::vec4 &color)
 {
-    m_pRenderAPI->ClearColor(color);
+    m_pRenderAPI->SetClearColor(color);
+    m_pRenderAPI->Clear(SL_CLEAR_COLOR);
 }
 
 void RenderCore::ClearDepth(float depth)
 {
-    m_pRenderAPI->ClearDepth(depth);
+    m_pRenderAPI->SetClearDepth(depth);
+    m_pRenderAPI->Clear(SL_CLEAR_DEPTH);
 }
 
 void RenderCore::ClearStencil(int stencil)
 {
-    m_pRenderAPI->ClearStencil(stencil);
+    m_pRenderAPI->SetClearStencil(stencil);
+    m_pRenderAPI->Clear(SL_CLEAR_STENCIL);
 }
 
 void RenderCore::Submit(VertexArray *pVertexArray, Shader *pShader)

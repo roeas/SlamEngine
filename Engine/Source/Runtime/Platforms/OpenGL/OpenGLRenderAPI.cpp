@@ -7,23 +7,27 @@
 namespace sl
 {
 
-void OpenGLRenderAPI::ClearColor(const glm::vec4 &color)
+void OpenGLRenderAPI::SetClearColor(const glm::vec4 &color)
 {
     glClearColor(color.r, color.g, color.b, color.a);
-    glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void OpenGLRenderAPI::ClearDepth(float depth)
+void OpenGLRenderAPI::SetClearDepth(float depth)
 {
     glClearDepth(depth);
-    glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRenderAPI::ClearStencil(int stencil)
+void OpenGLRenderAPI::SetClearStencil(int stencil)
 {
     glClearStencil(stencil);
-    glClear(GL_STENCIL_BUFFER_BIT);
 }
+
+void OpenGLRenderAPI::Clear(uint8_t bits)
+{
+    glClear(GLClearBufferBit[(bits & SL_CLEAR_COLOR_MASK) >> SL_CLEAR_COLOR_SHIFT] |
+        GLClearBufferBit[(bits & SL_CLEAR_DEPTH_MASK) >> SL_CLEAR_DEPTH_SHIFT] |
+        GLClearBufferBit[(bits & SL_CLEAR_STENCIL_MASK) >> SL_CLEAR_STENCIL_SHIFT]);
+};
 
 void OpenGLRenderAPI::DrawIndexed(uint32_t count)
 {

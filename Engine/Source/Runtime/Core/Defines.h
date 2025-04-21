@@ -169,6 +169,26 @@ enum class ShaderType : uint8_t
 
 } // namespace sl
 
+#define SL_CLEAR_NONE          UINT8_C(0x00)
+
+#define SL_CLEAR_COLOR         UINT8_C(0x01)
+#define SL_CLEAR_COLOR_MASK    UINT8_C(0x01)
+#define SL_CLEAR_COLOR_SHIFT   0
+
+#define SL_CLEAR_DEPTH         UINT8_C(0x02)
+#define SL_CLEAR_DEPTH_MASK    UINT8_C(0x02)
+#define SL_CLEAR_DEPTH_SHIFT   0
+
+#define SL_CLEAR_STENCIL       UINT8_C(0x04)
+#define SL_CLEAR_STENCIL_MASK  UINT8_C(0x04)
+#define SL_CLEAR_STENCIL_SHIFT 0
+
+#define SL_CLEAR_ALL (0 \
+    | SL_CLEAR_COLOR \
+    | SL_CLEAR_DEPTH \
+    | SL_CLEAR_STENCIL \
+    )
+
 #define SL_SAMPLER_NONE                   UINT32_C(0x00000000)
 
 #define SL_SAMPLER_U_REPEAT               UINT32_C(0x00000001)
