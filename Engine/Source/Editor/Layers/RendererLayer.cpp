@@ -61,7 +61,25 @@ void RendererLayer::OnEvent(sl::Event &event)
 
 void RendererLayer::BasePass()
 {
-    // TODO
+
+    sl::RenderCore::GetMainFramebuffer()->Bind();
+    sl::RenderCore::SetClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
+    sl::RenderCore::Clear();
+
+    auto group = sl::World::GetRegistry().group<sl::RenderingComponent>(entt::get<sl::TransformComponent>);
+    for (auto entity : group)
+    {
+        auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
+        rendering.m_pShader->Bind();
+        glm::mat4 modelMat = transform.GetTransform();
+        rendering.m_pShader->UploadUniform(0, modelMat);
+        rendering.m_pTexture->Bind(0);
+        rendering.m_pShader->Unbind();
+
+        sl::RenderCore::Submit(rendering.m_pVertexArray, rendering.m_pShader);
+    }
+ 
+    sl::RenderCore::GetMainFramebuffer()->Unbind();
 }
 
 void RendererLayer::EntityIDPass()

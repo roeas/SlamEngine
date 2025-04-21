@@ -1,5 +1,6 @@
 #include "Details.h"
 
+#include "Core/Path.h"
 #include "ImGui/IconsMaterialSymbols.h"
 #include "ImGui/ImGuiContext.h"
 #include "Panels/ImGuiData.h"
@@ -315,7 +316,7 @@ void Details::OnUpdate(float deltaTime)
         }
 
         ImGui::Separator();
-        if (ImGui::TreeNodeEx("##Perspective", DefaultSubTreeFlags, "Perspective"))
+        if (ImGui::TreeNodeEx("Perspective", DefaultSubTreeFlags))
         {
             float fovDegrees = glm::degrees(pComponent->m_fov);
             StartWithText("FOV");
@@ -333,7 +334,7 @@ void Details::OnUpdate(float deltaTime)
         }
 
         ImGui::Separator();
-        if (ImGui::TreeNodeEx("##Orthographic", DefaultSubTreeFlags, "Orthographic"))
+        if (ImGui::TreeNodeEx("Orthographic", DefaultSubTreeFlags))
         {
             StartWithText("Size");
             cameraMightDirty |= ImGui::DragFloat("##Size", &(pComponent->m_orthoSize), 0.1f, 1.0f, 100000.0f);
@@ -346,7 +347,7 @@ void Details::OnUpdate(float deltaTime)
         }
 
         ImGui::Separator();
-        if (ImGui::TreeNodeEx("##Controller", DefaultSubTreeFlags, "Controller"))
+        if (ImGui::TreeNodeEx("Controller", DefaultSubTreeFlags))
         {
             float rotateSpeedDegrees = glm::degrees(pComponent->m_rotateSpeed);
             StartWithText("Rotate Speed");
@@ -363,6 +364,29 @@ void Details::OnUpdate(float deltaTime)
         }
 
         pComponent->m_isDirty |= cameraMightDirty;
+    });
+
+    // Draw render component
+    DrawComponent<sl::RenderingComponent>("Rendering", [this, pData](sl::RenderingComponent *pComponent)
+    {
+        if (ImGui::TreeNodeEx("Mesh", DefaultSubTreeFlags))
+        {
+            StartWithText("Name");
+            ImGui::TextUnformatted("");
+
+            StartWithText("Index");
+            ImGui::Text("%d", pComponent->m_pVertexArray->GetIndexCount());
+        }
+        if (ImGui::TreeNodeEx("Shader", DefaultSubTreeFlags))
+        {
+            StartWithText("Name");
+            ImGui::TextUnformatted("");
+        }
+        if (ImGui::TreeNodeEx("Material", DefaultSubTreeFlags))
+        {
+            StartWithText("Name");
+            ImGui::TextUnformatted("");
+        }
     });
 
     // Add component button

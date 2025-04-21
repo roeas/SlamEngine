@@ -2,6 +2,7 @@
 
 #include "Core/Log.h"
 #include "Scene/CameraComponent.h"
+#include "Scene/RenderingComponent.h"
 #include "Scene/TagComponent.h"
 #include "Scene/TransformComponent.h"
 #include "Utils/NameOf.hpp"
