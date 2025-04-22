@@ -2,6 +2,7 @@
 
 #include "Core/Path.h"
 #include "Renderer/RenderCore.h"
+#include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 
 #include <glm/glm.hpp>
@@ -123,14 +124,13 @@ SandboxLayer::SandboxLayer()
     sl::Shader *pShader = sl::Shader::Create(vs, fs);
     sl::Shader *pIDShader = sl::Shader::Create(IDvs, IDfs);
 
-    int width, height, channel;
-    stbi_set_flip_vertically_on_load(1);
-    auto *pData = stbi_load(sl::Path::FromeAsset("Texture/DebugUV.png").data(), &width, &height, &channel, 3);
-    sl::Texture2D *pTexture = sl::Texture2D::Create(width, height, sl::TextureFormat::RGB8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData);
-    stbi_image_free(pData);
+    constexpr sl::StringHashType DebugUVTextureID = sl::StringHash("DebugUV.png");
+    std::unique_ptr<sl::TextureResource> pResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(DebugUVTextureID, std::move(pResource));
 
     auto squareEntity = sl::World::CreateEntity("Square");
-    squareEntity.AddComponent<sl::RenderingComponent>(pVertexArray, pTexture, pShader, pIDShader);
+    squareEntity.AddComponent<sl::RenderingComponent>(pVertexArray, pShader, pIDShader, DebugUVTextureID);
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 }

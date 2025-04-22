@@ -5,6 +5,7 @@
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/RenderCore.h"
+#include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 #include "Window/Window.h"
 
@@ -92,6 +93,7 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
+    sl::ResourceManager::Update();
     m_layerStack.OnUpdate(m_clock.GetDeltatIme());
 }
 

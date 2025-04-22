@@ -5,10 +5,22 @@
 #include "ImGui/IconsMaterialSymbols.h"
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
-#include "Renderer/Texture.h"
+#include "Resource/ResourceManager.h"
 
 #include <imgui/imgui.h>
 #include <stb/stb_image.h>
+
+AssetBrowser::AssetBrowser() :
+    m_fileIconResourceID(sl::StringHash("FileIcon.png")), m_folderIconResourceID(sl::StringHash("FolderIcon.png"))
+{
+    std::unique_ptr<sl::TextureResource> pFileIconResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/FileIcon.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(m_fileIconResourceID, std::move(pFileIconResource));
+
+    std::unique_ptr<sl::TextureResource> pFolderIconResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/FolderIcon.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(m_folderIconResourceID, std::move(pFolderIconResource));
+}
 
 void AssetBrowser::OnAttach()
 {
@@ -27,29 +39,6 @@ void AssetBrowser::BeginFrame()
 
 void AssetBrowser::OnUpdate(float deltaTime)
 {
-    // TMP
-    static bool s_first = true;
-    static sl::Texture2D *pFileTexture;
-    static sl::Texture2D *pFolderTexture;
-    if (s_first)
-    {
-        s_first = false;
-        {
-            int width, height, channel;
-            stbi_set_flip_vertically_on_load(1);
-            auto *pData = stbi_load(sl::Path::FromeAsset("Texture/FileIcon.png").data(), &width, &height, &channel, 4);
-            pFileTexture = sl::Texture2D::Create(width, height, sl::TextureFormat::RGBA8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData);
-            stbi_image_free(pData);
-        }
-        {
-            int width, height, channel;
-            stbi_set_flip_vertically_on_load(1);
-            auto *pData = stbi_load(sl::Path::FromeAsset("Texture/FolderIcon.png").data(), &width, &height, &channel, 4);
-            pFolderTexture = sl::Texture2D::Create(width, height, sl::TextureFormat::RGBA8, true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR, pData);
-            stbi_image_free(pData);
-        }
-    }
-
     if (!ImGui::Begin("Asset Browser"))
     {
         ImGui::End();
@@ -153,10 +142,23 @@ void AssetBrowser::OnUpdate(float deltaTime)
             ImGui::SetColumnWidth(columnIndex++, columSize);
         }
 
+        // Texture resources
+        auto *pFileIconResource = sl::ResourceManager::GetTextureResource(m_fileIconResourceID);
+        auto *pFolderIconResource = sl::ResourceManager::GetTextureResource(m_folderIconResourceID);
+        if (!pFileIconResource || !pFolderIconResource || !pFileIconResource->IsReady() || !pFolderIconResource->IsReady()) [[unlikely]]
+        {
+            ImGui::PopID();
+            ImGui::Columns(1);
+            ImGui::EndChild();
+            ImGui::End();
+            return;
+        }
+
         bool isDirectory = it.is_directory();
         ImTextureID textureID = isDirectory ?
-            (ImTextureID)(uint64_t)pFolderTexture->GetHandle() :
-            (ImTextureID)(uint64_t)pFileTexture->GetHandle();
+            (ImTextureID)(uint64_t)pFolderIconResource->GetTexture()->GetHandle() :
+            (ImTextureID)(uint64_t)pFileIconResource->GetTexture()->GetHandle();
+
         // ImageButton will adds `style.FramePadding * 2.0f` to provided size
         ImGui::ImageButton("##Icon", textureID,
             ImVec2{ filledItemSize - framePadding.x * 2.0f, filledItemSize - framePadding.y * 2.0f },
@@ -170,7 +172,7 @@ void AssetBrowser::OnUpdate(float deltaTime)
 
         // Limit the number of lines displayed for a file or folder name
         ImGui::BeginChild("##Name",
-            ImVec2{ filledItemSize, ImGui::GetFontSize() * (float)NameDisplayLines[s_itemSizeIndex]},
+            ImVec2{ filledItemSize, ImGui::GetFontSize() * (float)NameDisplayLines[s_itemSizeIndex] },
             ImGuiChildFlags_None, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs);
         ImGui::TextWrapped(fileName.data());
         ImGui::EndChild();

@@ -1,6 +1,7 @@
 #include "RendererLayer.h"
 
 #include "Renderer/RenderCore.h"
+#include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 
 #include <glm/gtc/type_ptr.hpp>
@@ -71,7 +72,13 @@ void RendererLayer::BasePass()
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
         rendering.m_pShader->Bind();
         rendering.m_pShader->UploadUniform(0, transform.GetTransform());
-        rendering.m_pTexture->Bind(0);
+
+        auto *pTextureResource = sl::ResourceManager::GetTextureResource(rendering.m_textureResourceID);
+        if (pTextureResource && pTextureResource->IsReady())
+        {
+            pTextureResource->GetTexture()->Bind(0);
+        }
+
         rendering.m_pShader->Unbind();
 
         sl::RenderCore::Submit(rendering.m_pVertexArray, rendering.m_pShader);

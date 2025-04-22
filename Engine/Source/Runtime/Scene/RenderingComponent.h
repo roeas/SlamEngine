@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Renderer/Shader.h"
-#include "Renderer/Texture.h"
 #include "Renderer/VertexArray.h"
+#include "Utils/Hash.hpp"
 
 namespace sl
 {
@@ -16,9 +16,10 @@ struct RenderingComponent
 
     // TMP
     VertexArray *m_pVertexArray = nullptr;
-    Texture2D *m_pTexture = nullptr;
     Shader *m_pShader = nullptr;
     Shader *m_pIDShader = nullptr;
+
+    StringHashType m_textureResourceID = 0;
 };
 
 } // namespace sl

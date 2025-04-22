@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Resource/TextureResource.h"
 #include "Utils/Hash.hpp"
 
 #include <map>
@@ -20,11 +21,16 @@ public:
 
     static void Update();
 
+    static void AddTextureResource(StringHashType key, std::unique_ptr<TextureResource> pResource);
+    static TextureResource *GetTextureResource(StringHashType key);
+
 private:
     template<class T>
-    static void AddResource(StringHashType key, T *pResource);
+    static void AddResource(StringHashType key, std::unique_ptr<T> pResource);
     template<class T>
     static T *GetResource(StringHashType key);
+
+    static inline std::map<StringHashType, std::unique_ptr<TextureResource>> m_pTextureResources;
 };
 
 } // namespace sl

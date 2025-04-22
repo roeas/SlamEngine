@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
 
 namespace sl
 {
@@ -47,12 +46,12 @@ public:
     virtual void OnReady() = 0;
     // Destroy both CPU and GPU data
     virtual void OnDestroy() = 0;
-
-private:
+    // Destroy CPU data
     virtual void DestroyCPUData() = 0;
 
-    ResourceState m_state;
-    uint8_t m_destroyDelayFrame;
+    ResourceState m_state = ResourceState::Importing;
+    uint8_t m_destroyDelayFrame = 60;
+    bool m_optimized = false;
 };
 
 } // namespace sl
