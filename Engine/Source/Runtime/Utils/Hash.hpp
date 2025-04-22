@@ -27,7 +27,9 @@ struct Fnv1aConfig<uint64_t>
     static constexpr uint64_t prime  = 0x00000100000001b3;
 };
 
-template<Fnv1aType T = uint64_t>
+using StringHashType = uint64_t;
+
+template<Fnv1aType T = StringHashType>
 consteval T StringHash(std::string_view str)
 {
     T hash = Fnv1aConfig<T>::offset;
