@@ -15,10 +15,10 @@ struct RenderingComponent
     }
 
     // TMP
-    VertexArray *m_pVertexArray = nullptr;
     Shader *m_pShader = nullptr;
     Shader *m_pIDShader = nullptr;
 
+    StringHashType m_meshResourceID = 0;
     StringHashType m_textureResourceID = 0;
 };
 

@@ -12,15 +12,15 @@
 
 SandboxLayer::SandboxLayer()
 {
-    static float vertices[4 * 5] =
+    static std::vector<float> vertices =
     {
-        // Position      // uv
+        // Position         // uv
         -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
          1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
          1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
         -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
     };
-    static uint32_t indices[6] = { 0, 1, 2, 2, 3, 0 };
+    static std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
 
     static std::string vs =
     R"(
@@ -112,25 +112,28 @@ SandboxLayer::SandboxLayer()
         }
     )";
 
-    auto *pVertexBUffer = sl::VertexBuffer::Create(vertices, sizeof(vertices));
-    auto *pIndexBuffer = sl::IndexBuffer::Create(indices, sizeof(indices));
+    // Mesh
     sl::VertexLayout layout
     {
         { 3, sl::AttribType::Float, false, "Position" },
         { 2, sl::AttribType::Float, false, "UV" },
     };
+    constexpr sl::StringHashType SquareMeshID = sl::StringHash("Square Mesh");
+    std::unique_ptr<sl::MeshResource> pSquareMesh = std::make_unique<sl::MeshResource>(std::move(vertices), std::move(indices), std::move(layout));
+    sl::ResourceManager::AddMeshResource(SquareMeshID, std::move(pSquareMesh));
 
-    sl::VertexArray *pVertexArray = sl::VertexArray::Create(pVertexBUffer, pIndexBuffer, std::move(layout));
-    sl::Shader *pShader = sl::Shader::Create(vs, fs);
-    sl::Shader *pIDShader = sl::Shader::Create(IDvs, IDfs);
-
+    // Texture
     constexpr sl::StringHashType DebugUVTextureID = sl::StringHash("DebugUV.png");
     std::unique_ptr<sl::TextureResource> pResource = std::make_unique<sl::TextureResource>(
         sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
     sl::ResourceManager::AddTextureResource(DebugUVTextureID, std::move(pResource));
 
+    // Shader
+    sl::Shader *pShader = sl::Shader::Create(vs, fs);
+    sl::Shader *pIDShader = sl::Shader::Create(IDvs, IDfs);
+
     auto squareEntity = sl::World::CreateEntity("Square");
-    squareEntity.AddComponent<sl::RenderingComponent>(pVertexArray, pShader, pIDShader, DebugUVTextureID);
+    squareEntity.AddComponent<sl::RenderingComponent>(pShader, pIDShader, SquareMeshID, DebugUVTextureID);
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 }

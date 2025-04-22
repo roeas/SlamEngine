@@ -70,6 +70,13 @@ void RendererLayer::BasePass()
     for (auto entity : group)
     {
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
+
+        auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
+        if (!pMeshResource || !pMeshResource->IsReady())
+        {
+            continue;
+        }
+
         rendering.m_pShader->Bind();
         rendering.m_pShader->UploadUniform(0, transform.GetTransform());
 
@@ -81,7 +88,7 @@ void RendererLayer::BasePass()
 
         rendering.m_pShader->Unbind();
 
-        sl::RenderCore::Submit(rendering.m_pVertexArray, rendering.m_pShader);
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), rendering.m_pShader);
     }
  
     sl::RenderCore::GetMainFramebuffer()->Unbind();
@@ -104,7 +111,13 @@ void RendererLayer::EntityIDPass()
         rendering.m_pIDShader->UploadUniform(1, (int)entity);
         rendering.m_pIDShader->Unbind();
 
-        sl::RenderCore::Submit(rendering.m_pVertexArray, rendering.m_pIDShader);
+        auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
+        if (!pMeshResource || !pMeshResource->IsReady())
+        {
+            continue;
+        }
+
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), rendering.m_pIDShader);
     }
 
     sl::RenderCore::GetEntityIDFramebuffer()->Unbind();

@@ -9,15 +9,29 @@ namespace sl
 
 void ResourceManager::Update()
 {
+    for (auto &[_, pResource] : m_pMeshResources)
+    {
+        pResource->Update();
+    }
     for (auto &[_, pResource] : m_pTextureResources)
     {
         pResource->Update();
     }
 }
 
+void ResourceManager::AddMeshResource(StringHashType key, std::unique_ptr<MeshResource> pResource)
+{
+    AddResource<MeshResource>(key, std::move(pResource));
+}
+
+MeshResource *ResourceManager::GetMeshResource(StringHashType key)
+{
+    return GetResource<MeshResource>(key);
+}
+
 void ResourceManager::AddTextureResource(StringHashType key, std::unique_ptr<TextureResource> pResource)
 {
-    AddResource(key, std::move(pResource));
+    AddResource<TextureResource>(key, std::move(pResource));
 }
 
 TextureResource *ResourceManager::GetTextureResource(StringHashType key)
@@ -28,7 +42,15 @@ TextureResource *ResourceManager::GetTextureResource(StringHashType key)
 template<class T>
 void ResourceManager::AddResource(StringHashType key, std::unique_ptr<T> pResource)
 {
-    if constexpr (std::same_as<T, TextureResource>)
+    if constexpr (std::same_as<T, MeshResource>)
+    {
+        if (!m_pMeshResources.contains(key))
+        {
+            m_pMeshResources.emplace(key, std::move(pResource));
+            return;
+        }
+    }
+    else if (std::same_as<T, TextureResource>)
     {
         if (!m_pTextureResources.contains(key))
         {
@@ -48,7 +70,14 @@ void ResourceManager::AddResource(StringHashType key, std::unique_ptr<T> pResour
 template<class T>
 T *ResourceManager::GetResource(StringHashType key)
 {
-    if constexpr (std::same_as<T, TextureResource>)
+    if constexpr (std::same_as<T, MeshResource>)
+    {
+        if (auto it = m_pMeshResources.find(key); it != m_pMeshResources.end())
+        {
+            return it->second.get();
+        }
+    }
+    else if (std::same_as<T, TextureResource>)
     {
         if (auto it = m_pTextureResources.find(key); it != m_pTextureResources.end())
         {

@@ -375,7 +375,7 @@ void Details::OnUpdate(float deltaTime)
             ImGui::TextUnformatted("");
 
             StartWithText("Index");
-            ImGui::Text("%d", pComponent->m_pVertexArray->GetIndexCount());
+            ImGui::TextUnformatted("");
         }
         if (ImGui::TreeNodeEx("Shader", DefaultSubTreeFlags))
         {

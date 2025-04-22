@@ -34,7 +34,6 @@ public:
 
     std::string m_sourcePath;
     std::vector<uint8_t> m_rawData;
-    std::unique_ptr<Texture2D> m_pTexture;
 
     uint32_t m_flags = 0;
     uint32_t m_width = 0;
@@ -43,6 +42,8 @@ public:
     bool m_isHDR = false;
     bool m_mipmap = false;
     sl::TextureFormat m_format;
+
+    std::unique_ptr<Texture2D> m_pTexture;
 };
 
 } // namespace sl
