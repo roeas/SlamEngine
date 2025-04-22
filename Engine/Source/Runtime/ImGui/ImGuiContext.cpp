@@ -5,6 +5,7 @@
 #include "ImGui/IconsMaterialSymbols.h"
 #include "ImGui/imgui_impl_opengl3.h"
 #include "ImGui/imgui_impl_sdl3.h"
+#include "Utils/FileIO.hpp"
 
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
@@ -33,20 +34,24 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     static std::string s_iniFilePath = Path::FromeRoot("Engine/Config/imgui.ini");
     io.IniFilename = s_iniFilePath.data();
 
-    // 3. Load font
+    // 3. Load fonts
     constexpr float FontSize = 18.0f;
-    std::string regularFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Regular.ttf");
     std::string boldFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Bold.ttf");
     std::string lightFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Light.ttf");
+    std::string regularFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Regular.ttf");
     std::string iconFontPath = sl::Path::FromeAsset("Font/MaterialSymbols/MaterialSymbolsOutlined.ttf");
 
-    // TODO: AddFontFromMemoryTTF
-    SL_LOG_TRACE("Loading blod font: {}", boldFontPath.data());
-    m_pBoldFont = io.Fonts->AddFontFromFileTTF(boldFontPath.data(), FontSize);
-    SL_LOG_TRACE("Loading light font: {}", lightFontPath.data());
-    m_pLightFont = io.Fonts->AddFontFromFileTTF(lightFontPath.data(), FontSize);
-    SL_LOG_TRACE("Loading regular font: {}", regularFontPath.data());
-    m_pRegularFont = io.Fonts->AddFontFromFileTTF(regularFontPath.data(), FontSize);
+    SL_LOG_TRACE("Loading fonts");
+    auto [pBoldFontData, BoldFontDataSize] = sl::FileIO::ReadBinaryRaw(boldFontPath);
+    auto [pLightFontData, LightFontDataSize] = sl::FileIO::ReadBinaryRaw(lightFontPath);
+    auto [pRegularFontData, RegularFontDataSize] = sl::FileIO::ReadBinaryRaw(regularFontPath);
+    auto [pIconFontData, IconFontDataSize] = sl::FileIO::ReadBinaryRaw(iconFontPath);
+    SL_ASSERT(pBoldFontData && BoldFontDataSize && pLightFontData && LightFontDataSize &&
+        pRegularFontData && RegularFontDataSize && pIconFontData && IconFontDataSize);
+
+    m_pBoldFont = io.Fonts->AddFontFromMemoryTTF(pBoldFontData, (int)BoldFontDataSize, FontSize);
+    m_pLightFont = io.Fonts->AddFontFromMemoryTTF(pLightFontData, (int)LightFontDataSize, FontSize);
+    m_pRegularFont = io.Fonts->AddFontFromMemoryTTF(pRegularFontData, (int)RegularFontDataSize, FontSize);
     io.FontDefault = m_pRegularFont;
 
     // Merge icon font
@@ -55,11 +60,9 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     fontConfig.GlyphMinAdvanceX = FontSize;
     fontConfig.MergeMode = true;
     static const ImWchar s_iconRange[] = { (ImWchar)ICON_MIN_MS, (ImWchar)ICON_MAX_MS, 0 };
-    SL_LOG_TRACE("Loading icon font: {}", iconFontPath.data());
-    io.Fonts->AddFontFromFileTTF(iconFontPath.data(), FontSize, &fontConfig, s_iconRange);
+    io.Fonts->AddFontFromMemoryTTF(pIconFontData, (int)RegularFontDataSize, FontSize, &fontConfig, s_iconRange);
 
     // 4. Set color and style
-    // TODO: Apply new options
     SetStyle();
     SetColor();
 

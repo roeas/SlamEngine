@@ -6,7 +6,6 @@
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
-#include "Utils/Hash.hpp"
 #include "Window/Window.h"
 
 #include "Layers/CameraControllerLayer.h"
@@ -59,9 +58,6 @@ Editor::Editor(const EditorInitor &initor)
     m_layerStack.PushLayer(std::move(pRendererLayer));
     m_layerStack.PushLayer(std::move(pImGuiLayer));
     m_layerStack.PushLayer(std::move(pSandBoxLayer));
-
-    constexpr auto hash = sl::StringHash("Hello Slam!");
-    SL_LOG_DEBUG(hash);
 }
 
 Editor::~Editor()

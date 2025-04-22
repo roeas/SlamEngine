@@ -29,9 +29,9 @@ void OutputLog::OnUpdate(float deltaTime)
 
     constexpr ImVec4 TraceColor{ 1.0f, 1.0f, 1.0f, 1.0f };
     constexpr ImVec4 DebugColor{ 0.1f, 0.5f, 1.0f, 1.0f };
-    constexpr ImVec4 InfoColor { 0.1f, 0.8f, 0.1f, 1.0f };
-    constexpr ImVec4 WarnColor { 0.9f, 0.8f, 0.1f, 1.0f };
-    constexpr ImVec4 ErrorColor{ 0.9f, 0.2f, 0.2f, 1.0f };
+    constexpr ImVec4 InfoColor { 0.1f, 0.7f, 0.1f, 1.0f };
+    constexpr ImVec4 WarnColor { 0.9f, 0.8f, 0.2f, 1.0f };
+    constexpr ImVec4 ErrorColor{ 1.0f, 0.2f, 0.2f, 1.0f };
     constexpr ImVec4 FatalColor{ 0.9f, 0.2f, 0.9f, 1.0f };
 
     auto LogLevelToColor = [](sl::LogLevel level)
