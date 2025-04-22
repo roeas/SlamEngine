@@ -13,17 +13,17 @@ void RenderCore::Init(GraphicsBackend backend)
     m_pRenderAPI.reset(RenderAPI::Create());
 }
 
-void RenderCore::SetMainFramebuffer(FrameBuffer *pFrameBuffer)
+void RenderCore::SetMainFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer)
 {
-    m_pMainFrameBuffer.reset(pFrameBuffer);
+    m_pMainFrameBuffer = std::move(pFrameBuffer);
 }
 
-void RenderCore::SetEntityIDFramebuffer(FrameBuffer *pFrameBuffer)
+void RenderCore::SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer)
 {
-    m_pEntityIDFrameBuffer.reset(pFrameBuffer);
+    m_pEntityIDFrameBuffer = std::move(pFrameBuffer);
 }
 
-void RenderCore::SetUniformBuffer(std::string_view name, UniformBuffer *pUniformBuffer)
+void RenderCore::SetUniformBuffer(std::string_view name, std::unique_ptr<UniformBuffer> pUniformBuffer)
 {
     if (m_UniformBuffers.find(name.data()) != m_UniformBuffers.end())
     {
@@ -31,7 +31,7 @@ void RenderCore::SetUniformBuffer(std::string_view name, UniformBuffer *pUniform
         return;
     }
 
-    m_UniformBuffers[name.data()].reset(pUniformBuffer);
+    m_UniformBuffers.emplace(name.data(), std::move(pUniformBuffer));
 }
 
 UniformBuffer *RenderCore::GetUniformBuffer(std::string_view name)

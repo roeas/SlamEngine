@@ -3,6 +3,8 @@
 #include "Renderer/VertexArray.h"
 #include "Resource/Resource.h"
 
+#include <memory>
+
 namespace sl
 {
 

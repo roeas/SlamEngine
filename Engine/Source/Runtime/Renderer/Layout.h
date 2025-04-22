@@ -46,6 +46,7 @@ struct UniformBufferLayoutElement
     uint32_t m_size;
 };
 
+// TODO: Optimize it
 class UniformBufferLayout
 {
 public:

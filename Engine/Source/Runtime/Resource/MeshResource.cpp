@@ -34,9 +34,11 @@ void MeshResource::OnLoad()
 
 void MeshResource::OnUpload()
 {
-    sl::VertexBuffer *pVertexBuffer = sl::VertexBuffer::Create(m_verticesRawData.data(), m_verticesRawData.size() * sizeof(float));
-    sl::IndexBuffer *pIndexBuffer = sl::IndexBuffer::Create(m_indicesRawData.data(), m_indicesRawData.size() * sizeof(uint32_t));
-    m_pVertexArray.reset(sl::VertexArray::Create(pVertexBuffer, pIndexBuffer, m_layout));
+    std::unique_ptr<sl::VertexBuffer> pVertexBuffer{ sl::VertexBuffer::Create(m_verticesRawData.data(),
+        m_verticesRawData.size() * sizeof(decltype(m_verticesRawData)::value_type)) };
+    std::unique_ptr<sl::IndexBuffer> pIndexBuffer{ sl::IndexBuffer::Create(m_indicesRawData.data(),
+        m_indicesRawData.size() * sizeof(decltype(m_indicesRawData)::value_type)) };
+    m_pVertexArray.reset(sl::VertexArray::Create(std::move(pVertexBuffer), std::move(pIndexBuffer), m_layout));
 
     m_state = ResourceState::Ready;
 }

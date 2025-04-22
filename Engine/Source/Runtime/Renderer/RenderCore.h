@@ -27,11 +27,11 @@ public:
     static void Init(GraphicsBackend backend);
     static GraphicsBackend GetBackend() { return m_backend; }
 
-    static void SetMainFramebuffer(FrameBuffer *pFrameBuffer);
+    static void SetMainFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
     static FrameBuffer *GetMainFramebuffer() { return m_pMainFrameBuffer.get(); }
-    static void SetEntityIDFramebuffer(FrameBuffer *pFrameBuffer);
+    static void SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
     static FrameBuffer *GetEntityIDFramebuffer() { return m_pEntityIDFrameBuffer.get(); }
-    static void SetUniformBuffer(std::string_view name, UniformBuffer *pUniformBuffer);
+    static void SetUniformBuffer(std::string_view name, std::unique_ptr<UniformBuffer> pUniformBuffer);
     static UniformBuffer *GetUniformBuffer(std::string_view name);
 
     static void ClearColor(const glm::vec4 &color);
