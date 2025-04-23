@@ -1,7 +1,7 @@
 # Thirdparties
 |Lib|Type|
 |:-:|:-:|
-|spdlog|header only|
+|spdlog|static|
 |SDL|shared|
 |glad|source|
 |ImGui|source|

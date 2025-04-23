@@ -17,6 +17,15 @@ if defined MSBUILD_PATH (
 )
 echo.
 
+rem spdlog
+set "SPDLOG_PATH=%THIRD_PARTY_PATH%\spdlog"
+echo [ spdlog ] path: %SPDLOG_PATH%
+cd %SPDLOG_PATH%
+cmake -B build -DSPDLOG_USE_STD_FORMAT=ON -DSPDLOG_NO_EXCEPTIONS=ON
+cmake --build build --target spdlog --config Debug
+cmake --build build --target spdlog --config Release
+echo.
+
 rem SDL
 set "SDL_PATH=%THIRD_PARTY_PATH%\sdl"
 echo [ SDL ] path: %SDL_PATH%

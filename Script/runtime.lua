@@ -33,18 +33,20 @@ project("Slam")
         libdirs
         {
             path.join(ThirdPartyPath, "sdl/build/Debug"),
+            path.join(ThirdPartyPath, "spdlog/build/Debug"),
         }
         links
         {
-            "SDL3",
+            "SDL3", "spdlogd"
         }
     filter{ "configurations:Release or configurations:Final" }
         libdirs
         {
             path.join(ThirdPartyPath, "sdl/build/Release"),
+            path.join(ThirdPartyPath, "spdlog/build/Release"),
         }
         links
         {
-            "SDL3",
+            "SDL3", "spdlog"
         }
     filter{}

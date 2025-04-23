@@ -40,7 +40,7 @@ workspace("SlamEngine")
     {
         "SL_ROOT_PATH=\""..RootPath.."\"",
         "SL_ASSET_PATH=\""..path.join(RootPath, "Engine/Asset").."\"",
-        "SPDLOG_NO_EXCEPTIONS", "SPDLOG_USE_STD_FORMAT"
+        "SPDLOG_COMPILED_LIB", "SPDLOG_NO_EXCEPTIONS", "SPDLOG_USE_STD_FORMAT"
     }
 
     includedirs
