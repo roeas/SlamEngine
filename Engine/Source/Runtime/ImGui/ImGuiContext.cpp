@@ -41,13 +41,13 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     std::string regularFontPath = sl::Path::FromeAsset("Font/Noto_Sans/static/NotoSans-Regular.ttf");
     std::string iconFontPath = sl::Path::FromeAsset("Font/MaterialSymbols/MaterialSymbolsOutlined.ttf");
 
-    SL_LOG_TRACE("Loading font {}", boldFontPath.data());
+    SL_LOG_TRACE("\tLoading font \"{}\"", boldFontPath.data());
     auto [pBoldFontData, BoldFontDataSize] = sl::FileIO::ReadBinaryRaw(boldFontPath);
-    SL_LOG_TRACE("Loading font {}", lightFontPath.data());
+    SL_LOG_TRACE("\tLoading font \"{}\"", lightFontPath.data());
     auto [pLightFontData, LightFontDataSize] = sl::FileIO::ReadBinaryRaw(lightFontPath);
-    SL_LOG_TRACE("Loading font {}", regularFontPath.data());
+    SL_LOG_TRACE("\tLoading font \"{}\"", regularFontPath.data());
     auto [pRegularFontData, RegularFontDataSize] = sl::FileIO::ReadBinaryRaw(regularFontPath);
-    SL_LOG_TRACE("Loading font {}", iconFontPath.data());
+    SL_LOG_TRACE("\tLoading font \"{}\"", iconFontPath.data());
     auto [pIconFontData, IconFontDataSize] = sl::FileIO::ReadBinaryRaw(iconFontPath);
     SL_ASSERT(pBoldFontData && BoldFontDataSize && pLightFontData && LightFontDataSize &&
         pRegularFontData && RegularFontDataSize && pIconFontData && IconFontDataSize);

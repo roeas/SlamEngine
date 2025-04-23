@@ -12,6 +12,10 @@ class MeshResource : public Resource
 {
 public:
     MeshResource(std::vector<float> vertices, std::vector<uint32_t> indices, VertexLayout layout);
+    MeshResource(const MeshResource &) = delete;
+    MeshResource &operator=(const MeshResource &) = delete;
+    MeshResource(MeshResource &&) = delete;
+    MeshResource &operator=(MeshResource &&) = delete;
     ~MeshResource() override;
 
     void OnImport() override;

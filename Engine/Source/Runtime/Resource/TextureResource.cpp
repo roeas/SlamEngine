@@ -21,7 +21,7 @@ TextureResource::~TextureResource()
 
 void TextureResource::OnImport()
 {
-    SL_LOG_TRACE("Loading image {}", m_sourcePath.data());
+    SL_LOG_TRACE("Loading image \"{}\"", m_sourcePath.data());
     auto optOriginalData = FileIO::ReadBinary(m_sourcePath);
     if (!optOriginalData)
     {
@@ -42,12 +42,12 @@ void TextureResource::OnImport()
     if (channel == 1)
     {
         desiredChannels = 3;
-        SL_LOG_TRACE("Expand 'Grey' to 'RGB'");
+        SL_LOG_TRACE("\tExpand 'Grey' to 'RGB'");
     }
     else if (channel == 2)
     {
         desiredChannels = 4;
-        SL_LOG_TRACE("Expand 'GreyAlpha' to 'RGBA'");
+        SL_LOG_TRACE("\tExpand 'GreyAlpha' to 'RGBA'");
     }
 
     if (isHDR)
@@ -129,7 +129,7 @@ void TextureResource::OnImport()
         }
     }
 
-    SL_LOG_TRACE("Width: {}, Height: {}, Channels: {}, Format: {}, IsHDR: {}",
+    SL_LOG_TRACE("\tWidth: {}, Height: {}, Channels: {}, Format: {}, IsHDR: {}",
         m_width, m_height, m_channels, nameof::nameof_enum<>(m_format), m_isHDR);
 
     m_rawData.resize(m_width * m_height * m_channels * (m_isHDR ? 4 : 1));

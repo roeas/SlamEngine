@@ -71,7 +71,7 @@ public:
         size_t fileSize = file.tellg();
         if (fileSize % sizeof(T) != 0)
         {
-            SL_LOG_DEBUG("File size of {} is not divisible by sizeof({})", path.data(), nameof::nameof_type<T>());
+            SL_LOG_ERROR("File size of {} is not divisible by sizeof {} ({})", path.data(), nameof::nameof_type<T>(), sizeof(T));
             return std::nullopt;
         }
 
