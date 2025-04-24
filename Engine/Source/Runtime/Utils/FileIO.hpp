@@ -108,7 +108,7 @@ public:
         return { pData, fileSize };
     }
 
-    template<typename T> requires std::is_trivial_v<T>
+    template<typename T = uint8_t> requires std::is_trivial_v<T>
     static bool WriteBinary(std::string_view path, std::span<const T> data, bool append = false)
     {
         auto mode = std::ios::binary | (append ? std::ios::app : std::ios::trunc);

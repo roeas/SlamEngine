@@ -38,6 +38,8 @@
 
 [EnTT](https://github.com/skypjack/entt) v3.15.0
 
+[Shaderc](https://github.com/google/shaderc) v2025.2
+
 [Noto Sans](https://fonts.google.com/noto)
 
 [Material Symbols](https://fonts.google.com/icons)

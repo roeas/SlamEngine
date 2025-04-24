@@ -16,6 +16,10 @@ class ShaderResource : public Resource
 public:
     ShaderResource(std::string_view vsPath, std::string_view fsPath);
     ShaderResource(std::string_view path, ShaderType type);
+    ShaderResource(const ShaderResource &) = delete;
+    ShaderResource &operator=(const ShaderResource &) = delete;
+    ShaderResource(ShaderResource &&) = delete;
+    ShaderResource &operator=(ShaderResource &&) = delete;
     ~ShaderResource() override;
 
     void OnImport() override;

@@ -11,3 +11,4 @@
 |Nameof|header only|
 |stb|header only|
 |EnTT|header only|
+|Shaderc|static|

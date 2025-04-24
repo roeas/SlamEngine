@@ -41,4 +41,8 @@ echo [ Shaderc ] path: %SHADERC_PATH%
 cd %SHADERC_PATH%
 python "utils\git-sync-deps"
 
+cmake -B build -DSHADERC_ENABLE_SHARED_CRT=ON
+cmake --build build --target shaderc_combined --config Debug
+cmake --build build --target shaderc_combined --config Release
+
 pause

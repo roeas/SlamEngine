@@ -27,6 +27,7 @@ project("Slam")
     {
         path.join(ThirdPartyPath, "sdl/include"),
         path.join(ThirdPartyPath, "glad/include"),
+        path.join(ThirdPartyPath, "shaderc/libshaderc/include"),
     }
 
     filter{ "configurations:Debug" }
@@ -34,19 +35,21 @@ project("Slam")
         {
             path.join(ThirdPartyPath, "sdl/build/Debug"),
             path.join(ThirdPartyPath, "spdlog/build/Debug"),
+            path.join(ThirdPartyPath, "shaderc/build/libshaderc/Debug"),
         }
         links
         {
-            "SDL3", "spdlogd"
+            "SDL3", "spdlogd", "shaderc_combined",
         }
     filter{ "configurations:Release or configurations:Final" }
         libdirs
         {
             path.join(ThirdPartyPath, "sdl/build/Release"),
             path.join(ThirdPartyPath, "spdlog/build/Release"),
+            path.join(ThirdPartyPath, "shaderc/build/libshaderc/Release"),
         }
         links
         {
-            "SDL3", "spdlog"
+            "SDL3", "spdlog", "shaderc_combined",
         }
     filter{}

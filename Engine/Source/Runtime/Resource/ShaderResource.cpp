@@ -2,9 +2,10 @@
 
 #include "Core/Log.h"
 #include "Core/Path.h"
-#include "Utils/Time.h"
 #include "Renderer/Shader.h"
+#include "resource/ShaderCompiler.h"
 #include "Utils/FileIO.hpp"
+#include "Utils/Time.h"
 
 namespace sl
 {
@@ -29,7 +30,7 @@ std::string GetShaderBinaryCachePath(std::string_view name)
     {
         path += "d";
     }
-    path.replace_extension(".bin");
+    path.replace_extension(".spv");
 
     return path.generic_string();
 }
@@ -59,14 +60,7 @@ ShaderResource::ShaderResource(std::string_view vsPath, std::string_view fsPath)
      */
     m_name = m_shaders[0].m_name.substr(0, m_shaders[0].m_name.rfind('_'));
 
-    if (Path::Exists(m_shaders[0].m_binaryPath) && Path::Exists(m_shaders[1].m_binaryPath))
-    {
-        m_state = ResourceState::Loading;
-    }
-    else
-    {
-        m_state = ResourceState::Importing;
-    }
+    m_state = ResourceState::Importing;
 }
 
 ShaderResource::ShaderResource(std::string_view path, ShaderType type) :
@@ -80,14 +74,7 @@ ShaderResource::ShaderResource(std::string_view path, ShaderType type) :
 
     m_name = m_shaders[0].m_name.substr(0, m_shaders[0].m_name.rfind('_'));
 
-    if (Path::Exists(m_shaders[0].m_binaryPath))
-    {
-        m_state = ResourceState::Loading;
-    }
-    else
-    {
-        m_state = ResourceState::Importing;
-    }
+    m_state = ResourceState::Importing;
 }
 
 ShaderResource::~ShaderResource()
@@ -126,6 +113,28 @@ void ShaderResource::OnImport()
 
 void ShaderResource::OnBuild()
 {
+    Timer timer;
+    auto spirvData = ShaderCompiler::SourceToSpirv(m_shaders[0]);
+    FileIO::WriteBinary<decltype(spirvData)::value_type>(m_shaders[0].m_binaryPath, spirvData);
+    //m_shaders[0].m_source = ShaderCompiler::SpirvToSource(std::move(spirvData));
+    SL_LOG_TRACE("Done in {} ms", timer.GetDuration());
+
+    if (m_shaderCount == 2)
+    {
+        timer.Reset();
+        auto fragSpirvData = ShaderCompiler::SourceToSpirv(m_shaders[1]);
+        FileIO::WriteBinary<decltype(fragSpirvData)::value_type>(m_shaders[1].m_binaryPath, fragSpirvData);
+        //m_shaders[1].m_source = ShaderCompiler::SpirvToSource(std::move(fragSpirvData));
+        SL_LOG_TRACE("Done in {} ms", timer.GetDuration());
+    }
+
+    if (m_shaders[0].m_source.empty() || (m_shaderCount == 2 && m_shaders[1].m_source.empty()))
+    {
+        SL_LOG_ERROR("Failed to compile shader {}", m_name.data());
+        m_state = ResourceState::Destroying;
+        return;
+    }
+
     m_state = ResourceState::Uploading;
 }
 
