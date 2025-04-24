@@ -35,4 +35,10 @@ cmake --build build --target SDL3-shared --config Debug
 cmake --build build --target SDL3-shared --config Release
 echo.
 
+rem Shaderc
+set "SHADERC_PATH=%THIRD_PARTY_PATH%\shaderc"
+echo [ Shaderc ] path: %SHADERC_PATH%
+cd %SHADERC_PATH%
+python "utils\git-sync-deps"
+
 pause
