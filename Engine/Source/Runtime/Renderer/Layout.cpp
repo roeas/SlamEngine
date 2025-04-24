@@ -24,8 +24,8 @@ constexpr uint32_t AttribTypeSize[nameof::enum_count<AttribType>()] =
 
 } // namespace
 
-VertexLayoutElement::VertexLayoutElement(uint32_t count, AttribType type, bool normalize, std::string_view name) :
-    m_name(name), m_count(count), m_size(count * AttribTypeSize[(size_t)type]),m_offset(0),
+VertexLayoutElement::VertexLayoutElement(std::string_view name, uint32_t count, AttribType type, bool normalize) :
+    m_name(name), m_count(count), m_offset(0), m_size(count * AttribTypeSize[(size_t)type]),
     m_type(type), m_normalize(normalize)
 {
 
@@ -45,9 +45,9 @@ VertexLayout::VertexLayout(std::initializer_list<VertexLayoutElement> elements) 
 
 void UniformBufferLayout::AddElement(std::string_view name, const UniformBufferLayoutElement &element)
 {
-    if (m_elements.find(name.data()) == m_elements.end())
+    if (!m_elements.contains(name.data()))
     {
-        m_elements[name.data()] = element;
+        m_elements.emplace(name.data(), element);
     }
     else
     {

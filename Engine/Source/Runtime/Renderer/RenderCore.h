@@ -31,8 +31,6 @@ public:
     static FrameBuffer *GetMainFramebuffer() { return m_pMainFrameBuffer.get(); }
     static void SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
     static FrameBuffer *GetEntityIDFramebuffer() { return m_pEntityIDFrameBuffer.get(); }
-    static void SetUniformBuffer(std::string_view name, std::unique_ptr<UniformBuffer> pUniformBuffer);
-    static UniformBuffer *GetUniformBuffer(std::string_view name);
 
     static void ClearColor(const glm::vec4 &color);
     static void ClearDepth(float depth);
@@ -45,7 +43,6 @@ private:
     inline static std::unique_ptr<RenderAPI> m_pRenderAPI;
     inline static std::unique_ptr<FrameBuffer> m_pMainFrameBuffer;
     inline static std::unique_ptr<FrameBuffer> m_pEntityIDFrameBuffer;
-    inline static std::map<std::string, std::unique_ptr<UniformBuffer>> m_UniformBuffers;
 };
 
 } // namespace sl

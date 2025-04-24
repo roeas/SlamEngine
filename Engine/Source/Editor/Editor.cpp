@@ -45,8 +45,7 @@ Editor::Editor(const EditorInitor &initor)
     cameraUniformBufferLayout.AddElement("ub_cameraPos", sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
     cameraUniformBufferLayout.AddElement("ub_viewProjection", sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
     cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
-    sl::RenderCore::SetUniformBuffer("CameraUniformBuffer",
-        std::unique_ptr<sl::UniformBuffer>{ sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout)) });
+    std::unique_ptr<sl::UniformBuffer> pCameraUniformBuffer{ sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout)) };
 
     // Main camrea entity
     sl::World::CreateEntity("Main Camera").AddComponent<sl::CameraComponent>().m_isMainCamera = true;
@@ -56,6 +55,7 @@ Editor::Editor(const EditorInitor &initor)
     auto pRendererLayer = std::make_unique<RendererLayer>();
     auto pImGuiLayer = std::make_unique<ImGuiLayer>();
     auto pSandBoxLayer = std::make_unique<SandboxLayer>();
+    pRendererLayer->SetCameraUniformBuffer(std::move(pCameraUniformBuffer));
     pImGuiLayer->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     pImGuiLayer->SetMainWindow(m_pMainWindow->GetNativeWindow());
     m_layerStack.PushLayer(std::move(pCameraControllerLayer));

@@ -23,29 +23,6 @@ void RenderCore::SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffe
     m_pEntityIDFrameBuffer = std::move(pFrameBuffer);
 }
 
-void RenderCore::SetUniformBuffer(std::string_view name, std::unique_ptr<UniformBuffer> pUniformBuffer)
-{
-    if (m_UniformBuffers.find(name.data()) != m_UniformBuffers.end())
-    {
-        SL_LOG_ERROR("Uniform buffer {} already exists!", name.data());
-        return;
-    }
-
-    m_UniformBuffers.emplace(name.data(), std::move(pUniformBuffer));
-}
-
-UniformBuffer *RenderCore::GetUniformBuffer(std::string_view name)
-{
-    auto it = m_UniformBuffers.find(name.data());
-    if (it == m_UniformBuffers.end())
-    {
-        SL_LOG_ERROR("Uniform buffer {} does not exist!", name.data());
-        return nullptr;
-    }
-
-    return it->second.get();
-}
-
 void RenderCore::ClearColor(const glm::vec4 &color)
 {
     m_pRenderAPI->SetClearColor(color);

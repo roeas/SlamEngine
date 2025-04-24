@@ -1,6 +1,7 @@
 #include "RendererLayer.h"
 
 #include "Renderer/RenderCore.h"
+#include "Renderer/UniformBuffer.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 
@@ -39,12 +40,9 @@ void RendererLayer::OnUpdate(float deltaTime)
 void RendererLayer::OnRender()
 {
     // Upload camera uniform buffer
-    if (auto *pCameraUniformBuffer = sl::RenderCore::GetUniformBuffer("CameraUniformBuffer"); pCameraUniformBuffer)
-    {
-        sl::Entity mainCamera = sl::World::GetMainCameraEntity();
-        pCameraUniformBuffer->Upload("ub_cameraPos", glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
-        pCameraUniformBuffer->Upload("ub_viewProjection", glm::value_ptr(mainCamera.GetComponents<sl::CameraComponent>().GetViewProjection()));
-    }
+    sl::Entity mainCamera = sl::World::GetMainCameraEntity();
+    m_pCameraUniformBuffer->Upload("ub_cameraPos", glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
+    m_pCameraUniformBuffer->Upload("ub_viewProjection", glm::value_ptr(mainCamera.GetComponents<sl::CameraComponent>().GetViewProjection()));
 
     BasePass();
     EntityIDPass();

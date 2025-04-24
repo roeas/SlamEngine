@@ -23,8 +23,8 @@ SandboxLayer::SandboxLayer()
     std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
     sl::VertexLayout layout
     {
-        { 3, sl::AttribType::Float, false, "Position" },
-        { 2, sl::AttribType::Float, false, "UV" },
+        { "Position", 3, sl::AttribType::Float, false },
+        { "UV", 2, sl::AttribType::Float, false },
     };
 
     // Mesh

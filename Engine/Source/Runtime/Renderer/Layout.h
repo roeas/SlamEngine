@@ -12,12 +12,12 @@ namespace sl
 
 struct VertexLayoutElement
 {
-    VertexLayoutElement(uint32_t count, AttribType type, bool normalize, std::string_view name);
+    VertexLayoutElement(std::string_view name, uint32_t count, AttribType type, bool normalize);
 
     std::string m_name;
     uint32_t m_count;
-    uint32_t m_size;
     uint32_t m_offset;
+    uint32_t m_size;
     AttribType m_type;
     bool m_normalize;
 };
@@ -46,7 +46,7 @@ struct UniformBufferLayoutElement
     uint32_t m_size;
 };
 
-// TODO: Optimize it
+// TODO: Currently we have to manually calculate the std140 layout, optimize it
 class UniformBufferLayout
 {
 public:
@@ -62,8 +62,8 @@ public:
     auto cend() const { return m_elements.cend(); }
 
 private:
-    uint32_t m_size = 0;
     std::map<std::string, UniformBufferLayoutElement> m_elements;
+    uint32_t m_size = 0;
 };
 
 } // namespace sl
