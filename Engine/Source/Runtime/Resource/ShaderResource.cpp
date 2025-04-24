@@ -113,19 +113,15 @@ void ShaderResource::OnImport()
 
 void ShaderResource::OnBuild()
 {
-    Timer timer;
     auto spirvData = ShaderCompiler::SourceToSpirv(m_shaders[0]);
     FileIO::WriteBinary<decltype(spirvData)::value_type>(m_shaders[0].m_binaryPath, spirvData);
     //m_shaders[0].m_source = ShaderCompiler::SpirvToSource(std::move(spirvData));
-    SL_LOG_TRACE("Done in {} ms", timer.GetDuration());
 
     if (m_shaderCount == 2)
     {
-        timer.Reset();
         auto fragSpirvData = ShaderCompiler::SourceToSpirv(m_shaders[1]);
         FileIO::WriteBinary<decltype(fragSpirvData)::value_type>(m_shaders[1].m_binaryPath, fragSpirvData);
         //m_shaders[1].m_source = ShaderCompiler::SpirvToSource(std::move(fragSpirvData));
-        SL_LOG_TRACE("Done in {} ms", timer.GetDuration());
     }
 
     if (m_shaders[0].m_source.empty() || (m_shaderCount == 2 && m_shaders[1].m_source.empty()))
