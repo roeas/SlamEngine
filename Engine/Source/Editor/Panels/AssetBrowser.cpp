@@ -5,6 +5,7 @@
 #include "ImGui/IconsMaterialSymbols.h"
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
+#include "Renderer/Texture.h"
 #include "Resource/ResourceManager.h"
 
 #include <imgui/imgui.h>

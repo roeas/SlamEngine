@@ -1,12 +1,14 @@
 #pragma once
 
-#include "Renderer/VertexArray.h"
 #include "Resource/Resource.h"
+#include "Renderer/Layout.h"
 
 #include <memory>
 
 namespace sl
 {
+
+class VertexArray;
 
 class MeshResource : public Resource
 {

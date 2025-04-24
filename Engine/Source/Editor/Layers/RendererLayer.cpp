@@ -72,13 +72,14 @@ void RendererLayer::BasePass()
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
 
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
-        if (!pMeshResource || !pMeshResource->IsReady())
+        auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_shaderResourceID);
+        if (!pMeshResource || !pShaderResource || !pMeshResource->IsReady() || !pShaderResource->IsReady())
         {
             continue;
         }
 
-        rendering.m_pShader->Bind();
-        rendering.m_pShader->UploadUniform(0, transform.GetTransform());
+        pShaderResource->GetShaderProgram()->Bind();
+        pShaderResource->GetShaderProgram()->UploadUniform(0, transform.GetTransform());
 
         auto *pTextureResource = sl::ResourceManager::GetTextureResource(rendering.m_textureResourceID);
         if (pTextureResource && pTextureResource->IsReady())
@@ -86,9 +87,9 @@ void RendererLayer::BasePass()
             pTextureResource->GetTexture()->Bind(0);
         }
 
-        rendering.m_pShader->Unbind();
+        pShaderResource->GetShaderProgram()->Unbind();
 
-        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), rendering.m_pShader);
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
     }
  
     sl::RenderCore::GetMainFramebuffer()->Unbind();
@@ -106,18 +107,19 @@ void RendererLayer::EntityIDPass()
     {
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
 
-        rendering.m_pIDShader->Bind();
-        rendering.m_pIDShader->UploadUniform(0, transform.GetTransform());
-        rendering.m_pIDShader->UploadUniform(1, (int)entity);
-        rendering.m_pIDShader->Unbind();
-
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
-        if (!pMeshResource || !pMeshResource->IsReady())
+        auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_entityIDShaderResourceID);
+        if (!pMeshResource || !pShaderResource || !pMeshResource->IsReady() || !pShaderResource->IsReady())
         {
             continue;
         }
 
-        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), rendering.m_pIDShader);
+        pShaderResource->GetShaderProgram()->Bind();
+        pShaderResource->GetShaderProgram()->UploadUniform(0, transform.GetTransform());
+        pShaderResource->GetShaderProgram()->UploadUniform(1, (int)entity);
+        pShaderResource->GetShaderProgram()->Unbind();
+
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
     }
 
     sl::RenderCore::GetEntityIDFramebuffer()->Unbind();

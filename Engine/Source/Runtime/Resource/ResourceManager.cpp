@@ -17,6 +17,10 @@ void ResourceManager::Update()
     {
         pResource->Update();
     }
+    for (auto &[_, pResource] : m_pShaderResources)
+    {
+        pResource->Update();
+    }
 }
 
 void ResourceManager::AddMeshResource(StringHashType key, std::unique_ptr<MeshResource> pResource)
@@ -39,6 +43,16 @@ TextureResource *ResourceManager::GetTextureResource(StringHashType key)
     return GetResource<TextureResource>(key);
 }
 
+void ResourceManager::AddShaderResource(StringHashType key, std::unique_ptr<ShaderResource> pResource)
+{
+    AddResource<ShaderResource>(key, std::move(pResource));
+}
+
+ShaderResource *ResourceManager::GetShaderResource(StringHashType key)
+{
+    return GetResource<ShaderResource>(key);
+}
+
 template<class T>
 void ResourceManager::AddResource(StringHashType key, std::unique_ptr<T> pResource)
 {
@@ -50,11 +64,19 @@ void ResourceManager::AddResource(StringHashType key, std::unique_ptr<T> pResour
             return;
         }
     }
-    else if (std::same_as<T, TextureResource>)
+    else if constexpr (std::same_as<T, TextureResource>)
     {
         if (!m_pTextureResources.contains(key))
         {
             m_pTextureResources.emplace(key, std::move(pResource));
+            return;
+        }
+    }
+    else if constexpr (std::same_as<T, ShaderResource>)
+    {
+        if (!m_pShaderResources.contains(key))
+        {
+            m_pShaderResources.emplace(key, std::move(pResource));
             return;
         }
     }
@@ -77,9 +99,16 @@ T *ResourceManager::GetResource(StringHashType key)
             return it->second.get();
         }
     }
-    else if (std::same_as<T, TextureResource>)
+    else if constexpr (std::same_as<T, TextureResource>)
     {
         if (auto it = m_pTextureResources.find(key); it != m_pTextureResources.end())
+        {
+            return it->second.get();
+        }
+    }
+    else if constexpr (std::same_as<T, ShaderResource>)
+    {
+        if (auto it = m_pShaderResources.find(key); it != m_pShaderResources.end())
         {
             return it->second.get();
         }

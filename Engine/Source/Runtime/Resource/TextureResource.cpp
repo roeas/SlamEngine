@@ -1,6 +1,7 @@
 #include "TextureResource.h"
 
 #include "Core/Log.h"
+#include "Renderer/Texture.h"
 #include "Utils/FileIO.hpp"
 
 #include <stb/stb_image.h>
@@ -9,7 +10,7 @@ namespace sl
 {
 
 TextureResource::TextureResource(std::string_view sourcePath, bool mipmap, uint32_t flags) :
-    m_sourcePath(sourcePath), m_flags(flags), m_mipmap(mipmap), m_format(TextureFormat::RGB8)
+    m_assetPath(sourcePath), m_flags(flags), m_mipmap(mipmap), m_format(TextureFormat::RGB8)
 {
 
 }
@@ -21,11 +22,11 @@ TextureResource::~TextureResource()
 
 void TextureResource::OnImport()
 {
-    SL_LOG_TRACE("Loading image \"{}\"", m_sourcePath.data());
-    auto optOriginalData = FileIO::ReadBinary(m_sourcePath);
+    SL_LOG_TRACE("Loading image \"{}\"", m_assetPath.data());
+    auto optOriginalData = FileIO::ReadBinary(m_assetPath);
     if (!optOriginalData)
     {
-        SL_LOG_ERROR("Failed to load image {}", m_sourcePath.data());
+        SL_LOG_ERROR("Failed to load image {}", m_assetPath.data());
         m_state = ResourceState::Destroying;
         return;
     }
@@ -63,7 +64,7 @@ void TextureResource::OnImport()
 
     if (!pTextureData || !getInfoSuccess || width <= 0 || height <= 0 || channel <= 0)
     {
-        SL_LOG_ERROR("Invalid image {}: {}", m_sourcePath.c_str(), stbi_failure_reason());
+        SL_LOG_ERROR("Invalid image {}: {}", m_assetPath.c_str(), stbi_failure_reason());
         m_state = ResourceState::Destroying;
         return;
     }
@@ -124,7 +125,7 @@ void TextureResource::OnImport()
         }
         default:
         {
-            SL_LOG_ERROR("Unknown texture format {}", m_sourcePath.c_str());
+            SL_LOG_ERROR("Unknown texture format {}", m_assetPath.c_str());
             m_state = ResourceState::Destroying;
         }
     }

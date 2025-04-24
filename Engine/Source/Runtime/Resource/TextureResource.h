@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/Defines.h"
-#include "Renderer/Texture.h"
 #include "Resource/Resource.h"
 
 #include <memory>
@@ -10,6 +9,8 @@
 
 namespace sl
 {
+
+class Texture2D;
 
 class TextureResource : public Resource
 {
@@ -29,10 +30,9 @@ public:
     void OnDestroy() override;
     void DestroyCPUData() override;
 
-    void SetRawData(std::vector<uint8_t> data) { m_rawData = std::move(data); }
     Texture2D *GetTexture() const { return m_pTexture.get(); }
 
-    std::string m_sourcePath;
+    std::string m_assetPath;
     std::vector<uint8_t> m_rawData;
 
     uint32_t m_flags = 0;
