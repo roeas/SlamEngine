@@ -12,13 +12,38 @@ namespace sl
 namespace
 {
 
-uint32_t UploadShader(const char *pSource, size_t size, ShaderType type)
+uint32_t UploadShaderSource(const char *pSource, size_t size, ShaderType type)
 {
-    const GLint GLsize = (GLint)size;
+    const GLint length = (GLint)size;
     GLuint shaderHandle = glCreateShader(GLShaderType[(size_t)type]);
 
-    glShaderSource(shaderHandle, 1, &pSource, &GLsize);
+    glShaderSource(shaderHandle, 1, &pSource, &length);
     glCompileShader(shaderHandle);
+
+    GLint isCompiled = 0;
+    glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &isCompiled);
+    if (isCompiled == GL_FALSE)
+    {
+        GLint logSize = 0;
+        glGetShaderiv(shaderHandle, GL_INFO_LOG_LENGTH, &logSize);
+
+        // The logSize includes the NULL character
+        std::vector<GLchar> infoLog(logSize);
+        glGetShaderInfoLog(shaderHandle, logSize, nullptr, infoLog.data());
+        SL_LOG_ERROR("Failed to compile shader: {}", infoLog.data());
+
+        glDeleteShader(shaderHandle);
+        return 0;
+    }
+
+    return shaderHandle;
+}
+
+uint32_t UploadShaderBinary(const void *pSource, size_t size, ShaderType type)
+{
+    GLuint shaderHandle = glCreateShader(GLShaderType[(size_t)type]);
+    glShaderBinary(1, &shaderHandle, GL_SHADER_BINARY_FORMAT_SPIR_V, pSource, (GLsizei)size);
+    glSpecializeShader(shaderHandle, "main", 0, nullptr, nullptr);
 
     GLint isCompiled = 0;
     glGetShaderiv(shaderHandle, GL_COMPILE_STATUS, &isCompiled);
@@ -82,14 +107,27 @@ uint32_t UploadProgram(uint32_t VSHandle, std::optional<uint32_t> optFSHandle = 
 
 OpenGLShader::OpenGLShader(std::string_view vsSource, std::string_view fsSource)
 {
-    uint32_t VSHandle = UploadShader(vsSource.data(), vsSource.size(), ShaderType::VertexShader);
-    uint32_t FSHandle = UploadShader(fsSource.data(), fsSource.size(), ShaderType::FragmentShader);
+    uint32_t VSHandle = UploadShaderSource(vsSource.data(), vsSource.size(), ShaderType::VertexShader);
+    uint32_t FSHandle = UploadShaderSource(fsSource.data(), fsSource.size(), ShaderType::FragmentShader);
     m_programHandle = UploadProgram(VSHandle, FSHandle);
 }
 
 OpenGLShader::OpenGLShader(std::string_view shaderSource, ShaderType type)
 {
-    uint32_t shaderHandle = UploadShader(shaderSource.data(), shaderSource.size(), type);
+    uint32_t shaderHandle = UploadShaderSource(shaderSource.data(), shaderSource.size(), type);
+    m_programHandle = UploadProgram(shaderHandle);
+}
+
+OpenGLShader::OpenGLShader(std::span<const uint32_t> vsBinary, std::span<const uint32_t> fsBinary)
+{
+    uint32_t VSHandle = UploadShaderBinary(vsBinary.data(), vsBinary.size_bytes(), ShaderType::VertexShader);
+    uint32_t FSHandle = UploadShaderBinary(fsBinary.data(), fsBinary.size_bytes(), ShaderType::FragmentShader);
+    m_programHandle = UploadProgram(VSHandle, FSHandle);
+}
+
+OpenGLShader::OpenGLShader(std::span<const uint32_t> binary, ShaderType type)
+{
+    uint32_t shaderHandle = UploadShaderBinary(binary.data(), binary.size_bytes(), ShaderType::FragmentShader);
     m_programHandle = UploadProgram(shaderHandle);
 }
 

@@ -2,6 +2,10 @@
 
 #include "Core/Defines.h"
 
+#include <cstdint>
+#include <string>
+#include <vector>
+
 namespace sl
 {
 
@@ -12,6 +16,7 @@ struct ShaderInfo
     std::string m_assetPath;
     std::string m_binaryPath;
     std::string m_source;
+    std::vector<uint32_t> m_binary;
 
     ShaderType m_type;
     bool m_debugMode;

@@ -32,9 +32,15 @@ public:
 
     Shader *GetShaderProgram() const { return m_pShaderProgram.get(); }
 
+    /*
+     * We assume that a shader is named by its shader program name plus the stage suffix
+     * Shader Program: XXX
+     * Vertex Shader: XXX_vert.glsl
+     * Fragment Shader: XXX_frag.glsl
+     */
+    std::string m_name;
     size_t m_shaderCount;
     ShaderInfo m_shaders[2];
-    std::string m_name;
 
     std::unique_ptr<Shader> m_pShaderProgram;
 };

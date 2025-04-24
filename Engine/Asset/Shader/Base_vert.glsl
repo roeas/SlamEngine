@@ -1,19 +1,6 @@
 #version 460 core
 
-// Camera
-layout(std140, binding = 0) uniform UBCamera
-{
-    vec4 ub_cameraPos;
-    mat4 ub_viewProjection;
-};
-vec3 GetCameraPos()
-{
-    return ub_cameraPos.xyz;
-}
-mat4 GetViewProjectionMat()
-{
-    return ub_viewProjection;
-}
+#include <Camera.glsl>
 
 // Input
 layout(location = 0) in vec3 a_position;

@@ -15,7 +15,7 @@ namespace
 
 consteval bool IsShaderDebugMode()
 {
-#if defined(SL_DEBUF)
+#if defined(SL_DEBUG)
     return true;
 #else
     return false;
@@ -52,15 +52,16 @@ ShaderResource::ShaderResource(std::string_view vsPath, std::string_view fsPath)
     m_shaders[1].m_type = ShaderType::FragmentShader;
     m_shaders[1].m_debugMode = IsShaderDebugMode();
 
-    /*
-     * We assume that a shader is named by its shader program name plus the stage suffix
-     * Shader Program: XXX
-     * Vertex Shader: XXX_vert.glsl
-     * Fragment Shader: XXX_frag.glsl
-     */
     m_name = m_shaders[0].m_name.substr(0, m_shaders[0].m_name.rfind('_'));
 
-    m_state = ResourceState::Importing;
+    if (Path::Exists(m_shaders[0].m_binaryPath) && Path::Exists(m_shaders[1].m_binaryPath))
+    {
+        m_state = ResourceState::Loading;
+    }
+    else
+    {
+        m_state = ResourceState::Importing;
+    }
 }
 
 ShaderResource::ShaderResource(std::string_view path, ShaderType type) :
@@ -74,7 +75,14 @@ ShaderResource::ShaderResource(std::string_view path, ShaderType type) :
 
     m_name = m_shaders[0].m_name.substr(0, m_shaders[0].m_name.rfind('_'));
 
-    m_state = ResourceState::Importing;
+    if (Path::Exists(m_shaders[0].m_binaryPath))
+    {
+        m_state = ResourceState::Loading;
+    }
+    else
+    {
+        m_state = ResourceState::Importing;
+    }
 }
 
 ShaderResource::~ShaderResource()
@@ -85,27 +93,12 @@ ShaderResource::~ShaderResource()
 void ShaderResource::OnImport()
 {
     SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[0].m_assetPath.data());
-    auto optShaderSource = FileIO::ReadString(m_shaders[0].m_assetPath);
-    if (optShaderSource)
-    {
-        m_shaders[0].m_source = std::move(optShaderSource.value());
-    }
+    m_shaders[0].m_source = FileIO::ReadString(m_shaders[0].m_assetPath);
 
     if (m_shaderCount == 2)
     {
         SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[1].m_assetPath.c_str());
-        auto optShaderSource1 = FileIO::ReadString(m_shaders[1].m_assetPath);
-        if (optShaderSource1)
-        {
-            m_shaders[1].m_source = std::move(optShaderSource1.value());
-        }
-    }
-
-    if (m_shaders[0].m_source.empty() || (m_shaderCount == 2 && m_shaders[1].m_source.empty()))
-    {
-        SL_LOG_ERROR("Failed to import shader!");
-        m_state = ResourceState::Destroying;
-        return;
+        m_shaders[1].m_source = FileIO::ReadString(m_shaders[1].m_assetPath);
     }
 
     m_state = ResourceState::Building;
@@ -113,22 +106,22 @@ void ShaderResource::OnImport()
 
 void ShaderResource::OnBuild()
 {
+    if (m_shaders[0].m_source.empty() || (m_shaderCount == 2 && m_shaders[1].m_source.empty()))
+    {
+        SL_LOG_ERROR("No shader source {}", m_name.data());
+        m_state = ResourceState::Destroying;
+        return;
+    }
+
     auto spirvData = ShaderCompiler::SourceToSpirv(m_shaders[0]);
-    FileIO::WriteBinary<decltype(spirvData)::value_type>(m_shaders[0].m_binaryPath, spirvData);
-    //m_shaders[0].m_source = ShaderCompiler::SpirvToSource(std::move(spirvData));
+    FileIO::WriteBinary<uint32_t>(m_shaders[0].m_binaryPath, spirvData);
+    m_shaders[0].m_binary = std::move(spirvData);
 
     if (m_shaderCount == 2)
     {
         auto fragSpirvData = ShaderCompiler::SourceToSpirv(m_shaders[1]);
-        FileIO::WriteBinary<decltype(fragSpirvData)::value_type>(m_shaders[1].m_binaryPath, fragSpirvData);
-        //m_shaders[1].m_source = ShaderCompiler::SpirvToSource(std::move(fragSpirvData));
-    }
-
-    if (m_shaders[0].m_source.empty() || (m_shaderCount == 2 && m_shaders[1].m_source.empty()))
-    {
-        SL_LOG_ERROR("Failed to compile shader {}", m_name.data());
-        m_state = ResourceState::Destroying;
-        return;
+        FileIO::WriteBinary<uint32_t>(m_shaders[1].m_binaryPath, fragSpirvData);
+        m_shaders[1].m_binary = std::move(fragSpirvData);
     }
 
     m_state = ResourceState::Uploading;
@@ -136,6 +129,15 @@ void ShaderResource::OnBuild()
 
 void ShaderResource::OnLoad()
 {
+    SL_LOG_TRACE("Loading SPIR-V cache \"{}\"", m_shaders[0].m_binaryPath.data());
+    m_shaders[0].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[0].m_binaryPath);
+
+    if (m_shaderCount == 2)
+    {
+        SL_LOG_TRACE("Loading SPIR-V cache: \"{}\"", m_shaders[1].m_binaryPath.data());
+        m_shaders[1].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[1].m_binaryPath);
+    }
+
     m_state = ResourceState::Uploading;
 }
 
@@ -143,16 +145,23 @@ void ShaderResource::OnUpload()
 {
     SL_LOG_TRACE("Uploading shader program \"{}\"", m_name.data());
 
+    if (m_shaders[0].m_binary.empty() || (m_shaderCount == 2 && m_shaders[1].m_binary.empty()))
+    {
+        SL_LOG_ERROR("No shader binary {}", m_name.data());
+        m_state = ResourceState::Destroying;
+        return;
+    }
+
     if (m_shaderCount == 2)
     {
-        m_pShaderProgram.reset(Shader::Create(m_shaders[0].m_source, m_shaders[1].m_source));
+        m_pShaderProgram.reset(Shader::Create(m_shaders[0].m_binary, m_shaders[1].m_binary));
     }
     else
     {
-        m_pShaderProgram.reset(Shader::Create(m_shaders[0].m_source, m_shaders[0].m_type));
+        m_pShaderProgram.reset(Shader::Create(m_shaders[0].m_binary, m_shaders[0].m_type));
     }
 
-    if (!m_pShaderProgram)
+    if (!m_pShaderProgram->GetHandle())
     {
         SL_LOG_ERROR("Failed to create shader program \"{}\" handle", m_name.data());
         m_state = ResourceState::Destroying;

@@ -5,6 +5,7 @@
 #include <glm/matrix.hpp>
 
 #include <string>
+#include <span>
 
 namespace sl
 {
@@ -14,6 +15,9 @@ class Shader
 public:
     static Shader *Create(std::string_view vsSource, std::string_view fsSource);
     static Shader *Create(std::string_view shaderSource, ShaderType type);
+
+    static Shader *Create(std::span<const uint32_t> vsBinary, std::span<const uint32_t> fsBinary);
+    static Shader *Create(std::span<const uint32_t> binary, ShaderType type);
 
 public:
     virtual ~Shader() = default;

@@ -23,21 +23,15 @@ TextureResource::~TextureResource()
 void TextureResource::OnImport()
 {
     SL_LOG_TRACE("Loading image \"{}\"", m_assetPath.data());
-    auto optOriginalData = FileIO::ReadBinary(m_assetPath);
-    if (!optOriginalData)
-    {
-        SL_LOG_ERROR("Failed to load image {}", m_assetPath.data());
-        m_state = ResourceState::Destroying;
-        return;
-    }
+    auto assetData = FileIO::ReadBinary(m_assetPath);
 
     // The first pixel should at the bottom left
     stbi_set_flip_vertically_on_load(true);
 
     void *pTextureData;
     int width, height, channel;
-    bool isHDR = stbi_is_hdr_from_memory((stbi_uc *)optOriginalData->data(), (int)optOriginalData->size());
-    bool getInfoSuccess = stbi_info_from_memory((stbi_uc *)optOriginalData->data(), (int)optOriginalData->size(), &width, &height, &channel);
+    bool isHDR = stbi_is_hdr_from_memory((stbi_uc *)assetData.data(), (int)assetData.size());
+    bool getInfoSuccess = stbi_info_from_memory((stbi_uc *)assetData.data(), (int)assetData.size(), &width, &height, &channel);
 
     int desiredChannels = 0;
     if (channel == 1)
@@ -53,12 +47,12 @@ void TextureResource::OnImport()
 
     if (isHDR)
     {
-        pTextureData = stbi_loadf_from_memory((stbi_uc *)optOriginalData->data(), (int)optOriginalData->size(),
+        pTextureData = stbi_loadf_from_memory((stbi_uc *)assetData.data(), (int)assetData.size(),
             &width, &height, &channel, desiredChannels);
     }
     else
     {
-        pTextureData = stbi_load_from_memory((stbi_uc *)optOriginalData->data(), (int)optOriginalData->size(),
+        pTextureData = stbi_load_from_memory((stbi_uc *)assetData.data(), (int)assetData.size(),
             &width, &height, &channel, desiredChannels);
     }
 

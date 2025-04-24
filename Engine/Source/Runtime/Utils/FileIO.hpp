@@ -25,12 +25,13 @@ public:
     FileIO &operator=(FileIO &&) = delete;
     ~FileIO() = delete;
 
-    static std::optional<std::string> ReadString(std::string_view path)
+    static std::string ReadString(std::string_view path)
     {
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
         {
-            return std::nullopt;
+            SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
+            return "";
         }
 
         std::string content;
@@ -40,39 +41,45 @@ public:
         file.read(content.data(), content.size());
         if (!file)
         {
-            return std::nullopt;
+            SL_LOG_ERROR("Failed to read file \"{}\"", path.data());
+            return "";
         }
 
         return content;
     }
 
-    static bool WriteString(std::string_view path, std::string_view content, bool append = false)
+    static void WriteString(std::string_view path, std::string_view content, bool append = false)
     {
         auto mode = std::ios::binary | (append ? std::ios::app : std::ios::trunc);
         std::ofstream file(path.data(), mode);
         if (!file.is_open())
         {
-            return false;
+            SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
+            return;
         }
 
         file.write(content.data(), content.size());
-        return file.good();
+        if (!file)
+        {
+            SL_LOG_ERROR("Failed to write file \"{}\"", path.data());
+        }
     }
 
     template<typename T = uint8_t> requires std::is_trivial_v<T>
-    static std::optional<std::vector<T>> ReadBinary(std::string_view path)
+    static std::vector<T> ReadBinary(std::string_view path)
     {
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
         {
-            return std::nullopt;
+            SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
+            return {};
         }
 
         size_t fileSize = file.tellg();
         if (fileSize % sizeof(T) != 0)
         {
             SL_LOG_ERROR("File size of {} is not divisible by sizeof {} ({})", path.data(), nameof::nameof_type<T>(), sizeof(T));
-            return std::nullopt;
+            return {};
         }
 
         std::vector<T> buffer(fileSize / sizeof(T));
@@ -80,7 +87,8 @@ public:
         file.read(reinterpret_cast<char *>(buffer.data()), fileSize);
         if (!file)
         {
-            return std::nullopt;
+            SL_LOG_ERROR("Failed to read file \"{}\"", path.data());
+            return {};
         }
 
         return buffer;
@@ -91,6 +99,7 @@ public:
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
         {
+            SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
             return { nullptr, 0 };
         }
 
@@ -101,6 +110,7 @@ public:
         file.read(pData, fileSize);
         if (!file)
         {
+            SL_LOG_ERROR("Failed to read file \"{}\"", path.data());
             delete[] pData;
             return { nullptr, 0 };
         }
@@ -109,17 +119,21 @@ public:
     }
 
     template<typename T = uint8_t> requires std::is_trivial_v<T>
-    static bool WriteBinary(std::string_view path, std::span<const T> data, bool append = false)
+    static void WriteBinary(std::string_view path, std::span<const T> data, bool append = false)
     {
         auto mode = std::ios::binary | (append ? std::ios::app : std::ios::trunc);
         std::ofstream file(path.data(), mode);
         if (!file.is_open())
         {
-            return false;
+            SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
+            return;
         }
 
         file.write(reinterpret_cast<const char *>(data.data()), data.size_bytes());
-        return file.good();
+        if (!file)
+        {
+            SL_LOG_ERROR("Failed to write file \"{}\"", path.data());
+        }
     }
 };
 

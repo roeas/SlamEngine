@@ -10,6 +10,8 @@ class OpenGLShader : public Shader
 public:
     OpenGLShader(std::string_view vsSource, std::string_view fsSource);
     OpenGLShader(std::string_view shaderSource, ShaderType type);
+    OpenGLShader(std::span<const uint32_t> vsBinary, std::span<const uint32_t> fsBinary);
+    OpenGLShader(std::span<const uint32_t> binary, ShaderType type);
     ~OpenGLShader() override;
 
     void Bind() const override;
