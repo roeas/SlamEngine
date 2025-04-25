@@ -7,8 +7,8 @@ namespace sl
 {
 
 MeshResource::MeshResource(std::vector<float> vertices, std::vector<uint32_t> indices, VertexLayout layout) :
-    m_verticesRawData(std::move(vertices)), m_indicesRawData(std::move(indices)), m_layout(std::move(layout)),
-    m_vertexCount((uint32_t)m_verticesRawData.size()), m_indexCount((uint32_t)m_indicesRawData.size())
+    m_vertices(std::move(vertices)), m_indices(std::move(indices)), m_layout(std::move(layout)),
+    m_vertexCount((uint32_t)m_vertices.size()), m_indexCount((uint32_t)m_indices.size())
 {
 
 }
@@ -35,10 +35,8 @@ void MeshResource::OnLoad()
 
 void MeshResource::OnUpload()
 {
-    std::unique_ptr<sl::VertexBuffer> pVertexBuffer{ sl::VertexBuffer::Create(m_verticesRawData.data(),
-        m_verticesRawData.size() * sizeof(decltype(m_verticesRawData)::value_type)) };
-    std::unique_ptr<sl::IndexBuffer> pIndexBuffer{ sl::IndexBuffer::Create(m_indicesRawData.data(),
-        m_indicesRawData.size() * sizeof(decltype(m_indicesRawData)::value_type)) };
+    std::unique_ptr<sl::VertexBuffer> pVertexBuffer{ sl::VertexBuffer::Create(m_vertices) };
+    std::unique_ptr<sl::IndexBuffer> pIndexBuffer{ sl::IndexBuffer::Create(m_indices) };
     m_pVertexArray.reset(sl::VertexArray::Create(std::move(pVertexBuffer), std::move(pIndexBuffer), m_layout));
 
     m_state = ResourceState::Ready;
@@ -64,10 +62,12 @@ void MeshResource::OnDestroy()
 
 void MeshResource::DestroyCPUData()
 {
-    m_verticesRawData.clear();
-    std::vector<float>().swap(m_verticesRawData);
-    m_indicesRawData.clear();
-    std::vector<uint32_t>().swap(m_indicesRawData);
+    m_vertices.clear();
+    std::vector<float>().swap(m_vertices);
+    m_indices.clear();
+    std::vector<uint32_t>().swap(m_indices);
+
+    m_optimized = true;
 }
 
 } // namespace sl

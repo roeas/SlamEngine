@@ -5,6 +5,12 @@
 namespace sl
 {
 
+Resource::Resource(std::string assetPath, std::string internalPath) :
+    m_assettPath(std::move(assetPath)), m_internalPath(std::move(internalPath))
+{
+
+}
+
 void Resource::Update()
 {
     switch (m_state)

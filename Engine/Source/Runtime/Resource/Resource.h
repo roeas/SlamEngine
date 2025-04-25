@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 namespace sl
 {
@@ -29,11 +30,14 @@ enum class ResourcesType : uint8_t
 class Resource
 {
 public:
+    Resource() = default;
+    Resource(std::string assetPath, std::string internalPath);
     virtual ~Resource() = default;
 
     void Update();
     bool IsReady() { return m_state == ResourceState::Ready; }
 
+protected:
     // Import asset file from original format
     virtual void OnImport() = 0;
     // Compile to internal format
@@ -48,6 +52,9 @@ public:
     virtual void OnDestroy() = 0;
     // Destroy CPU data
     virtual void DestroyCPUData() = 0;
+
+    std::string m_assettPath;
+    std::string m_internalPath;
 
     ResourceState m_state = ResourceState::Importing;
     uint8_t m_destroyDelayFrame = 60;

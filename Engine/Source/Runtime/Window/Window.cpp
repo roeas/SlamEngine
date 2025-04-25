@@ -31,7 +31,7 @@ void Window::Quit()
 Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_pNativeWindow(nullptr), m_title(title), m_width(width), m_height(height)
 {
-    SL_LOG_INFO("Creating window \"{}\"", title);
+    SL_LOG_INFO("Creating window {}", title.data());
 
     uint64_t windowFlags = SDL_WINDOW_RESIZABLE;
     switch (RenderCore::GetBackend())

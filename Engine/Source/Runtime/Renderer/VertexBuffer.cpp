@@ -7,7 +7,7 @@
 namespace sl
 {
 
-VertexBuffer *VertexBuffer::Create(const float *pVertices, size_t size)
+VertexBuffer *VertexBuffer::Create(std::span<const float> vertices)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ VertexBuffer *VertexBuffer::Create(const float *pVertices, size_t size)
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLVertexBuffer{ pVertices, size };
+            return new OpenGLVertexBuffer{ vertices };
             break;
         }
         default:

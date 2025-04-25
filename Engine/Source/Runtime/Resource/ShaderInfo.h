@@ -14,7 +14,7 @@ struct ShaderInfo
     // Shader file name without extension
     std::string m_name;
     std::string m_assetPath;
-    std::string m_binaryPath;
+    std::string m_internalPath;
     std::string m_source;
     std::vector<uint32_t> m_binary;
 

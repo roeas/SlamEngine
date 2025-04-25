@@ -12,6 +12,7 @@
 |Assertion|On|On|Off|
 |Break Point|On|On|On|
 |Force Inlining|Off|Off|On|
+|Shader Debug Info|On|Off|Off|
 
 # Third party
 [Premake](https://github.com/premake/premake-core) v5.0.0-beta6

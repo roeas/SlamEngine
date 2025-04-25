@@ -150,7 +150,7 @@ bool Viewport::MousePick()
         return false;
     }
 
-    SL_LOG_TRACE("Select entity, ID: {}, Name: \"{}\", Mouse position: ({}, {})",
+    SL_LOG_TRACE("Select entity, ID: {}, Name: {}, Mouse position: ({}, {})",
         entityID, crtEntity.GetComponents<sl::TagComponent>().m_name.c_str(),
         mouseLocalPosX, mouseLocalPosY);
 

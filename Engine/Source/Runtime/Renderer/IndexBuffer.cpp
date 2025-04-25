@@ -7,7 +7,7 @@
 namespace sl
 {
 
-IndexBuffer *IndexBuffer::Create(const uint32_t *pIndicies, size_t size)
+IndexBuffer *IndexBuffer::Create(std::span<const uint32_t> indices)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ IndexBuffer *IndexBuffer::Create(const uint32_t *pIndicies, size_t size)
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLIndexBuffer{ pIndicies, size };
+            return new OpenGLIndexBuffer{ indices };
             break;
         }
         default:

@@ -10,7 +10,7 @@ namespace sl
 class OpenGLVertexBuffer : public VertexBuffer
 {
 public:
-    OpenGLVertexBuffer(const float *pVertices, size_t size);
+    OpenGLVertexBuffer(std::span<const float> vertices);
     ~OpenGLVertexBuffer() override;
 
     uint32_t GetHandle() const override { return m_handle; }

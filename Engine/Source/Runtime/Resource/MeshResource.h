@@ -20,6 +20,9 @@ public:
     MeshResource &operator=(MeshResource &&) = delete;
     ~MeshResource() override;
 
+    VertexArray *GetVertexArray() const { return m_pVertexArray.get(); }
+
+private:
     void OnImport() override;
     void OnBuild() override;
     void OnLoad() override;
@@ -28,10 +31,8 @@ public:
     void OnDestroy() override;
     void DestroyCPUData() override;
 
-    VertexArray *GetVertexArray() const { return m_pVertexArray.get(); }
-
-    std::vector<float> m_verticesRawData;
-    std::vector<uint32_t> m_indicesRawData;
+    std::vector<float> m_vertices;
+    std::vector<uint32_t> m_indices;
     VertexLayout m_layout;
     uint32_t m_vertexCount;
     uint32_t m_indexCount;

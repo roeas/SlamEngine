@@ -14,14 +14,17 @@ class Shader;
 class ShaderResource : public Resource
 {
 public:
-    ShaderResource(std::string_view vsPath, std::string_view fsPath);
-    ShaderResource(std::string_view path, ShaderType type);
+    ShaderResource(std::string vsPath, std::string fsPath);
+    ShaderResource(std::string path, ShaderType type);
     ShaderResource(const ShaderResource &) = delete;
     ShaderResource &operator=(const ShaderResource &) = delete;
     ShaderResource(ShaderResource &&) = delete;
     ShaderResource &operator=(ShaderResource &&) = delete;
     ~ShaderResource() override;
 
+    Shader *GetShaderProgram() const { return m_pShaderProgram.get(); }
+
+private:
     void OnImport() override;
     void OnBuild() override;
     void OnLoad() override;
@@ -29,8 +32,6 @@ public:
     void OnReady() override;
     void OnDestroy() override;
     void DestroyCPUData() override;
-
-    Shader *GetShaderProgram() const { return m_pShaderProgram.get(); }
 
     /*
      * We assume that a shader is named by its shader program name plus the stage suffix

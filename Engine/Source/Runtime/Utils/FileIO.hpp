@@ -4,10 +4,8 @@
 
 #include <nameof/nameof.hpp>
 
-#include <concepts>
-#include <filesystem>
+#include <cstdint>
 #include <fstream>
-#include <optional>
 #include <span>
 #include <string>
 #include <tuple>
@@ -34,38 +32,37 @@ public:
             return "";
         }
 
-        std::string content;
-        content.resize(file.tellg());
+        std::string buffer;
+        buffer.resize(file.tellg());
 
         file.seekg(0, std::ios::beg);
-        file.read(content.data(), content.size());
+        file.read(buffer.data(), buffer.size());
         if (!file)
         {
             SL_LOG_ERROR("Failed to read file \"{}\"", path.data());
             return "";
         }
 
-        return content;
+        return buffer;
     }
 
-    static void WriteString(std::string_view path, std::string_view content, bool append = false)
+    static void WriteString(std::string_view path, std::string_view buffer, bool append = false)
     {
-        auto mode = std::ios::binary | (append ? std::ios::app : std::ios::trunc);
-        std::ofstream file(path.data(), mode);
+        std::ofstream file(path.data(), std::ios::binary | (append ? std::ios::app : std::ios::trunc));
         if (!file.is_open())
         {
             SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
             return;
         }
 
-        file.write(content.data(), content.size());
+        file.write(buffer.data(), buffer.size());
         if (!file)
         {
             SL_LOG_ERROR("Failed to write file \"{}\"", path.data());
         }
     }
 
-    template<typename T = uint8_t> requires std::is_trivial_v<T>
+    template<typename T = unsigned char> requires std::is_trivial_v<T>
     static std::vector<T> ReadBinary(std::string_view path)
     {
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
@@ -118,18 +115,17 @@ public:
         return { pData, fileSize };
     }
 
-    template<typename T = uint8_t> requires std::is_trivial_v<T>
-    static void WriteBinary(std::string_view path, std::span<const T> data, bool append = false)
+    template<typename T = unsigned char> requires std::is_trivial_v<T>
+    static void WriteBinary(std::string_view path, std::span<const T> buffer, bool append = false)
     {
-        auto mode = std::ios::binary | (append ? std::ios::app : std::ios::trunc);
-        std::ofstream file(path.data(), mode);
+        std::ofstream file(path.data(), std::ios::binary | (append ? std::ios::app : std::ios::trunc));
         if (!file.is_open())
         {
             SL_LOG_ERROR("Failed to open file \"{}\"", path.data());
             return;
         }
 
-        file.write(reinterpret_cast<const char *>(data.data()), data.size_bytes());
+        file.write(reinterpret_cast<const char *>(buffer.data()), buffer.size_bytes());
         if (!file)
         {
             SL_LOG_ERROR("Failed to write file \"{}\"", path.data());

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 
 namespace sl
 {
@@ -8,7 +9,7 @@ namespace sl
 class IndexBuffer
 {
 public:
-    static IndexBuffer *Create(const uint32_t* pIndicies, size_t size);
+    static IndexBuffer *Create(std::span<const uint32_t> indices);
 
 public:
     virtual ~IndexBuffer() = default;

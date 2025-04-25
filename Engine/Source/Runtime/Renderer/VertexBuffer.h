@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 
 namespace sl
 {
@@ -8,7 +9,7 @@ namespace sl
 class VertexBuffer
 {
 public:
-    static VertexBuffer *Create(const float *pVertices, size_t size);
+    static VertexBuffer *Create(std::span<const float> vertices);
 
 public:
     virtual ~VertexBuffer() = default;

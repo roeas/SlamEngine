@@ -5,11 +5,11 @@
 namespace sl
 {
 
-OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t *pIndices, size_t size) :
-    m_handle(0), m_count((uint32_t)size / sizeof(uint32_t))
+OpenGLIndexBuffer::OpenGLIndexBuffer(std::span<const uint32_t> indices) :
+    m_handle(0), m_count((uint32_t)indices.size())
 {
     glCreateBuffers(1, &m_handle);
-    glNamedBufferStorage(m_handle, size, pIndices, 0);
+    glNamedBufferStorage(m_handle, indices.size_bytes(), indices.data(), 0);
 }
 
 OpenGLIndexBuffer::~OpenGLIndexBuffer()

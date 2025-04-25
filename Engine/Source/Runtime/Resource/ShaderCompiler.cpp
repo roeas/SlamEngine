@@ -39,7 +39,6 @@ public:
     {
         std::filesystem::path path = type == shaderc_include_type_standard ?
             Path::FromeAsset("Shader/Lib") : Path::FromeAsset("Shader");
-
         path /= requested_source;
         m_pathContainer = path.generic_string();
         m_contentContainer = FileIO::ReadString(m_pathContainer);
@@ -68,9 +67,7 @@ private:
 
 std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
 {
-    SL_LOG_TRACE("Compiling SPIR-V {}", info.m_name.data());
-
-    std::string preprocessedShaderSource;
+    std::string preprocessedSource;
     shaderc_shader_kind shaderKind = ShaderTypeToShaderKind[(size_t)info.m_type];
 
     // 1. Preprocess
@@ -88,7 +85,7 @@ std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
             return {};
         }
 
-        preprocessedShaderSource = { result.cbegin(), result.cend() };
+        preprocessedSource = { result.cbegin(), result.cend() };
     }
 
     // 2. Compile
@@ -109,10 +106,7 @@ std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
         options.SetSourceLanguage(shaderc_source_language_glsl);
         options.SetTargetEnvironment(shaderc_target_env_opengl, shaderc_env_version_opengl_4_5);
 
-        auto result = compiler.CompileGlslToSpv(
-            preprocessedShaderSource.data(), preprocessedShaderSource.size(),
-            shaderKind, info.m_name.data(), "main", options);
-
+        auto result = compiler.CompileGlslToSpv(preprocessedSource, shaderKind, info.m_name.data(), "main", options);
         if (result.GetCompilationStatus() != shaderc_compilation_status_success)
         {
             SL_LOG_ERROR("Failed to compile SPIR-V: {}", result.GetErrorMessage());
@@ -125,6 +119,7 @@ std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
 
 std::string ShaderCompiler::SpirvToSource(std::vector<uint32_t> spirv)
 {
+    // TODO: SPIRV-Cross
     return {};
 }
 
