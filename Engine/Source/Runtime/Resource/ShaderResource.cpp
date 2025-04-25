@@ -193,11 +193,15 @@ void ShaderResource::DestroyCPUData()
 {
     m_shaders[0].m_source.clear();
     std::string{}.swap(m_shaders[0].m_source);
+    m_shaders[0].m_binary.clear();
+    std::vector<uint32_t>{}.swap(m_shaders[0].m_binary);
 
     if (m_shaderCount == 2)
     {
         m_shaders[1].m_source.clear();
         std::string{}.swap(m_shaders[1].m_source);
+        m_shaders[1].m_binary.clear();
+        std::vector<uint32_t>{}.swap(m_shaders[1].m_binary);
     }
 }
 

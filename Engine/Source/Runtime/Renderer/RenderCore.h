@@ -28,9 +28,9 @@ public:
     static GraphicsBackend GetBackend() { return m_backend; }
 
     static void SetMainFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
-    static FrameBuffer *GetMainFramebuffer() { return m_pMainFrameBuffer.get(); }
+    static FrameBuffer *GetMainFramebuffer() { return pMainFrameBuffer.get(); }
     static void SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
-    static FrameBuffer *GetEntityIDFramebuffer() { return m_pEntityIDFrameBuffer.get(); }
+    static FrameBuffer *GetEntityIDFramebuffer() { return pEntityIDFrameBuffer.get(); }
 
     static void ClearColor(const glm::vec4 &color);
     static void ClearDepth(float depth);
@@ -40,9 +40,9 @@ public:
 
 private:
     inline static GraphicsBackend m_backend = GraphicsBackend::None;
-    inline static std::unique_ptr<RenderAPI> m_pRenderAPI;
-    inline static std::unique_ptr<FrameBuffer> m_pMainFrameBuffer;
-    inline static std::unique_ptr<FrameBuffer> m_pEntityIDFrameBuffer;
+    inline static std::unique_ptr<RenderAPI> pRenderAPI;
+    inline static std::unique_ptr<FrameBuffer> pMainFrameBuffer;
+    inline static std::unique_ptr<FrameBuffer> pEntityIDFrameBuffer;
 };
 
 } // namespace sl

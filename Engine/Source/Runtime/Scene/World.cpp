@@ -41,7 +41,7 @@ Entity World::CreateEntity(std::string_view name)
 {
     uint32_t sameNameCount = 0;
     std::string newName = name.data();
-    auto view = m_registry.view<TagComponent>();
+    auto view = registry.view<TagComponent>();
     for (auto sameNameEntity : view)
     {
         if (EntityNameMatch(name, view.get<TagComponent>(sameNameEntity).m_name))
@@ -54,7 +54,7 @@ Entity World::CreateEntity(std::string_view name)
         newName += std::format(" ({})", sameNameCount);
     }
 
-    Entity entity{ m_registry.create() };
+    Entity entity{ registry.create() };
     entity.AddComponent<TagComponent>(std::move(newName));
     entity.AddComponent<TransformComponent>();
 
@@ -63,7 +63,7 @@ Entity World::CreateEntity(std::string_view name)
 
 Entity World::GetMainCameraEntity()
 {
-    auto view = m_registry.view<CameraComponent>();
+    auto view = registry.view<CameraComponent>();
     for (auto entity : view)
     {
         if (view.get<CameraComponent>(entity).m_isMainCamera)
@@ -99,13 +99,13 @@ void World::SetMainCameraTransform(glm::vec3 position, glm::vec3 rotation)
 
 bool Entity::IsValid() const
 {
-    return World::m_registry.valid(m_handle);
+    return World::registry.valid(m_handle);
 }
 
 void Entity::Destroy()
 {
     // Destroy this entity and all its components
-    World::m_registry.destroy(m_handle);
+    World::registry.destroy(m_handle);
     m_handle = entt::null;
 }
 

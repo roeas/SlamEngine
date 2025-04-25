@@ -59,7 +59,7 @@ public:
     }
 
 private:
-    // To ensure requested data is valid before calling ReleaseInclude
+    // To ensure requested data is valid before calling #ReleaseInclude
     std::string m_pathContainer;
     std::string m_contentContainer;
 };
@@ -109,7 +109,7 @@ std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
         options.SetSourceLanguage(shaderc_source_language_glsl);
         options.SetTargetEnvironment(shaderc_target_env_opengl, shaderc_env_version_opengl_4_5);
 
-        shaderc::SpvCompilationResult result = compiler.CompileGlslToSpv(
+        auto result = compiler.CompileGlslToSpv(
             preprocessedShaderSource.data(), preprocessedShaderSource.size(),
             shaderKind, info.m_name.data(), "main", options);
 

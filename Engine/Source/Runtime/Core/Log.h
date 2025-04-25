@@ -44,12 +44,12 @@ public:
     ~Log() = delete;
 
     static void Init();
-    static spdlog::logger *GetEngineLogger() { return m_pEngineLogger.get(); }
-    static std::vector<LogInfo> &GetLogInfos() { return m_logInfos; }
+    static spdlog::logger *GetEngineLogger() { return pEngineLogger.get(); }
+    static std::vector<LogInfo> &GetLogInfos() { return logInfos; }
 
 private:
-    inline static std::unique_ptr<spdlog::logger> m_pEngineLogger;
-    inline static std::vector<LogInfo> m_logInfos;
+    inline static std::unique_ptr<spdlog::logger> pEngineLogger;
+    inline static std::vector<LogInfo> logInfos;
 };
 
 } // namespace sl

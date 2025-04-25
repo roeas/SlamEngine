@@ -40,8 +40,8 @@ void Log::Init()
     auto pCallbackSink = std::make_shared<spdlog::sinks::callback_sink_mt>([](const spdlog::details::log_msg &msg)
     {
         // TODO: Ring buffer
-        // TODO: Add time information to #m_logInfos
-        m_logInfos.emplace_back
+        // TODO: Add time information to #logInfos
+        logInfos.emplace_back
         (
             std::string{ msg.payload.data(), msg.payload.size() },
             SPDLevelToSLLevel[msg.level]
@@ -49,8 +49,8 @@ void Log::Init()
     });
 
     spdlog::sinks_init_list sinks{ pConsoleSink, pFileSink, pCallbackSink };
-    m_pEngineLogger = std::make_unique<spdlog::logger>("Engine", sinks.begin(), sinks.end());
-    m_pEngineLogger->set_level(spdlog::level::trace);
+    pEngineLogger = std::make_unique<spdlog::logger>("Engine", sinks.begin(), sinks.end());
+    pEngineLogger->set_level(spdlog::level::trace);
 
     SL_LOG_INFO("Logger initialized");
 }

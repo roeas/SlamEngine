@@ -31,7 +31,7 @@ public:
     static bool SetMouseRelativeMode(void *pWindow, bool enable);
 
 private:
-    inline static void *m_pWindow = nullptr;
+    inline static void *pWindow = nullptr;
 };
 
 } // namespace sl

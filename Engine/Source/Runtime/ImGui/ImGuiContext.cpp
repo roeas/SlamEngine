@@ -52,10 +52,10 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     SL_ASSERT(pBoldFontData && BoldFontDataSize && pLightFontData && LightFontDataSize &&
         pRegularFontData && RegularFontDataSize && pIconFontData && IconFontDataSize);
 
-    m_pBoldFont = io.Fonts->AddFontFromMemoryTTF(pBoldFontData, (int)BoldFontDataSize, FontSize);
-    m_pLightFont = io.Fonts->AddFontFromMemoryTTF(pLightFontData, (int)LightFontDataSize, FontSize);
-    m_pRegularFont = io.Fonts->AddFontFromMemoryTTF(pRegularFontData, (int)RegularFontDataSize, FontSize);
-    io.FontDefault = m_pRegularFont;
+    pBoldFont = io.Fonts->AddFontFromMemoryTTF(pBoldFontData, (int)BoldFontDataSize, FontSize);
+    pLightFont = io.Fonts->AddFontFromMemoryTTF(pLightFontData, (int)LightFontDataSize, FontSize);
+    pRegularFont = io.Fonts->AddFontFromMemoryTTF(pRegularFontData, (int)RegularFontDataSize, FontSize);
+    io.FontDefault = pRegularFont;
 
     // Merge icon font
     ImFontConfig fontConfig;
