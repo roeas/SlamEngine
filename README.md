@@ -29,13 +29,13 @@
 
 [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) 2310acda820d7383d4c4884b7945ada92cd16a47
 
-[IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) 3eac3a08c43680cd8a5cef32001a75766126ef99
+[IconFontCppHeaders](https://github.com/juliettef/IconFontCppHeaders) 14746043eda157a4c4e6773db1869e6aadd7c634
 
 [GLM](https://github.com/g-truc/glm) v1.0.1
 
 [Nameof](https://github.com/Neargye/nameof) v0.10.4
 
-[stb](https://github.com/nothings/stb) f0569113c93ad095470c54bf34a17b36646bbbb5
+[stb](https://github.com/nothings/stb) 013ac3beddff3dbffafd5177e7972067cd2b5083
 
 [EnTT](https://github.com/skypjack/entt) v3.15.0
 

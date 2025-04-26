@@ -7,6 +7,7 @@
 |ImGui|source|
 |ImPlot|source|
 |ImGuizmo|source|
+|IconFontCppHeaders|header only|
 |GLM|header only|
 |Nameof|header only|
 |stb|header only|

@@ -1,8 +1,8 @@
 #include "OutputLog.h"
 
 #include "Core/Log.h"
-#include "ImGui/IconsMaterialSymbols.h"
 
+#include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 
 void OutputLog::OnAttach()

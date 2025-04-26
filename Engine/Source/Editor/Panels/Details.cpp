@@ -1,13 +1,13 @@
 #include "Details.h"
 
 #include "Core/Path.h"
-#include "ImGui/IconsMaterialSymbols.h"
 #include "ImGui/ImGuiContext.h"
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
 #include "Scene/World.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 #include <nameof/nameof.hpp>
 

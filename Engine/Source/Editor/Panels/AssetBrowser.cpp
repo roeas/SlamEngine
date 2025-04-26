@@ -2,12 +2,12 @@
 
 #include "Core/Log.h"
 #include "Core/Path.h"
-#include "ImGui/IconsMaterialSymbols.h"
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
 #include "Renderer/Texture.h"
 #include "Resource/ResourceManager.h"
 
+#include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 #include <stb/stb_image.h>
 

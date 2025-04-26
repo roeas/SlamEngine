@@ -2,9 +2,9 @@
 
 #include "Core/Log.h"
 #include "Core/Path.h"
-#include "ImGui/IconsMaterialSymbols.h"
 #include "Utils/FileIO.hpp"
 
+#include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_sdl3.h>
 #include <imgui/imgui.h>

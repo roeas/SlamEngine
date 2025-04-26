@@ -1,13 +1,13 @@
 #include "Viewport.h"
 
 #include "Event/MouseEvent.h"
-#include "ImGui/IconsMaterialSymbols.h"
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
 
