@@ -27,6 +27,7 @@ public:
     static std::string ReadString(std::string_view path)
     {
         SL_PROFILE;
+        SL_PROFILE_ADD_TEXT(path.data(), path.size());
 
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
@@ -52,6 +53,7 @@ public:
     static void WriteString(std::string_view path, std::string_view buffer, bool append = false)
     {
         SL_PROFILE;
+        SL_PROFILE_ADD_TEXT(path.data(), path.size());
 
         std::ofstream file(path.data(), std::ios::binary | (append ? std::ios::app : std::ios::trunc));
         if (!file.is_open())
@@ -71,6 +73,7 @@ public:
     static std::vector<T> ReadBinary(std::string_view path)
     {
         SL_PROFILE;
+        SL_PROFILE_ADD_TEXT(path.data(), path.size());
 
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
@@ -101,6 +104,7 @@ public:
     static std::tuple<void *, size_t> ReadBinaryRaw(std::string_view path)
     {
         SL_PROFILE;
+        SL_PROFILE_ADD_TEXT(path.data(), path.size());
 
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
@@ -128,6 +132,7 @@ public:
     static void WriteBinary(std::string_view path, std::span<const T> buffer, bool append = false)
     {
         SL_PROFILE;
+        SL_PROFILE_ADD_TEXT(path.data(), path.size());
 
         std::ofstream file(path.data(), std::ios::binary | (append ? std::ios::app : std::ios::trunc));
         if (!file.is_open())

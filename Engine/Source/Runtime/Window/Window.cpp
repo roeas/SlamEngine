@@ -10,8 +10,6 @@
 #include "Renderer/RenderCore.h"
 #include "Utils/ProfilerCPU.h"
 
-#include <glad/gl.h>
-#include <nameof/nameof.hpp>
 #include <SDL3/SDL.h>
 
 namespace sl
