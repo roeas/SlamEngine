@@ -19,6 +19,6 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
-    sl::StringHashType m_fileIconResourceID;
-    sl::StringHashType m_folderIconResourceID;
+    sl::StringHashType m_fileIconID;
+    sl::StringHashType m_folderIconID;
 };

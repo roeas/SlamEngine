@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Log.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <nameof/nameof.hpp>
 
@@ -25,6 +26,8 @@ public:
 
     static std::string ReadString(std::string_view path)
     {
+        SL_PROFILE;
+
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
         {
@@ -48,6 +51,8 @@ public:
 
     static void WriteString(std::string_view path, std::string_view buffer, bool append = false)
     {
+        SL_PROFILE;
+
         std::ofstream file(path.data(), std::ios::binary | (append ? std::ios::app : std::ios::trunc));
         if (!file.is_open())
         {
@@ -65,6 +70,8 @@ public:
     template<typename T = unsigned char> requires std::is_trivial_v<T>
     static std::vector<T> ReadBinary(std::string_view path)
     {
+        SL_PROFILE;
+
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
         {
@@ -93,6 +100,8 @@ public:
 
     static std::tuple<void *, size_t> ReadBinaryRaw(std::string_view path)
     {
+        SL_PROFILE;
+
         std::ifstream file(path.data(), std::ios::binary | std::ios::ate);
         if (!file.is_open())
         {
@@ -118,6 +127,8 @@ public:
     template<typename T = unsigned char> requires std::is_trivial_v<T>
     static void WriteBinary(std::string_view path, std::span<const T> buffer, bool append = false)
     {
+        SL_PROFILE;
+
         std::ofstream file(path.data(), std::ios::binary | (append ? std::ios::app : std::ios::trunc));
         if (!file.is_open())
         {

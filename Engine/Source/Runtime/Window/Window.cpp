@@ -8,8 +8,10 @@
 #include "ImGui/ImGuiContext.h"
 #include "Renderer/GraphicsContext.h"
 #include "Renderer/RenderCore.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <glad/gl.h>
+#include <nameof/nameof.hpp>
 #include <SDL3/SDL.h>
 
 namespace sl
@@ -17,6 +19,7 @@ namespace sl
 
 void Window::Init()
 {
+    SL_PROFILE;
     SL_LOG_INFO("Initializing SDL");
 
     bool success = SDL_Init(SDL_INIT_EVENTS);
@@ -25,12 +28,15 @@ void Window::Init()
 
 void Window::Quit()
 {
+    SL_PROFILE;
+
     SDL_Quit();
 }
 
 Window::Window(std::string_view title, uint32_t width, uint32_t height) :
     m_pNativeWindow(nullptr), m_title(title), m_width(width), m_height(height)
 {
+    SL_PROFILE;
     SL_LOG_INFO("Creating window {}", title.data());
 
     uint64_t windowFlags = SDL_WINDOW_RESIZABLE;
@@ -72,16 +78,22 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
 
 Window::~Window()
 {
+    SL_PROFILE;
+
     SDL_DestroyWindow(static_cast<SDL_Window *>(m_pNativeWindow));
 }
 
 void Window::BeginFrame()
 {
+    SL_PROFILE;
+
     PullEvents();
 }
 
 void Window::EndFrame()
 {
+    SL_PROFILE;
+
     m_pContext->MakeCurrent();
     m_pContext->SwapBuffers();
 }
@@ -98,11 +110,15 @@ void *Window::GetRenderContext() const
 
 void Window::PullEvents()
 {
+    SL_PROFILE;
+
     SDL_Event SDLevent;
     while (SDL_PollEvent(&SDLevent))
     {
-        sl::ImGuiContext::OnEvent(&SDLevent);
+        SL_PROFILE_NAME("SDL Event");
+        SL_PROFILE_ADD_VALUE(SDLevent.type);
 
+        sl::ImGuiContext::OnEvent(&SDLevent);
         switch (SDLevent.type)
         {
             // Window events

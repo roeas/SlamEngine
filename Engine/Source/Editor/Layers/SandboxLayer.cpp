@@ -4,6 +4,7 @@
 #include "Renderer/RenderCore.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <glm/glm.hpp>
 #include <stb/stb_image.h>
@@ -12,6 +13,8 @@
 
 SandboxLayer::SandboxLayer()
 {
+    SL_PROFILE;
+
     std::vector<float> vertices =
     {
         // Position         // uv
@@ -52,11 +55,6 @@ SandboxLayer::SandboxLayer()
     squareEntity.AddComponent<sl::RenderingComponent>(SquareMeshID, DebugUVTextureID, BaseShaderID, EntityIDShaderID);
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
-}
-
-SandboxLayer::~SandboxLayer()
-{
-
 }
 
 void SandboxLayer::OnAttach()

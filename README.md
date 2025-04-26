@@ -41,6 +41,8 @@
 
 [Shaderc](https://github.com/google/shaderc) v2025.2
 
+[Tracy](https://github.com/wolfpld/tracy) v0.11.1
+
 [Noto Sans](https://fonts.google.com/noto)
 
 [Material Symbols](https://fonts.google.com/icons)

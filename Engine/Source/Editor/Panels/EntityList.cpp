@@ -2,6 +2,7 @@
 
 #include "Panels/ImGuiData.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <imgui/imgui.h>
 
@@ -22,6 +23,8 @@ void EntityList::BeginFrame()
 
 void EntityList::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     if (!ImGui::Begin("Entity List"))
     {
         ImGui::End();

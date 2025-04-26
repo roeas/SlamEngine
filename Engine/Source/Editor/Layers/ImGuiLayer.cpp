@@ -5,6 +5,7 @@
 #include "Event/MouseEvent.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
+#include "Utils/ProfilerCPU.h"
 #include "Window/Input.h"
 
 #include "Panels/AssetBrowser.h"
@@ -21,6 +22,8 @@
 
 ImGuiLayer::ImGuiLayer() : m_pMainWindow(nullptr)
 {
+    SL_PROFILE;
+
     ImGui::GetIO().UserData = &m_data;
 
     auto pMenuBar = std::make_unique<MenuBar>();
@@ -52,12 +55,16 @@ void ImGuiLayer::OnDetach()
 
 void ImGuiLayer::BeginFrame()
 {
+    SL_PROFILE;
+
     sl::ImGuiContext::NewFrame();
     m_panelStack.BeginFrame();
 }
 
 void ImGuiLayer::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     if (m_data.m_debugImGuiDemo)
     {
         ImGui::ShowDemoWindow(&m_data.m_debugImGuiDemo);
@@ -102,17 +109,23 @@ void ImGuiLayer::OnUpdate(float deltaTime)
 
 void ImGuiLayer::OnRender()
 {
+    SL_PROFILE;
+
     m_panelStack.OnRender();
     sl::ImGuiContext::Submit();
 }
 
 void ImGuiLayer::EndFrame()
 {
+    SL_PROFILE;
+
     m_panelStack.EndFrame();
 }
 
 void ImGuiLayer::OnEvent(sl::Event &event)
 {
+    SL_PROFILE;
+
     sl::EventDispatcher dispatcher{ event };
     dispatcher.Dispatch<sl::KeyDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnKeyDownEvent));
     dispatcher.Dispatch<sl::MouseButtonDownEvent>(SL_BIND_EVENT_CALLBACK(ImGuiLayer::OnMouseButtonDown));
@@ -123,6 +136,8 @@ void ImGuiLayer::OnEvent(sl::Event &event)
 
 bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
 {
+    SL_PROFILE;
+
     if (sl::World::GetMainCameraComponent().IsUsing() || ImGuizmo::IsUsing())
     {
         return false;
@@ -168,6 +183,8 @@ bool ImGuiLayer::OnKeyDownEvent(sl::KeyDownEvent &event)
 
 bool ImGuiLayer::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
 {
+    SL_PROFILE;
+
     // Right button down to start moving camera
     if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT && m_data.m_isMouseHoverViewport)
     {
@@ -188,6 +205,8 @@ bool ImGuiLayer::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
 
 bool ImGuiLayer::OnMouseButtonUp(sl::MouseButtonUpEvent &event)
 {
+    SL_PROFILE;
+
     // Left button up to stop moving camera
     if (event.GetButton() == SL_MOUSE_BUTTON_RIGHT &&
         sl::World::GetMainCameraComponent().m_controllerMode != sl::CameraControllerMode::None)

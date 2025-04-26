@@ -6,21 +6,23 @@
 #include "Panels/ImGuiUtils.h"
 #include "Renderer/Texture.h"
 #include "Resource/ResourceManager.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
 #include <stb/stb_image.h>
 
-AssetBrowser::AssetBrowser() :
-    m_fileIconResourceID(sl::StringHash("FileIcon.png")), m_folderIconResourceID(sl::StringHash("FolderIcon.png"))
+AssetBrowser::AssetBrowser() : m_fileIconID(sl::StringHash("FileIcon.png")), m_folderIconID(sl::StringHash("FolderIcon.png"))
 {
+    SL_PROFILE;
+
     std::unique_ptr<sl::TextureResource> pFileIconResource = std::make_unique<sl::TextureResource>(
         sl::Path::FromeAsset("Texture/FileIcon.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-    sl::ResourceManager::AddTextureResource(m_fileIconResourceID, std::move(pFileIconResource));
+    sl::ResourceManager::AddTextureResource(m_fileIconID, std::move(pFileIconResource));
 
     std::unique_ptr<sl::TextureResource> pFolderIconResource = std::make_unique<sl::TextureResource>(
         sl::Path::FromeAsset("Texture/FolderIcon.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-    sl::ResourceManager::AddTextureResource(m_folderIconResourceID, std::move(pFolderIconResource));
+    sl::ResourceManager::AddTextureResource(m_folderIconID, std::move(pFolderIconResource));
 }
 
 void AssetBrowser::OnAttach()
@@ -40,6 +42,8 @@ void AssetBrowser::BeginFrame()
 
 void AssetBrowser::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     if (!ImGui::Begin("Asset Browser"))
     {
         ImGui::End();
@@ -144,8 +148,8 @@ void AssetBrowser::OnUpdate(float deltaTime)
         }
 
         // Texture resources
-        auto *pFileIconResource = sl::ResourceManager::GetTextureResource(m_fileIconResourceID);
-        auto *pFolderIconResource = sl::ResourceManager::GetTextureResource(m_folderIconResourceID);
+        auto *pFileIconResource = sl::ResourceManager::GetTextureResource(m_fileIconID);
+        auto *pFolderIconResource = sl::ResourceManager::GetTextureResource(m_folderIconID);
         if (!pFileIconResource || !pFolderIconResource || !pFileIconResource->IsReady() || !pFolderIconResource->IsReady()) [[unlikely]]
         {
             ImGui::PopID();

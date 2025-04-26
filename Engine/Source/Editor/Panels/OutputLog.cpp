@@ -1,6 +1,7 @@
 #include "OutputLog.h"
 
 #include "Core/Log.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
@@ -22,6 +23,8 @@ void OutputLog::BeginFrame()
 
 void OutputLog::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     // 0011 1111, which means not filtering anything
     constexpr uint8_t FullLevelFilter = 0x3f;
     static uint8_t s_levelFilter = FullLevelFilter;

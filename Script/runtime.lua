@@ -36,7 +36,6 @@ project("Slam")
     includedirs
     {
         path.join(ThirdPartyPath, "sdl/include"),
-        path.join(ThirdPartyPath, "glad/include"),
         path.join(ThirdPartyPath, "shaderc/libshaderc/include"),
     }
 
@@ -46,10 +45,11 @@ project("Slam")
             path.join(ThirdPartyPath, "sdl/build/Debug"),
             path.join(ThirdPartyPath, "spdlog/build/Debug"),
             path.join(ThirdPartyPath, "shaderc/build/libshaderc/Debug"),
+            path.join(ThirdPartyPath, "tracy/build/Debug"),
         }
         links
         {
-            "SDL3", "spdlogd", "shaderc_combined",
+            "SDL3", "spdlogd", "shaderc_combined", "TracyClient",
         }
     filter{ "configurations:Release or configurations:Final" }
         libdirs
@@ -57,9 +57,10 @@ project("Slam")
             path.join(ThirdPartyPath, "sdl/build/Release"),
             path.join(ThirdPartyPath, "spdlog/build/Release"),
             path.join(ThirdPartyPath, "shaderc/build/libshaderc/Release"),
+            path.join(ThirdPartyPath, "tracy/build/Release"),
         }
         links
         {
-            "SDL3", "spdlog", "shaderc_combined",
+            "SDL3", "spdlog", "shaderc_combined", "TracyClient",
         }
     filter{}

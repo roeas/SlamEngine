@@ -5,6 +5,7 @@
 #include "Renderer/Shader.h"
 #include "resource/ShaderCompiler.h"
 #include "Utils/FileIO.hpp"
+#include "Utils/ProfilerCPU.h"
 #include "Utils/Time.h"
 
 namespace sl
@@ -92,6 +93,7 @@ ShaderResource::~ShaderResource()
 
 void ShaderResource::OnImport()
 {
+    SL_PROFILE;
     SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[0].m_assetPath.data());
     m_shaders[0].m_source = FileIO::ReadString(m_shaders[0].m_assetPath);
     if (m_shaderCount == 2)
@@ -112,6 +114,7 @@ void ShaderResource::OnImport()
 
 void ShaderResource::OnBuild()
 {
+    SL_PROFILE;
     SL_LOG_TRACE("Compiling SPIR-V {}", m_shaders[0].m_name.data());
     m_shaders[0].m_binary = ShaderCompiler::SourceToSpirv(m_shaders[0]);
     if (m_shaderCount == 2)
@@ -137,6 +140,8 @@ void ShaderResource::OnBuild()
 
 void ShaderResource::OnLoad()
 {
+    SL_PROFILE;
+
     SL_LOG_TRACE("Loading SPIR-V cache \"{}\"", m_shaders[0].m_internalPath.data());
     m_shaders[0].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[0].m_internalPath);
     if (m_shaderCount == 2)
@@ -157,6 +162,7 @@ void ShaderResource::OnLoad()
 
 void ShaderResource::OnUpload()
 {
+    SL_PROFILE;
     SL_LOG_TRACE("Uploading shader program {}", m_name.data());
     if (m_shaderCount == 2)
     {

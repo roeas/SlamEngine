@@ -5,6 +5,7 @@
 #include "Panels/ImGuiUtils.h"
 #include "Renderer/RenderCore.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <iconfontcppheaders/IconsMaterialSymbols.h>
@@ -44,6 +45,8 @@ void Viewport::BeginFrame()
 
 void Viewport::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0.0f, 0.0f });
     if (!ImGui::Begin("Viewport"))
     {
@@ -105,12 +108,16 @@ void Viewport::EndFrame()
 
 void Viewport::OnEvent(sl::Event &event)
 {
+    SL_PROFILE;
+
     sl::EventDispatcher dispatcher{ event };
     dispatcher.Dispatch<sl::MouseButtonDownEvent>(SL_BIND_EVENT_CALLBACK(Viewport::OnMouseButtonDown));
 }
 
 bool Viewport::OnMouseButtonDown(sl::MouseButtonDownEvent &event)
 {
+    SL_PROFILE;
+
     if (event.GetButton() == SL_MOUSE_BUTTON_LEFT)
     {
         return MousePick();

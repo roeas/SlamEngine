@@ -2,6 +2,7 @@
 
 #include "Event/MouseEvent.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
 #include "Window/Input.h"
 
 #include <array>
@@ -23,6 +24,8 @@ void CameraControllerLayer::BeginFrame()
 
 void CameraControllerLayer::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     auto mode = sl::World::GetMainCameraComponent().m_controllerMode;
     if (mode == sl::CameraControllerMode::None)
     {
@@ -51,6 +54,8 @@ void CameraControllerLayer::EndFrame()
 
 void CameraControllerLayer::OnEvent(sl::Event &event)
 {
+    SL_PROFILE;
+
     sl::EventDispatcher dispatcher(event);
     dispatcher.Dispatch<sl::MouseScrollEvent>(SL_BIND_EVENT_CALLBACK(CameraControllerLayer::OnMouseScroll));
 }
@@ -112,6 +117,8 @@ void CameraControllerLayer::UpdateEditorMode(float deltaTime)
 
 bool CameraControllerLayer::OnMouseScroll(sl::MouseScrollEvent &event)
 {
+    SL_PROFILE;
+
     auto &camera = sl::World::GetMainCameraComponent();
     if (camera.m_controllerMode == sl::CameraControllerMode::None)
     {

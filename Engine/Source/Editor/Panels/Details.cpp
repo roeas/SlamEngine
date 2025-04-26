@@ -5,6 +5,7 @@
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <glm/gtc/type_ptr.hpp>
 #include <iconfontcppheaders/IconsMaterialSymbols.h>
@@ -208,6 +209,8 @@ void Details::BeginFrame()
 
 void Details::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     constexpr ImGuiTreeNodeFlags DefaultSubTreeFlags =
         ImGuiTreeNodeFlags_NoTreePushOnOpen |
         ImGuiTreeNodeFlags_DefaultOpen |

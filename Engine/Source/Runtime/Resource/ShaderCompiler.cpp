@@ -4,6 +4,7 @@
 #include "Core/Path.h"
 #include "Renderer//RenderCore.h"
 #include "Utils/FileIO.hpp"
+#include "Utils/ProfilerCPU.h"
 
 #include <shaderc/shaderc.hpp>
 
@@ -67,6 +68,8 @@ private:
 
 std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
 {
+    SL_PROFILE;
+
     std::string preprocessedSource;
     shaderc_shader_kind shaderKind = ShaderTypeToShaderKind[(size_t)info.m_type];
 

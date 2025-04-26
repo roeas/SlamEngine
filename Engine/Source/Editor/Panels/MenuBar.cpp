@@ -2,6 +2,7 @@
 
 #include "Event/WindowEvent.h"
 #include "Panels/ImGuiData.h"
+#include "Utils/ProfilerCPU.h"
 
 #include <imgui/imgui.h>
 
@@ -22,6 +23,8 @@ void MenuBar::BeginFrame()
 
 void MenuBar::OnUpdate(float deltaTime)
 {
+    SL_PROFILE;
+
     ImGui::BeginMainMenuBar();
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
 

@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Renderer/Texture.h"
 #include "Utils/FileIO.hpp"
+#include "Utils/ProfilerCPU.h"
 
 #include <stb/stb_image.h>
 
@@ -23,6 +24,7 @@ TextureResource::~TextureResource()
 
 void TextureResource::OnImport()
 {
+    SL_PROFILE;
     SL_LOG_TRACE("Loading image \"{}\"", m_assettPath.data());
     auto assetData = FileIO::ReadBinary(m_assettPath);
 
@@ -149,6 +151,8 @@ void TextureResource::OnLoad()
 
 void TextureResource::OnUpload()
 {
+    SL_PROFILE;
+
     m_pTexture.reset(Texture2D::Create(m_width, m_height, m_format, m_mipmap, m_flags, m_imageData.data()));
     m_state = ResourceState::Ready;
 }

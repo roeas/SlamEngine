@@ -40,9 +40,18 @@ set "SHADERC_PATH=%THIRD_PARTY_PATH%\shaderc"
 echo [ Shaderc ] path: %SHADERC_PATH%
 cd %SHADERC_PATH%
 python "utils\git-sync-deps"
-
 cmake -B build -DSHADERC_ENABLE_SHARED_CRT=ON
 cmake --build build --target shaderc_combined --config Debug
 cmake --build build --target shaderc_combined --config Release
+echo.
+
+rem Tracy
+set "TRACY_PATH=%THIRD_PARTY_PATH%\tracy"
+echo [ Tracy ] path: %TRACY_PATH%
+cd %TRACY_PATH%
+cmake -B build
+cmake --build build --target TracyClient --config Debug
+cmake --build build --target TracyClient --config Release
+echo.
 
 pause

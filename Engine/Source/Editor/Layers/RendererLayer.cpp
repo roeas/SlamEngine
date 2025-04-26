@@ -4,6 +4,8 @@
 #include "Renderer/UniformBuffer.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
+#include "Utils/ProfilerGPU.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -39,6 +41,8 @@ void RendererLayer::OnUpdate(float deltaTime)
 
 void RendererLayer::OnRender()
 {
+    SL_PROFILE;
+
     // Upload camera uniform buffer
     sl::Entity mainCamera = sl::World::GetMainCameraEntity();
     m_pCameraUniformBuffer->Upload("ub_cameraPos", glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
@@ -60,6 +64,9 @@ void RendererLayer::OnEvent(sl::Event &event)
 
 void RendererLayer::BasePass()
 {
+    SL_PROFILE_GPU("Base Pass");
+    SL_PROFILE;
+
     sl::RenderCore::GetMainFramebuffer()->Bind();
     sl::RenderCore::ClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
     sl::RenderCore::ClearDepth(1.0f);
@@ -86,7 +93,6 @@ void RendererLayer::BasePass()
         }
 
         pShaderResource->GetShaderProgram()->Unbind();
-
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
     }
  
@@ -95,6 +101,9 @@ void RendererLayer::BasePass()
 
 void RendererLayer::EntityIDPass()
 {
+    SL_PROFILE_GPU("Entity ID Pass");
+    SL_PROFILE;
+
     constexpr int entityIDClearData = -1;
     sl::RenderCore::GetEntityIDFramebuffer()->Bind();
     sl::RenderCore::GetEntityIDFramebuffer()->Clear(0, &entityIDClearData);

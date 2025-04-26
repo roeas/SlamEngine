@@ -7,6 +7,7 @@
 #include "Renderer/RenderCore.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
+#include "Utils/ProfilerCPU.h"
 #include "Window/Window.h"
 
 #include "Layers/CameraControllerLayer.h"
@@ -16,6 +17,8 @@
 
 Editor::Editor(const EditorInitor &initor)
 {
+    SL_PROFILE;
+
     m_clock.Tick();
     sl::Log::Init();
     sl::RenderCore::Init(initor.m_backend);
@@ -66,12 +69,16 @@ Editor::Editor(const EditorInitor &initor)
 
 Editor::~Editor()
 {
+    SL_PROFILE;
+
     sl::ImGuiContext::Shutdown();
     sl::Window::Quit();
 }
 
 void Editor::Run()
 {
+    SL_PROFILE;
+
     while (m_isRunning)
     {
         BeginFrame();
@@ -83,11 +90,15 @@ void Editor::Run()
         }
 
         EndFrame();
+
+        SL_PROFILE_FRAME;
     }
 }
 
 void Editor::BeginFrame()
 {
+    SL_PROFILE;
+
     m_clock.Tick();
 
     m_pMainWindow->BeginFrame();
@@ -96,23 +107,31 @@ void Editor::BeginFrame()
 
 void Editor::Update()
 {
+    SL_PROFILE;
+
     sl::ResourceManager::Update();
     m_layerStack.OnUpdate(m_clock.GetDeltatIme());
 }
 
 void Editor::Render()
 {
+    SL_PROFILE;
+
     m_layerStack.OnRender();
 }
 
 void Editor::EndFrame()
 {
+    SL_PROFILE;
+
     m_layerStack.EndFrame();
     m_pMainWindow->EndFrame();
 }
 
 void Editor::OnEvent(sl::Event &event)
 {
+    SL_PROFILE;
+
     sl::EventDispatcher dispatcher{ event };
     dispatcher.Dispatch<sl::WindowCloseEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowClose));
     dispatcher.Dispatch<sl::WindowMinimizeEvent>(SL_BIND_EVENT_CALLBACK(Editor::OnWindowMinimize));
@@ -123,19 +142,25 @@ void Editor::OnEvent(sl::Event &event)
 
 bool Editor::OnWindowClose(sl::WindowCloseEvent &event)
 {
+    SL_PROFILE;
     SL_LOG_TRACE("Window close");
+
     m_isRunning = false;
     return true;
 }
 
 bool Editor::OnWindowMinimize(sl::WindowMinimizeEvent &event)
 {
+    SL_PROFILE;
+
     m_isMinimized = true;
     return true;
 }
 
 bool Editor::OnWindowRestore(sl::WindowRestoreEvent &event)
 {
+    SL_PROFILE;
+
     m_isMinimized = false;
     return true;
 }

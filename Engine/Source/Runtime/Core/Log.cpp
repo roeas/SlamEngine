@@ -2,6 +2,7 @@
 
 #include "Core/Path.h"
 #include "Utils/NameOf.hpp"
+#include "Utils/ProfilerCPU.h"
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/callback_sink.h>
@@ -28,6 +29,8 @@ constexpr std::array<LogLevel, nameof::enum_count<LogLevel>()> SPDLevelToSLLevel
 
 void Log::Init()
 {
+    SL_PROFILE;
+
     // Output to console
     auto pConsoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     pConsoleSink->set_pattern("%^[%T] [%n] %v%$");

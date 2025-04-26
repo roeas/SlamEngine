@@ -6,7 +6,6 @@ class SandboxLayer : public sl::Layer
 {
 public:
     SandboxLayer();
-    ~SandboxLayer() override;
 
     void OnAttach() override;
     void OnDetach() override;

@@ -2,6 +2,7 @@
 
 #include "Core/Log.h"
 #include "Renderer/VertexArray.h"
+#include "Utils/ProfilerCPU.h"
 
 namespace sl
 {
@@ -35,6 +36,8 @@ void MeshResource::OnLoad()
 
 void MeshResource::OnUpload()
 {
+    SL_PROFILE;
+
     std::unique_ptr<sl::VertexBuffer> pVertexBuffer{ sl::VertexBuffer::Create(m_vertices) };
     std::unique_ptr<sl::IndexBuffer> pIndexBuffer{ sl::IndexBuffer::Create(m_indices) };
     m_pVertexArray.reset(sl::VertexArray::Create(std::move(pVertexBuffer), std::move(pIndexBuffer), m_layout));

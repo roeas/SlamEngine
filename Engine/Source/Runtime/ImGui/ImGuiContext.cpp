@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 #include "Core/Path.h"
 #include "Utils/FileIO.hpp"
+#include "Utils/ProfilerCPU.h"
 
 #include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
@@ -16,6 +17,7 @@ namespace sl
 
 void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
 {
+    SL_PROFILE;
     SL_LOG_INFO("Initializing ImGui");
 
     // 1. Init ImGui
@@ -76,6 +78,8 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
 
 void ImGuiContext::Shutdown()
 {
+    SL_PROFILE;
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
     ImPlot::DestroyContext();
@@ -84,6 +88,8 @@ void ImGuiContext::Shutdown()
 
 void ImGuiContext::NewFrame()
 {
+    SL_PROFILE;
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
@@ -92,6 +98,8 @@ void ImGuiContext::NewFrame()
 
 void ImGuiContext::Submit()
 {
+    SL_PROFILE;
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -101,6 +109,8 @@ void ImGuiContext::Submit()
 
 void ImGuiContext::OnEvent(void *pSDLEvent)
 {
+    SL_PROFILE;
+
     ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event *>(pSDLEvent));
 }
 
