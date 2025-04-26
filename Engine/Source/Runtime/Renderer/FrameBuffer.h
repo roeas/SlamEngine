@@ -8,13 +8,13 @@
 namespace sl
 {
 
-class FrameBuffer
+class Framebuffer
 {
 public:
-    static FrameBuffer *Create(std::initializer_list<Texture2D *> pTextures, bool destroy = true);
+    static Framebuffer *Create(std::initializer_list<Texture2D *> pTextures, bool destroy = true);
 
 public:
-    virtual ~FrameBuffer() = default;
+    virtual ~Framebuffer() = default;
 
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;

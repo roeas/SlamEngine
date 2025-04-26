@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Defines.h"
-#include "Renderer/FrameBuffer.h"
+#include "Renderer/Framebuffer.h"
 #include "Renderer/RenderAPI.h"
 #include "Renderer/UniformBuffer.h"
 
@@ -27,10 +27,10 @@ public:
     static void Init(GraphicsBackend backend);
     static GraphicsBackend GetBackend() { return m_backend; }
 
-    static void SetMainFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
-    static FrameBuffer *GetMainFramebuffer() { return pMainFrameBuffer.get(); }
-    static void SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer);
-    static FrameBuffer *GetEntityIDFramebuffer() { return pEntityIDFrameBuffer.get(); }
+    static void SetMainFramebuffer(std::unique_ptr<Framebuffer> pFrameBuffer);
+    static Framebuffer *GetMainFramebuffer() { return pMainFrameBuffer.get(); }
+    static void SetEntityIDFramebuffer(std::unique_ptr<Framebuffer> pFrameBuffer);
+    static Framebuffer *GetEntityIDFramebuffer() { return pEntityIDFrameBuffer.get(); }
 
     static void ClearColor(const glm::vec4 &color);
     static void ClearDepth(float depth);
@@ -41,8 +41,10 @@ public:
 private:
     inline static GraphicsBackend m_backend = GraphicsBackend::None;
     inline static std::unique_ptr<RenderAPI> pRenderAPI;
-    inline static std::unique_ptr<FrameBuffer> pMainFrameBuffer;
-    inline static std::unique_ptr<FrameBuffer> pEntityIDFrameBuffer;
+
+    // TODO: Can we move these to #RendererLayer?
+    inline static std::unique_ptr<Framebuffer> pMainFrameBuffer;
+    inline static std::unique_ptr<Framebuffer> pEntityIDFrameBuffer;
 };
 
 } // namespace sl

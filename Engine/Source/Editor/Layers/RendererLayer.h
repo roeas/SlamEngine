@@ -15,7 +15,6 @@ class RendererLayer : public sl::Layer
 {
 public:
     RendererLayer();
-    ~RendererLayer() override;
 
     void OnAttach() override;
     void OnDetach() override;
@@ -26,8 +25,6 @@ public:
     void EndFrame() override;
 
     void OnEvent(sl::Event &event) override;
-
-    void SetCameraUniformBuffer(std::unique_ptr<sl::UniformBuffer> pUniformBuffer) { m_pCameraUniformBuffer = std::move(pUniformBuffer); }
 
 private:
     void BasePass();

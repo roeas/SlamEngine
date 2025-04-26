@@ -13,12 +13,12 @@ void RenderCore::Init(GraphicsBackend backend)
     pRenderAPI.reset(RenderAPI::Create());
 }
 
-void RenderCore::SetMainFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer)
+void RenderCore::SetMainFramebuffer(std::unique_ptr<Framebuffer> pFrameBuffer)
 {
     pMainFrameBuffer = std::move(pFrameBuffer);
 }
 
-void RenderCore::SetEntityIDFramebuffer(std::unique_ptr<FrameBuffer> pFrameBuffer)
+void RenderCore::SetEntityIDFramebuffer(std::unique_ptr<Framebuffer> pFrameBuffer)
 {
     pEntityIDFrameBuffer = std::move(pFrameBuffer);
 }

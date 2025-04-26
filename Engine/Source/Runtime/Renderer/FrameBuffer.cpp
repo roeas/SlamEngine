@@ -1,13 +1,13 @@
-#include "FrameBuffer.h"
+#include "Framebuffer.h"
 
 #include "Core/Log.h"
-#include "Platforms/OpenGL/OpenGLFrameBuffer.h"
+#include "Platforms/OpenGL/OpenGLFramebuffer.h"
 #include "Renderer/RenderCore.h"
 
 namespace sl
 {
 
-FrameBuffer *FrameBuffer::Create(std::initializer_list<Texture2D *> pTextures, bool destroy)
+Framebuffer *Framebuffer::Create(std::initializer_list<Texture2D *> pTextures, bool destroy)
 {
     switch (RenderCore::GetBackend())
     {
@@ -18,7 +18,7 @@ FrameBuffer *FrameBuffer::Create(std::initializer_list<Texture2D *> pTextures, b
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLFrameBuffer{ pTextures };
+            return new OpenGLFramebuffer{ pTextures };
             break;
         }
         default:

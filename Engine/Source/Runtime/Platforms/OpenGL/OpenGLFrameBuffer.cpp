@@ -1,4 +1,4 @@
-#include "OpenGLFrameBuffer.h"
+#include "OpenGLFramebuffer.h"
 
 #include "Core/Log.h"
 #include "Platforms/OpenGL/OpenGLDefines.h"
@@ -8,7 +8,7 @@
 namespace sl
 {
 
-OpenGLFrameBuffer::OpenGLFrameBuffer(std::initializer_list<Texture2D *> pTextures, bool destroy) :
+OpenGLFramebuffer::OpenGLFramebuffer(std::initializer_list<Texture2D *> pTextures, bool destroy) :
     m_handle(0), m_width(0), m_height(0), m_colorAttachmentCount(0), m_destroyTextures(destroy)
 {
     size_t textureCount = pTextures.size();
@@ -52,7 +52,7 @@ OpenGLFrameBuffer::OpenGLFrameBuffer(std::initializer_list<Texture2D *> pTexture
     Create();
 }
 
-OpenGLFrameBuffer::~OpenGLFrameBuffer()
+OpenGLFramebuffer::~OpenGLFramebuffer()
 {
     if (m_destroyTextures)
     {
@@ -65,18 +65,18 @@ OpenGLFrameBuffer::~OpenGLFrameBuffer()
     glDeleteFramebuffers(1, &m_handle);
 }
 
-void OpenGLFrameBuffer::Bind() const
+void OpenGLFramebuffer::Bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
     glViewport(0, 0, m_width, m_height);
 }
 
-void OpenGLFrameBuffer::Unbind() const
+void OpenGLFramebuffer::Unbind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
+void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 {
     if (width < 1 || height < 1)
     {
@@ -101,7 +101,7 @@ void OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
     Create();
 }
 
-void OpenGLFrameBuffer::Clear(uint32_t attachmentIndex, const void *pClearData) const
+void OpenGLFramebuffer::Clear(uint32_t attachmentIndex, const void *pClearData) const
 {
     if (attachmentIndex >= m_attachments.size())
     {
@@ -112,7 +112,7 @@ void OpenGLFrameBuffer::Clear(uint32_t attachmentIndex, const void *pClearData) 
     m_attachments[attachmentIndex].m_pTexture->Clear(pClearData);
 }
 
-int OpenGLFrameBuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t y)
+int OpenGLFramebuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t y)
 {
     if (attachmentIndex >= m_attachments.size())
     {
@@ -133,7 +133,7 @@ int OpenGLFrameBuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t 
     return data;
 }
 
-uint32_t OpenGLFrameBuffer::GetAttachmentHandle(size_t attachmentIndex) const
+uint32_t OpenGLFramebuffer::GetAttachmentHandle(size_t attachmentIndex) const
 {
     if (attachmentIndex >= m_attachments.size())
     {
@@ -144,7 +144,7 @@ uint32_t OpenGLFrameBuffer::GetAttachmentHandle(size_t attachmentIndex) const
     return m_attachments[attachmentIndex].m_pTexture->GetHandle();
 }
 
-void OpenGLFrameBuffer::Create()
+void OpenGLFramebuffer::Create()
 {
     if (m_handle)
     {

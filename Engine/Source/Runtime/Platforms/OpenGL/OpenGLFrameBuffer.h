@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/FrameBuffer.h"
+#include "Renderer/Framebuffer.h"
 
 #include <vector>
 
@@ -13,11 +13,11 @@ struct Attachment
     uint32_t m_point;
 };
 
-class OpenGLFrameBuffer : public FrameBuffer
+class OpenGLFramebuffer : public Framebuffer
 {
 public:
-    OpenGLFrameBuffer(std::initializer_list<Texture2D *> pTextures, bool destroy = false);
-    ~OpenGLFrameBuffer() override;
+    OpenGLFramebuffer(std::initializer_list<Texture2D *> pTextures, bool destroy = false);
+    ~OpenGLFramebuffer() override;
 
     void Bind() const override;
     void Unbind() const override;

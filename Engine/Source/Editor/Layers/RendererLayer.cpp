@@ -1,6 +1,7 @@
 #include "RendererLayer.h"
 
 #include "Renderer/RenderCore.h"
+#include "Renderer/Shader.h"
 #include "Renderer/UniformBuffer.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
@@ -11,12 +12,28 @@
 
 RendererLayer::RendererLayer()
 {
+    SL_PROFILE;
 
-}
+    // Create main framebuffer and ID framebuffer, size is meaningless here
+    std::unique_ptr<sl::Framebuffer> pMainFrameBuffer{ sl::Framebuffer::Create(
+    {
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+    }) };
+    std::unique_ptr<sl::Framebuffer> pEntityIDFramebuffer{ sl::Framebuffer::Create(
+    {
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::R32I, false, SL_SAMPLER_CLAMP | SL_SAMPLER_NEAREST),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+    }) };
+    sl::RenderCore::SetMainFramebuffer(std::move(pMainFrameBuffer));
+    sl::RenderCore::SetEntityIDFramebuffer(std::move(pEntityIDFramebuffer));
 
-RendererLayer::~RendererLayer()
-{
-
+    // Create camera uniform buffer
+    sl::UniformBufferLayout cameraUniformBufferLayout;
+    cameraUniformBufferLayout.AddElement("ub_cameraPos", sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
+    cameraUniformBufferLayout.AddElement("ub_viewProjection", sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
+    cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
+    m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout)));
 }
 
 void RendererLayer::OnAttach()
