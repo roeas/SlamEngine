@@ -3,10 +3,10 @@
 #include "Core/Log.h"
 #include "Core/Path.h"
 #include "ImGui/IconsMaterialSymbols.h"
-#include "ImGui/imgui_impl_opengl3.h"
-#include "ImGui/imgui_impl_sdl3.h"
 #include "Utils/FileIO.hpp"
 
+#include <imgui/backends/imgui_impl_opengl3.h>
+#include <imgui/backends/imgui_impl_sdl3.h>
 #include <imgui/imgui.h>
 #include <imguizmo/ImGuizmo.h>
 #include <implot/implot.h>

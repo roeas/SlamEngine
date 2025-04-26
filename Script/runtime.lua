@@ -23,6 +23,16 @@ project("Slam")
         path.join(ThirdPartyPath, "imguizmo/*.cpp");
     }
 
+    -- ImGui backends
+    files
+    {
+        path.join(ThirdPartyPath, "imgui/backends/imgui_impl_sdl3.h");
+        path.join(ThirdPartyPath, "imgui/backends/imgui_impl_sdl3.cpp");
+        path.join(ThirdPartyPath, "imgui/backends/imgui_impl_opengl3_loader.h");
+        path.join(ThirdPartyPath, "imgui/backends/imgui_impl_opengl3.h");
+        path.join(ThirdPartyPath, "imgui/backends/imgui_impl_opengl3.cpp");
+    }
+
     includedirs
     {
         path.join(ThirdPartyPath, "sdl/include"),
