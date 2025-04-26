@@ -10,10 +10,14 @@
 #endif
 
 // Break point
-#if defined(_MSC_VER)
-    #define SL_BREAKPOINT() __debugbreak()
+#if !defined(SL_FINAL)
+    #if defined(_MSC_VER)
+        #define SL_BREAKPOINT __debugbreak()
+    #else
+        #define SL_BREAKPOINT
+    #endif
 #else
-    #define SL_BREAKPOINT()
+    #define SL_BREAKPOINT
 #endif
 
 // Force inline

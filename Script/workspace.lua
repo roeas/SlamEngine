@@ -24,7 +24,7 @@ workspace("SlamEngine")
     -- Final maode, full optimization
     filter{ "configurations:Final" }
         defines{ "SL_FINAL", "NDEBUG" }
-        symbols("On")
+        symbols("Off")
         optimize("Speed")
         runtime("Release")
         linktimeoptimization("On")

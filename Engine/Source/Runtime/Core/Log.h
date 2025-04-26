@@ -62,7 +62,7 @@ private:
 #define SL_LOG_FATAL(...) ::sl::Log::GetEngineLogger()->critical(__VA_ARGS__)
 
 #if !defined(SL_FINAL)
-    #define SL_ASSERT(x, ...) { if(!(x)) { __VA_OPT__(SL_LOG_FATAL(__VA_ARGS__);) SL_BREAKPOINT(); } }
+    #define SL_ASSERT(x, ...) { if(!(x)) { __VA_OPT__(SL_LOG_FATAL(__VA_ARGS__);) SL_BREAKPOINT; } }
 #else
     #define SL_ASSERT(...)
 #endif

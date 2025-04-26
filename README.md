@@ -5,7 +5,7 @@
 ||Debug|Release|Final|
 |:-|:-:|:-:|:-:|
 |Macro|`SL_DEBUG`, `DEBUG`|`SL_RELEASE`, `NDEBUG`|`SL_FINAL`, `NDEBUG`|
-|Symbol|On|On|On|
+|Symbol|On|On|Off|
 |Optimization|Debug|On|Speed|
 |CRT|/MDd|/MD|/MD|
 |LTO|Off|Off|On|
