@@ -225,6 +225,7 @@ void Details::OnUpdate(float deltaTime)
         ImGui::End();
         return;
     }
+    ImGui::PushID((int)pData->m_selectedEntity.GetHandle());
 
     // Draw tag component
     DrawComponent<sl::TagComponent>("Tag", [this, pData](sl::TagComponent *pComponent)
@@ -233,16 +234,19 @@ void Details::OnUpdate(float deltaTime)
         ImGui::Text("%d", (uint32_t)pData->m_selectedEntity.GetHandle());
 
         constexpr size_t BufferSize = 256;
-        SL_ASSERT(BufferSize > pComponent->m_name.size(),
+        static char s_buffer[BufferSize] = { 0 };
+
+        auto nameSize = pComponent->m_name.size();
+        SL_ASSERT(BufferSize > nameSize,
             "ImGui ensure that InputText() returns a null-terminated character array,"
-            "it also means that character buffer[BufferSize - 1] will be discard.");
-        char buffer[BufferSize] = { 0 };
-        memcpy(buffer, pComponent->m_name.data(), pComponent->m_name.size());
+            "it also means that character s_buffer[BufferSize - 1] will be discard.");
+        memcpy(s_buffer, pComponent->m_name.data(), nameSize);
+        memset(s_buffer + nameSize, 0, BufferSize - nameSize);
 
         StartWithText("Name");
-        if (ImGui::InputText("##Name", buffer, BufferSize))
+        if (ImGui::InputText("##Name", s_buffer, BufferSize))
         {
-            pComponent->m_name = buffer;
+            pComponent->m_name = s_buffer;
             if (pComponent->m_name.empty())
             {
                 pComponent->Reset();
@@ -404,6 +408,7 @@ void Details::OnUpdate(float deltaTime)
         ImGui::EndPopup();
     }
 
+    ImGui::PopID();
     ImGui::End(); // Details
 }
 
