@@ -44,13 +44,13 @@ void ImGuiContext::Init(void *pNativeWindow, void *pRenderContext)
     std::string iconFontPath = sl::Path::FromeAsset("Font/MaterialSymbols/MaterialSymbolsOutlined.ttf");
 
     SL_LOG_TRACE("\tLoading font \"{}\"", boldFontPath.data());
-    auto [pBoldFontData, BoldFontDataSize] = sl::FileIO::ReadBinaryRaw(boldFontPath);
+    auto [pBoldFontData, BoldFontDataSize] = sl::FileIO::ReadBinaryRaw(boldFontPath.data());
     SL_LOG_TRACE("\tLoading font \"{}\"", lightFontPath.data());
-    auto [pLightFontData, LightFontDataSize] = sl::FileIO::ReadBinaryRaw(lightFontPath);
+    auto [pLightFontData, LightFontDataSize] = sl::FileIO::ReadBinaryRaw(lightFontPath.data());
     SL_LOG_TRACE("\tLoading font \"{}\"", regularFontPath.data());
-    auto [pRegularFontData, RegularFontDataSize] = sl::FileIO::ReadBinaryRaw(regularFontPath);
+    auto [pRegularFontData, RegularFontDataSize] = sl::FileIO::ReadBinaryRaw(regularFontPath.data());
     SL_LOG_TRACE("\tLoading font \"{}\"", iconFontPath.data());
-    auto [pIconFontData, IconFontDataSize] = sl::FileIO::ReadBinaryRaw(iconFontPath);
+    auto [pIconFontData, IconFontDataSize] = sl::FileIO::ReadBinaryRaw(iconFontPath.data());
     SL_ASSERT(pBoldFontData && BoldFontDataSize && pLightFontData && LightFontDataSize &&
         pRegularFontData && RegularFontDataSize && pIconFontData && IconFontDataSize);
 

@@ -25,7 +25,7 @@ Editor::Editor(const EditorInitor &initor)
 
     // Init window, graphics context and GUI
     sl::Window::Init();
-    m_pMainWindow = std::make_unique<sl::Window>(initor.m_title, initor.m_width, initor.m_height);
+    m_pMainWindow = std::make_unique<sl::Window>(initor.m_pTitle, initor.m_width, initor.m_height);
     m_pMainWindow->SetEventCallback(SL_BIND_EVENT_CALLBACK(Editor::OnEvent));
     sl::ImGuiContext::Init(m_pMainWindow->GetNativeWindow(), m_pMainWindow->GetRenderContext());
 

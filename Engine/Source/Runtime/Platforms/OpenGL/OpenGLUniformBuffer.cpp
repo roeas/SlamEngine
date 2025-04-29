@@ -34,13 +34,13 @@ void OpenGLUniformBuffer::Unbind() const
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void OpenGLUniformBuffer::Upload(std::string_view name, const void *pData, uint32_t size) const
+void OpenGLUniformBuffer::Upload(StringHashType name, const void *pData, uint32_t size) const
 {
     if (const auto &optElement = m_layout.GetElement(name); optElement)
     {
         if (size > optElement->m_size)
         {
-            SL_LOG_ERROR("Uniform buffer element {} update size out of range!", name.data());
+            SL_LOG_ERROR("Uniform buffer element update size out of range!");
             return;
         }
 
@@ -50,7 +50,7 @@ void OpenGLUniformBuffer::Upload(std::string_view name, const void *pData, uint3
     }
     else
     {
-        SL_LOG_ERROR("Uniform buffer element {} does not exist!", name.data());
+        SL_LOG_ERROR("Uniform buffer element does not exist!");
     }
 }
 

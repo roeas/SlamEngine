@@ -13,7 +13,7 @@ bool EntityNameMatch(std::string_view base, std::string_view str)
         return true;
     }
 
-    // Check if name "ABCD" match "ABCD (X)", X is integer
+    // Check if name "ABCD" match "ABCD (X)", X is an integer
     size_t baseSize = base.size();
     size_t strSize = str.size();
     if (strSize < baseSize + 4 ||
@@ -37,14 +37,14 @@ bool EntityNameMatch(std::string_view base, std::string_view str)
 
 } // namespace
 
-Entity World::CreateEntity(std::string_view name)
+Entity World::CreateEntity(const char *pName)
 {
     uint32_t sameNameCount = 0;
-    std::string newName = name.data();
+    std::string newName{ pName };
     auto view = registry.view<TagComponent>();
     for (auto sameNameEntity : view)
     {
-        if (EntityNameMatch(name, view.get<TagComponent>(sameNameEntity).m_name))
+        if (EntityNameMatch(newName, view.get<TagComponent>(sameNameEntity).m_name))
         {
             ++sameNameCount;
         }

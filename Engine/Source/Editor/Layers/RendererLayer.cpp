@@ -10,6 +10,14 @@
 
 #include <glm/gtc/type_ptr.hpp>
 
+namespace
+{
+
+constexpr sl::StringHashType CameraPosHash = sl::StringHash("ub_cameraPos");
+constexpr sl::StringHashType ViewProjHash = sl::StringHash("ub_viewProjection");
+
+} // namespace
+
 RendererLayer::RendererLayer()
 {
     SL_PROFILE;
@@ -30,8 +38,8 @@ RendererLayer::RendererLayer()
 
     // Create camera uniform buffer
     sl::UniformBufferLayout cameraUniformBufferLayout;
-    cameraUniformBufferLayout.AddElement("ub_cameraPos", sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
-    cameraUniformBufferLayout.AddElement("ub_viewProjection", sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
+    cameraUniformBufferLayout.AddElement(CameraPosHash, sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
+    cameraUniformBufferLayout.AddElement(ViewProjHash, sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
     cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
     m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout)));
 }
@@ -62,8 +70,8 @@ void RendererLayer::OnRender()
 
     // Upload camera uniform buffer
     sl::Entity mainCamera = sl::World::GetMainCameraEntity();
-    m_pCameraUniformBuffer->Upload("ub_cameraPos", glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
-    m_pCameraUniformBuffer->Upload("ub_viewProjection", glm::value_ptr(mainCamera.GetComponents<sl::CameraComponent>().GetViewProjection()));
+    m_pCameraUniformBuffer->Upload(CameraPosHash, glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
+    m_pCameraUniformBuffer->Upload(ViewProjHash, glm::value_ptr(mainCamera.GetComponents<sl::CameraComponent>().GetViewProjection()));
 
     BasePass();
     EntityIDPass();

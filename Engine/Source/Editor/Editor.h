@@ -17,7 +17,7 @@ class WindowRestoreEvent;
 
 struct EditorInitor
 {
-    std::string_view m_title;
+    const char *m_pTitle;
     uint32_t m_width;
     uint32_t m_height;
     sl::GraphicsBackend m_backend;

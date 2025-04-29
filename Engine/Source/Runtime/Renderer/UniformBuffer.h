@@ -19,7 +19,7 @@ public:
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
-    virtual void Upload(std::string_view name, const void *pData, uint32_t size = 0) const = 0;
+    virtual void Upload(StringHashType name, const void *pData, uint32_t size = 0) const = 0;
 };
 
 } // namespace sl

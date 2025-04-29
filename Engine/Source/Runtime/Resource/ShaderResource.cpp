@@ -95,11 +95,11 @@ void ShaderResource::OnImport()
 {
     SL_PROFILE;
     SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[0].m_assetPath.data());
-    m_shaders[0].m_source = FileIO::ReadString(m_shaders[0].m_assetPath);
+    m_shaders[0].m_source = FileIO::ReadString(m_shaders[0].m_assetPath.data());
     if (m_shaderCount == 2)
     {
         SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[1].m_assetPath.c_str());
-        m_shaders[1].m_source = FileIO::ReadString(m_shaders[1].m_assetPath);
+        m_shaders[1].m_source = FileIO::ReadString(m_shaders[1].m_assetPath.data());
     }
 
     if (m_shaders[0].m_source.empty() || (m_shaderCount == 2 && m_shaders[1].m_source.empty()))
@@ -131,9 +131,9 @@ void ShaderResource::OnBuild()
     }
 
     SL_LOG_TRACE("Writing SPIR-V file \"{}\"", m_shaders[0].m_internalPath);
-    FileIO::WriteBinary<uint32_t>(m_shaders[0].m_internalPath, m_shaders[0].m_binary);
+    FileIO::WriteBinary<uint32_t>(m_shaders[0].m_internalPath.data(), m_shaders[0].m_binary);
     SL_LOG_TRACE("Writing SPIR-V file \"{}\"", m_shaders[1].m_internalPath);
-    FileIO::WriteBinary<uint32_t>(m_shaders[1].m_internalPath, m_shaders[1].m_binary);
+    FileIO::WriteBinary<uint32_t>(m_shaders[1].m_internalPath.data(), m_shaders[1].m_binary);
 
     m_state = ResourceState::Uploading;
 }
@@ -143,11 +143,11 @@ void ShaderResource::OnLoad()
     SL_PROFILE;
 
     SL_LOG_TRACE("Loading SPIR-V cache \"{}\"", m_shaders[0].m_internalPath.data());
-    m_shaders[0].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[0].m_internalPath);
+    m_shaders[0].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[0].m_internalPath.data());
     if (m_shaderCount == 2)
     {
         SL_LOG_TRACE("Loading SPIR-V cache: \"{}\"", m_shaders[1].m_internalPath.data());
-        m_shaders[1].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[1].m_internalPath);
+        m_shaders[1].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[1].m_internalPath.data());
     }
 
     if (m_shaders[0].m_binary.empty() || (m_shaderCount == 2 && m_shaders[1].m_binary.empty()))

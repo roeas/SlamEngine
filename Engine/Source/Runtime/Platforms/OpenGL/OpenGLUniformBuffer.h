@@ -15,7 +15,7 @@ public:
     void Bind() const override;
     void Unbind() const override;
 
-    void Upload(std::string_view name, const void *pData, uint32_t size = 0) const override;
+    void Upload(StringHashType name, const void *pData, uint32_t size = 0) const override;
 
 private:
     UniformBufferLayout m_layout;

@@ -43,7 +43,7 @@ public:
             Path::FromeAsset("Shader/Lib") : Path::FromeAsset("Shader");
         path /= requested_source;
         m_pathContainer = path.generic_string();
-        m_contentContainer = FileIO::ReadString(m_pathContainer);
+        m_contentContainer = FileIO::ReadString(m_pathContainer.data());
 
         auto *pResult = new shaderc_include_result;
         pResult->source_name = m_pathContainer.data();

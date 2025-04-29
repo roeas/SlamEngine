@@ -31,11 +31,10 @@ void Window::Quit()
     SDL_Quit();
 }
 
-Window::Window(std::string_view title, uint32_t width, uint32_t height) :
-    m_pNativeWindow(nullptr), m_title(title), m_width(width), m_height(height)
+Window::Window(const char *pTitle, uint32_t width, uint32_t height) : m_pNativeWindow(nullptr)
 {
     SL_PROFILE;
-    SL_LOG_INFO("Creating window {}", title.data());
+    SL_LOG_INFO("Creating window {}", pTitle);
 
     uint64_t windowFlags = SDL_WINDOW_RESIZABLE;
     switch (RenderCore::GetBackend())
@@ -58,7 +57,7 @@ Window::Window(std::string_view title, uint32_t width, uint32_t height) :
         }
     }
 
-    SDL_Window *pWindow = SDL_CreateWindow(m_title.data(), m_width, m_height, windowFlags);
+    SDL_Window *pWindow = SDL_CreateWindow(pTitle, width, height, windowFlags);
     if (!pWindow)
     {
         SL_LOG_ERROR("Failed to creat window: {}", SDL_GetError());

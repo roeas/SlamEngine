@@ -25,8 +25,8 @@ constexpr uint32_t AttribTypeSize[magic_enum::enum_count<AttribType>()] =
 
 } // namespace
 
-VertexLayoutElement::VertexLayoutElement(std::string_view name, uint32_t count, AttribType type, bool normalize) :
-    m_name(name), m_count(count), m_offset(0), m_size(count * AttribTypeSize[(size_t)type]),
+VertexLayoutElement::VertexLayoutElement(const char *pName, uint32_t count, AttribType type, bool normalize) :
+    m_name(pName), m_count(count), m_offset(0), m_size(count * AttribTypeSize[(size_t)type]),
     m_type(type), m_normalize(normalize)
 {
     
@@ -44,21 +44,21 @@ VertexLayout::VertexLayout(std::initializer_list<VertexLayoutElement> elements) 
     }
 }
 
-void UniformBufferLayout::AddElement(std::string_view name, const UniformBufferLayoutElement &element)
+void UniformBufferLayout::AddElement(StringHashType name, const UniformBufferLayoutElement &element)
 {
-    if (!m_elements.contains(name.data()))
+    if (!m_elements.contains(name))
     {
-        m_elements.emplace(name.data(), element);
+        m_elements.emplace(name, element);
     }
     else
     {
-        SL_LOG_ERROR("Uniform buffer element {} already exists!", name.data());
+        SL_LOG_ERROR("Uniform buffer element already exists!");
     }
 }
 
-std::optional<UniformBufferLayoutElement> UniformBufferLayout::GetElement(std::string_view name) const
+std::optional<UniformBufferLayoutElement> UniformBufferLayout::GetElement(StringHashType name) const
 {
-    if (auto it = m_elements.find(name.data()); it != m_elements.end())
+    if (auto it = m_elements.find(name); it != m_elements.end())
     {
         return it->second;
     }

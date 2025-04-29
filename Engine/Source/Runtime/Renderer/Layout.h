@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Defines.h"
+#include "Utils/Hash.hpp"
 
 #include <initializer_list>
 #include <map>
@@ -12,7 +13,7 @@ namespace sl
 
 struct VertexLayoutElement
 {
-    VertexLayoutElement(std::string_view name, uint32_t count, AttribType type, bool normalize);
+    VertexLayoutElement(const char *pName, uint32_t count, AttribType type, bool normalize);
 
     std::string m_name;
     uint32_t m_count;
@@ -50,8 +51,8 @@ struct UniformBufferLayoutElement
 class UniformBufferLayout
 {
 public:
-    void AddElement(std::string_view name, const UniformBufferLayoutElement &element);
-    std::optional<UniformBufferLayoutElement> GetElement(std::string_view name) const;
+    void AddElement(StringHashType name, const UniformBufferLayoutElement &element);
+    std::optional<UniformBufferLayoutElement> GetElement(StringHashType name) const;
 
     void SetSize(uint32_t size) { m_size = size; }
     uint32_t GetSize() const { return m_size; }
@@ -62,7 +63,7 @@ public:
     auto cend() const { return m_elements.cend(); }
 
 private:
-    std::map<std::string, UniformBufferLayoutElement> m_elements;
+    std::map<StringHashType, UniformBufferLayoutElement> m_elements;
     uint32_t m_size = 0;
 };
 

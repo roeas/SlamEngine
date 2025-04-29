@@ -25,7 +25,7 @@ public:
     ~World() = delete;
 
     static entt::registry &GetRegistry() { return registry; }
-    static Entity CreateEntity(std::string_view name = "New Entity");
+    static Entity CreateEntity(const char *pName = "New Entity");
 
     static Entity GetMainCameraEntity();
     static CameraComponent &GetMainCameraComponent();

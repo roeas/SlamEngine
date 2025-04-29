@@ -35,7 +35,7 @@ glm::vec3 RotationMod(const glm::vec3 &v)
     return ret;
 }
 
-float StartWithText(std::string_view text, float offset = 0.0f)
+float StartWithText(const char *pText, float offset = 0.0f)
 {
     // Align component parameter widgets
     static sl::Entity s_crtEntity;
@@ -52,7 +52,7 @@ float StartWithText(std::string_view text, float offset = 0.0f)
         s_crtEntity = pData->m_selectedEntity;
     }
 
-    float crtTextSize = ImGui::CalcTextSize(text.data()).x;
+    float crtTextSize = ImGui::CalcTextSize(pText).x;
     float crtOffset;
     if (offset > 0.0f)
     {
@@ -66,7 +66,7 @@ float StartWithText(std::string_view text, float offset = 0.0f)
 
     ImGui::SetCursorPosX(crtOffset);
     ImGui::AlignTextToFramePadding();
-    ImGui::TextUnformatted(text.data());
+    ImGui::TextUnformatted(pText);
 
     float padding = ImGui::GetStyle().WindowPadding.x;
     float nextOffset = crtOffset + pData->m_maxTextSize + padding;

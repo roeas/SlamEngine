@@ -14,7 +14,7 @@ public:
     }
 
 public:
-    DropEvent(std::string_view path) : m_path(path) {}
+    DropEvent(const char *pPath) : m_path(pPath) {}
 
     EventType GetEventType() const override
     {
