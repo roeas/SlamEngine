@@ -12,8 +12,7 @@ namespace sl
 class VertexArray
 {
 public:
-    static VertexArray *Create(std::unique_ptr<sl::VertexBuffer> pVertexBuffer,
-        std::unique_ptr<sl::IndexBuffer> pIndexBuffer, VertexLayout vertexLayout);
+    static VertexArray *Create(sl::VertexBuffer *pVertexBuffer, sl::IndexBuffer *pIndexBuffer, const VertexLayout &vertexLayout);
 
 public:
     virtual ~VertexArray() = default;

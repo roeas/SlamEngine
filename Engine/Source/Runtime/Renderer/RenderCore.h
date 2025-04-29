@@ -27,9 +27,9 @@ public:
     static void Init(GraphicsBackend backend);
     static GraphicsBackend GetBackend() { return m_backend; }
 
-    static void SetMainFramebuffer(std::unique_ptr<Framebuffer> pFrameBuffer);
+    static void SetMainFramebuffer(Framebuffer *pFrameBuffer);
     static Framebuffer *GetMainFramebuffer() { return pMainFrameBuffer.get(); }
-    static void SetEntityIDFramebuffer(std::unique_ptr<Framebuffer> pFrameBuffer);
+    static void SetEntityIDFramebuffer(Framebuffer *pFrameBuffer);
     static Framebuffer *GetEntityIDFramebuffer() { return pEntityIDFrameBuffer.get(); }
 
     static void ClearColor(const glm::vec4 &color);

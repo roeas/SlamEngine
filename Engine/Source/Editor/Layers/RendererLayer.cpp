@@ -23,18 +23,16 @@ RendererLayer::RendererLayer()
     SL_PROFILE;
 
     // Create main framebuffer and ID framebuffer, size is meaningless here
-    std::unique_ptr<sl::Framebuffer> pMainFrameBuffer{ sl::Framebuffer::Create(
+    sl::RenderCore::SetMainFramebuffer(sl::Framebuffer::Create(
     {
         sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
         sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
-    }) };
-    std::unique_ptr<sl::Framebuffer> pEntityIDFramebuffer{ sl::Framebuffer::Create(
+    }));
+    sl::RenderCore::SetEntityIDFramebuffer(sl::Framebuffer::Create(
     {
         sl::Texture2D::Create(1, 1, sl::TextureFormat::R32I, false, SL_SAMPLER_CLAMP | SL_SAMPLER_NEAREST),
         sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
-    }) };
-    sl::RenderCore::SetMainFramebuffer(std::move(pMainFrameBuffer));
-    sl::RenderCore::SetEntityIDFramebuffer(std::move(pEntityIDFramebuffer));
+    }));
 
     // Create camera uniform buffer
     sl::UniformBufferLayout cameraUniformBufferLayout;

@@ -38,10 +38,7 @@ void MeshResource::OnUpload()
 {
     SL_PROFILE;
 
-    std::unique_ptr<sl::VertexBuffer> pVertexBuffer{ sl::VertexBuffer::Create(m_vertices) };
-    std::unique_ptr<sl::IndexBuffer> pIndexBuffer{ sl::IndexBuffer::Create(m_indices) };
-    m_pVertexArray.reset(sl::VertexArray::Create(std::move(pVertexBuffer), std::move(pIndexBuffer), m_layout));
-
+    m_pVertexArray.reset(sl::VertexArray::Create(sl::VertexBuffer::Create(m_vertices), sl::IndexBuffer::Create(m_indices), m_layout));
     m_state = ResourceState::Ready;
 }
 

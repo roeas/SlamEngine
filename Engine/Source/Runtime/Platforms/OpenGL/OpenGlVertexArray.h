@@ -10,8 +10,7 @@ namespace sl
 class OpenGLVertexArray : public VertexArray
 {
 public:
-    OpenGLVertexArray(std::unique_ptr<sl::VertexBuffer> pVertexBuffer,
-        std::unique_ptr<sl::IndexBuffer> pIndexBuffer, const VertexLayout &vertexLayout);
+    OpenGLVertexArray(sl::VertexBuffer *pVertexBuffer, sl::IndexBuffer *pIndexBuffer, const VertexLayout &vertexLayout);
     virtual ~OpenGLVertexArray() override;
 
     void Bind() const override;

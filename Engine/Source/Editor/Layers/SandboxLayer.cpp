@@ -30,21 +30,23 @@ SandboxLayer::SandboxLayer()
         { "UV", 2, sl::AttribType::Float, false },
     };
 
-    // Mesh
+    // Hash
     constexpr sl::StringHashType SquareMeshID = sl::StringHash("Square Mesh");
+    constexpr sl::StringHashType DebugUVTextureID = sl::StringHash("DebugUV Texture");
+    constexpr sl::StringHashType BaseShaderID = sl::StringHash("Base Shader");
+    constexpr sl::StringHashType EntityIDShaderID = sl::StringHash("EntityID Shader");
+
+    // Mesh
     std::unique_ptr<sl::MeshResource> pSquareMesh = std::make_unique<sl::MeshResource>(
         std::move(vertices), std::move(indices), sl::VertexLayout{ std::move(elements) });
     sl::ResourceManager::AddMeshResource(SquareMeshID, std::move(pSquareMesh));
 
     // Texture
-    constexpr sl::StringHashType DebugUVTextureID = sl::StringHash("DebugUV Texture");
     std::unique_ptr<sl::TextureResource> pResource = std::make_unique<sl::TextureResource>(
         sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
     sl::ResourceManager::AddTextureResource(DebugUVTextureID, std::move(pResource));
 
     // Shader
-    constexpr sl::StringHashType BaseShaderID = sl::StringHash("Base Shader");
-    constexpr sl::StringHashType EntityIDShaderID = sl::StringHash("EntityID Shader");
     std::unique_ptr<sl::ShaderResource> pBaseShaderIDResource = std::make_unique<sl::ShaderResource>(
         sl::Path::FromeAsset("Shader/Base_vert.glsl"), sl::Path::FromeAsset("Shader/Base_frag.glsl"));
     std::unique_ptr<sl::ShaderResource> pEntityIDShaderIDResource = std::make_unique<sl::ShaderResource>(

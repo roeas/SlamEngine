@@ -7,8 +7,7 @@
 namespace sl
 {
 
-VertexArray *VertexArray::Create(std::unique_ptr<sl::VertexBuffer> pVertexBuffer,
-    std::unique_ptr<sl::IndexBuffer> pIndexBuffer, VertexLayout vertexLayout)
+VertexArray *VertexArray::Create(sl::VertexBuffer *pVertexBuffer, sl::IndexBuffer *pIndexBuffer, const VertexLayout &vertexLayout)
 {
     switch (RenderCore::GetBackend())
     {
@@ -19,7 +18,7 @@ VertexArray *VertexArray::Create(std::unique_ptr<sl::VertexBuffer> pVertexBuffer
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLVertexArray{ std::move(pVertexBuffer), std::move(pIndexBuffer), std::move(vertexLayout) };
+            return new OpenGLVertexArray{ pVertexBuffer, pIndexBuffer, vertexLayout };
             break;
         }
         default:
