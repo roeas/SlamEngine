@@ -4,6 +4,8 @@
 #include "Renderer/Layout.h"
 #include "Renderer/VertexBuffer.h"
 
+#include <memory>
+
 namespace sl
 {
 

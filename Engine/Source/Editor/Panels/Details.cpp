@@ -10,6 +10,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <iconfontcppheaders/IconsMaterialSymbols.h>
 #include <imgui/imgui.h>
+#include <magic_enum/magic_enum.hpp>
 #include <nameof/nameof.hpp>
 
 namespace
@@ -184,7 +185,7 @@ void AddComponentMenuItem(const char *pLabel)
         }
         else
         {
-            SL_LOG_WARN("Entity {} already has component {}",
+            SL_LOG_WARN("Entity {} already holds {} component",
                 (uint32_t)pData->m_selectedEntity.GetHandle(), nameof::nameof_type<T>());
         }
     }
@@ -308,12 +309,12 @@ void Details::OnUpdate(float deltaTime)
         }
 
         StartWithText("Projection");
-        if (ImGui::BeginCombo("##Projection", nameof::nameof_enum(pComponent->m_projectionType).data(), ImGuiComboFlags_WidthFitPreview))
+        if (ImGui::BeginCombo("##Projection", magic_enum::enum_name(pComponent->m_projectionType).data(), ImGuiComboFlags_WidthFitPreview))
         {
-            for (size_t i = 0; i < nameof::enum_count<sl::ProjectionType>(); ++i)
+            for (size_t i = 0; i < magic_enum::enum_count<sl::ProjectionType>(); ++i)
             {
                 sl::ProjectionType type = (sl::ProjectionType)i;
-                if (ImGui::Selectable(nameof::nameof_enum(type).data(), type == pComponent->m_projectionType))
+                if (ImGui::Selectable(magic_enum::enum_name(type).data(), type == pComponent->m_projectionType))
                 {
                     pComponent->m_projectionType = type;
                     cameraMightDirty = true;

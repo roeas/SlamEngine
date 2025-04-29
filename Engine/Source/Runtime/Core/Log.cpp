@@ -1,9 +1,9 @@
 #include "Log.h"
 
 #include "Core/Path.h"
-#include "Utils/NameOf.hpp"
 #include "Utils/ProfilerCPU.h"
 
+#include <magic_enum/magic_enum.hpp>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/callback_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -14,7 +14,7 @@ namespace sl
 namespace
 {
 
-constexpr std::array<LogLevel, nameof::enum_count<LogLevel>()> SPDLevelToSLLevel =
+constexpr std::array<LogLevel, magic_enum::enum_count<LogLevel>()> SPDLevelToSLLevel =
 {
     LogLevel::Trace,
     LogLevel::Debug,

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utils/NameOf.hpp"
+#include <magic_enum/magic_enum.hpp>
 
 namespace sl
 {
@@ -101,63 +101,63 @@ enum class AttachmentType : uint8_t
     DepthAndStencil,
 };
 
-constexpr AttachmentType TextureFormatToAttachmentType[nameof::enum_count<TextureFormat>()] =
+constexpr AttachmentType TextureFormatToAttachmentType[magic_enum::enum_count<TextureFormat>()] =
 {
-    AttachmentType::Color,           // R8
-    AttachmentType::Color,           // R8S
-    AttachmentType::Color,           // R8U
-    AttachmentType::Color,           // R8I
-    AttachmentType::Color,           // R16
-    AttachmentType::Color,           // R16S
-    AttachmentType::Color,           // R16U
-    AttachmentType::Color,           // R16I
-    AttachmentType::Color,           // R16F
-    AttachmentType::Color,           // R32U
-    AttachmentType::Color,           // R32I
-    AttachmentType::Color,           // R32F
-    AttachmentType::Color,           // RG8
-    AttachmentType::Color,           // RG8S
-    AttachmentType::Color,           // RG8U
-    AttachmentType::Color,           // RG8I
-    AttachmentType::Color,           // RG16
-    AttachmentType::Color,           // RG16S
-    AttachmentType::Color,           // RG16U
-    AttachmentType::Color,           // RG16I
-    AttachmentType::Color,           // RG16F
-    AttachmentType::Color,           // RG32U
-    AttachmentType::Color,           // RG32I
-    AttachmentType::Color,           // RG32F
-    AttachmentType::Color,           // RGB8
-    AttachmentType::Color,           // RGB8S
-    AttachmentType::Color,           // RGB8U
-    AttachmentType::Color,           // RGB8I
-    AttachmentType::Color,           // RGB16
-    AttachmentType::Color,           // RGB16S
-    AttachmentType::Color,           // RGB16U
-    AttachmentType::Color,           // RGB16I
-    AttachmentType::Color,           // RGB16F
-    AttachmentType::Color,           // RGB32U
-    AttachmentType::Color,           // RGB32I
-    AttachmentType::Color,           // RGB32F
-    AttachmentType::Color,           // RGBA8
-    AttachmentType::Color,           // RGBA8S
-    AttachmentType::Color,           // RGBA8U
-    AttachmentType::Color,           // RGBA8I
-    AttachmentType::Color,           // RGBA16
-    AttachmentType::Color,           // RGBA16S
-    AttachmentType::Color,           // RGBA16U
-    AttachmentType::Color,           // RGBA16I
-    AttachmentType::Color,           // RGBA16F
-    AttachmentType::Color,           // RGBA32U
-    AttachmentType::Color,           // RGBA32I
-    AttachmentType::Color,           // RGBA32F
-    AttachmentType::Depth,           // D16
-    AttachmentType::Depth,           // D24
-    AttachmentType::Depth,           // D32
-    AttachmentType::Depth,           // D32F
-    AttachmentType::Stencil,         // S8
-    AttachmentType::DepthAndStencil, // D24S8
-    AttachmentType::DepthAndStencil, // D32FS8
+    AttachmentType::Color,           // TextureFormat::R8
+    AttachmentType::Color,           // TextureFormat::R8S
+    AttachmentType::Color,           // TextureFormat::R8U
+    AttachmentType::Color,           // TextureFormat::R8I
+    AttachmentType::Color,           // TextureFormat::R16
+    AttachmentType::Color,           // TextureFormat::R16S
+    AttachmentType::Color,           // TextureFormat::R16U
+    AttachmentType::Color,           // TextureFormat::R16I
+    AttachmentType::Color,           // TextureFormat::R16F
+    AttachmentType::Color,           // TextureFormat::R32U
+    AttachmentType::Color,           // TextureFormat::R32I
+    AttachmentType::Color,           // TextureFormat::R32F
+    AttachmentType::Color,           // TextureFormat::RG8
+    AttachmentType::Color,           // TextureFormat::RG8S
+    AttachmentType::Color,           // TextureFormat::RG8U
+    AttachmentType::Color,           // TextureFormat::RG8I
+    AttachmentType::Color,           // TextureFormat::RG16
+    AttachmentType::Color,           // TextureFormat::RG16S
+    AttachmentType::Color,           // TextureFormat::RG16U
+    AttachmentType::Color,           // TextureFormat::RG16I
+    AttachmentType::Color,           // TextureFormat::RG16F
+    AttachmentType::Color,           // TextureFormat::RG32U
+    AttachmentType::Color,           // TextureFormat::RG32I
+    AttachmentType::Color,           // TextureFormat::RG32F
+    AttachmentType::Color,           // TextureFormat::RGB8
+    AttachmentType::Color,           // TextureFormat::RGB8S
+    AttachmentType::Color,           // TextureFormat::RGB8U
+    AttachmentType::Color,           // TextureFormat::RGB8I
+    AttachmentType::Color,           // TextureFormat::RGB16
+    AttachmentType::Color,           // TextureFormat::RGB16S
+    AttachmentType::Color,           // TextureFormat::RGB16U
+    AttachmentType::Color,           // TextureFormat::RGB16I
+    AttachmentType::Color,           // TextureFormat::RGB16F
+    AttachmentType::Color,           // TextureFormat::RGB32U
+    AttachmentType::Color,           // TextureFormat::RGB32I
+    AttachmentType::Color,           // TextureFormat::RGB32F
+    AttachmentType::Color,           // TextureFormat::RGBA8
+    AttachmentType::Color,           // TextureFormat::RGBA8S
+    AttachmentType::Color,           // TextureFormat::RGBA8U
+    AttachmentType::Color,           // TextureFormat::RGBA8I
+    AttachmentType::Color,           // TextureFormat::RGBA16
+    AttachmentType::Color,           // TextureFormat::RGBA16S
+    AttachmentType::Color,           // TextureFormat::RGBA16U
+    AttachmentType::Color,           // TextureFormat::RGBA16I
+    AttachmentType::Color,           // TextureFormat::RGBA16F
+    AttachmentType::Color,           // TextureFormat::RGBA32U
+    AttachmentType::Color,           // TextureFormat::RGBA32I
+    AttachmentType::Color,           // TextureFormat::RGBA32F
+    AttachmentType::Depth,           // TextureFormat::D16
+    AttachmentType::Depth,           // TextureFormat::D24
+    AttachmentType::Depth,           // TextureFormat::D32
+    AttachmentType::Depth,           // TextureFormat::D32F
+    AttachmentType::Stencil,         // TextureFormat::S8
+    AttachmentType::DepthAndStencil, // TextureFormat::D24S8
+    AttachmentType::DepthAndStencil, // TextureFormat::D32FS8
 };
 
 enum class ShaderType : uint8_t

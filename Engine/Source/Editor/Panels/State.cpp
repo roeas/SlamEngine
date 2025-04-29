@@ -2,11 +2,11 @@
 
 #include "Core/Log.h"
 #include "Renderer/RenderCore.h"
-#include "Utils/NameOf.hpp"
 #include "Utils/ProfilerCPU.h"
 
 #include <imgui/imgui.h>
 #include <implot/implot.h>
+#include <magic_enum/magic_enum.hpp>
 
 namespace
 {
@@ -88,7 +88,7 @@ void State::OnUpdate(float deltaTime)
         s_sumTime = 0.0f;
     }
 
-    ImGui::Text("Backend: %s", nameof::nameof_enum(sl::RenderCore::GetBackend()).data());
+    ImGui::Text("Backend: %s", magic_enum::enum_name(sl::RenderCore::GetBackend()).data());
     ImGui::Text("Average FPS: %i", (int)std::round(avgFPS));
     ImGui::Text("FPS: %i", (int)std::round(crtFPS));
     ImGui::Text("Cost: %i ms", (int)std::round(deltaTime));

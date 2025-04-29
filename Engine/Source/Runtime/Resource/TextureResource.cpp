@@ -5,6 +5,7 @@
 #include "Utils/FileIO.hpp"
 #include "Utils/ProfilerCPU.h"
 
+#include <magic_enum/magic_enum.hpp>
 #include <stb/stb_image.h>
 
 namespace sl
@@ -70,67 +71,34 @@ void TextureResource::OnImport()
 
     m_width = (uint32_t)width;
     m_height = (uint32_t)height;
-    m_channels = desiredChannels ? (uint32_t)desiredChannels : (uint32_t)channel;
+    m_channels = desiredChannels ? (uint8_t)desiredChannels : (uint8_t)channel;
     m_isHDR = isHDR;
     switch (m_channels)
     {
         case 1:
         {
-            if (m_isHDR)
-            {
-                m_format = sl::TextureFormat::R32F;
-            }
-            else
-            {
-                m_format = sl::TextureFormat::R8;
-            }
+            m_format = m_isHDR ? sl::TextureFormat::R32F : sl::TextureFormat::R8;
             break;
         }
         case 2:
         {
-            if (m_isHDR)
-            {
-                m_format = sl::TextureFormat::RG32F;
-            }
-            else
-            {
-                m_format = sl::TextureFormat::RG8;
-            }
+            m_format = m_isHDR ? sl::TextureFormat::RG32F : sl::TextureFormat::RG8;
             break;
         }
         case 3:
         {
-            if (m_isHDR)
-            {
-                m_format = sl::TextureFormat::RGB32F;
-            }
-            else
-            {
-                m_format = sl::TextureFormat::RGB8;
-            }
+            m_format = m_isHDR ? sl::TextureFormat::RGB32F : sl::TextureFormat::RGB8;
             break;
         }
         case 4:
         {
-            if (m_isHDR)
-            {
-                m_format = sl::TextureFormat::RGBA32F;
-            }
-            else
-            {
-                m_format = sl::TextureFormat::RGBA8;
-            }
+            m_format = m_isHDR ? sl::TextureFormat::RGBA32F : sl::TextureFormat::RGBA8;
             break;
-        }
-        default:
-        {
-            SL_LOG_ERROR("Unknown texture format!");
-            m_state = ResourceState::Destroying;
         }
     }
 
     SL_LOG_TRACE("\tWidth: {}, Height: {}, Channels: {}, Format: {}, IsHDR: {}",
-        m_width, m_height, m_channels, nameof::nameof_enum<>(m_format), m_isHDR);
+        m_width, m_height, m_channels, magic_enum::enum_name(m_format).data(), m_isHDR);
 
     m_imageData.resize(m_width * m_height * m_channels * (m_isHDR ? 4 : 1));
     memcpy(m_imageData.data(), pImageData, m_imageData.size());

@@ -1,7 +1,8 @@
 #include "Layout.h"
 
 #include "Core/Log.h"
-#include "Utils/NameOf.hpp"
+
+#include <magic_enum/magic_enum.hpp>
 
 namespace sl
 {
@@ -9,7 +10,7 @@ namespace sl
 namespace
 {
 
-constexpr uint32_t AttribTypeSize[nameof::enum_count<AttribType>()] =
+constexpr uint32_t AttribTypeSize[magic_enum::enum_count<AttribType>()] =
 {
     1, // AttribType::Int8
     1, // AttribType::Uint8
@@ -28,7 +29,7 @@ VertexLayoutElement::VertexLayoutElement(std::string_view name, uint32_t count, 
     m_name(name), m_count(count), m_offset(0), m_size(count * AttribTypeSize[(size_t)type]),
     m_type(type), m_normalize(normalize)
 {
-
+    
 }
 
 VertexLayout::VertexLayout(std::initializer_list<VertexLayoutElement> elements) :

@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Core/Defines.h"
-#include "Utils/NameOf.hpp"
 
 #include <glad/gl.h>
+#include <magic_enum/magic_enum.hpp>
 
 namespace sl
 {
 
-constexpr GLenum GLAttribType[nameof::enum_count<AttribType>()] =
+constexpr GLenum GLAttribType[magic_enum::enum_count<AttribType>()] =
 {
     GL_BYTE,           // AttribType::Int8
     GL_UNSIGNED_BYTE,  // AttribType::Uint8
@@ -21,7 +21,7 @@ constexpr GLenum GLAttribType[nameof::enum_count<AttribType>()] =
     GL_DOUBLE,         // AttribType::Double
 };
 
-constexpr GLenum GLTextureInternalFormat[nameof::enum_count<TextureFormat>()] =
+constexpr GLenum GLTextureInternalFormat[magic_enum::enum_count<TextureFormat>()] =
 {
     GL_R8,                 // TextureFormat::R8
     GL_R8_SNORM,           // TextureFormat::R8S
@@ -84,7 +84,7 @@ constexpr GLenum GLTextureInternalFormat[nameof::enum_count<TextureFormat>()] =
     GL_DEPTH32F_STENCIL8,  // TextureFormat::D32FS8
 };
 
-constexpr GLenum GLTextureFormat[nameof::enum_count<TextureFormat>()] =
+constexpr GLenum GLTextureFormat[magic_enum::enum_count<TextureFormat>()] =
 {
     GL_RED,             // TextureFormat::R8
     GL_RED,             // TextureFormat::R8S
@@ -147,7 +147,7 @@ constexpr GLenum GLTextureFormat[nameof::enum_count<TextureFormat>()] =
     GL_DEPTH_STENCIL,   // TextureFormat::D32FS8
 };
 
-constexpr GLenum GLDataType[nameof::enum_count<TextureFormat>()] =
+constexpr GLenum GLDataType[magic_enum::enum_count<TextureFormat>()] =
 {
     GL_UNSIGNED_BYTE,                  // TextureFormat::R8
     GL_BYTE,                           // TextureFormat::R8S
@@ -244,7 +244,7 @@ constexpr GLint GLTextureMipmapFilter[] =
     GL_LINEAR_MIPMAP_LINEAR,
 };
 
-constexpr GLenum GLAttachmentPoint[nameof::enum_count<AttachmentType>()] =
+constexpr GLenum GLAttachmentPoint[magic_enum::enum_count<AttachmentType>()] =
 {
     GL_COLOR_ATTACHMENT0,        // AttachmentType::Color
     GL_DEPTH_ATTACHMENT,         // AttachmentType::Depth
@@ -252,7 +252,7 @@ constexpr GLenum GLAttachmentPoint[nameof::enum_count<AttachmentType>()] =
     GL_DEPTH_STENCIL_ATTACHMENT, // AttachmentType::DepthAndStencil
 };
 
-constexpr GLenum GLShaderType[nameof::enum_count<ShaderType>()] =
+constexpr GLenum GLShaderType[magic_enum::enum_count<ShaderType>()] =
 {
     GL_VERTEX_SHADER,   // ShaderType::VertexShader
     GL_FRAGMENT_SHADER, // ShaderType::FragmentShader

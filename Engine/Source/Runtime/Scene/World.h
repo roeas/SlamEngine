@@ -80,9 +80,7 @@ public:
     template<typename... T>
     decltype(auto) GetComponents()
     {
-        SL_ASSERT(HasAllComponentsOf<T...>(),
-            (sizeof...(T) == 1U) ? "Entity does not hold {} component!" : "Entity does not hold {} components!",
-            nameof::nameof_types<T...>());
+        SL_ASSERT(HasAllComponentsOf<T...>(), "Entity does not hold {} component!", nameof::nameof_types<T...>());
         return World::registry.get<T...>(m_handle);
     }
 

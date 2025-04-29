@@ -10,6 +10,7 @@
 |IconFontCppHeaders|header only|
 |GLM|header only|
 |Nameof|header only|
+|magic_enum|header only|
 |stb|header only|
 |EnTT|header only|
 |Shaderc|static|

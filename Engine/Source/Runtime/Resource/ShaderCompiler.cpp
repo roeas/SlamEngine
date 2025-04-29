@@ -6,6 +6,7 @@
 #include "Utils/FileIO.hpp"
 #include "Utils/ProfilerCPU.h"
 
+#include <magic_enum/magic_enum.hpp>
 #include <shaderc/shaderc.hpp>
 
 namespace sl
@@ -14,7 +15,7 @@ namespace sl
 namespace
 {
 
-constexpr const char *BackendToDefinition[nameof::enum_count<GraphicsBackend>()] =
+constexpr const char *BackendToDefinition[magic_enum::enum_count<GraphicsBackend>()] =
 {
     "SL_NONE",      // GraphicsBackend::None
     "SL_OPENGL",    // GraphicsBackend::OpenGL
@@ -24,7 +25,7 @@ constexpr const char *BackendToDefinition[nameof::enum_count<GraphicsBackend>()]
     "SL_METAL",     // GraphicsBackend::Metal
 };
 
-constexpr shaderc_shader_kind ShaderTypeToShaderKind[nameof::enum_count<ShaderType>()] =
+constexpr shaderc_shader_kind ShaderTypeToShaderKind[magic_enum::enum_count<ShaderType>()] =
 {
     shaderc_vertex_shader,   // ShaderType::VertexShader
     shaderc_fragment_shader, // ShaderType::FragmentShader

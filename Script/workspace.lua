@@ -52,6 +52,7 @@ workspace("SlamEngine")
         path.join(ThirdPartyPath, "entt/src"),
         path.join(ThirdPartyPath, "tracy/public"),
         path.join(ThirdPartyPath, "glad/include"),
+        path.join(ThirdPartyPath, "magicenum/include"),
     }
 
     flags

@@ -35,6 +35,8 @@
 
 [Nameof](https://github.com/Neargye/nameof) v0.10.4
 
+[magic_enum](https://github.com/Neargye/magic_enum) v0.9.7
+
 [stb](https://github.com/nothings/stb) 013ac3beddff3dbffafd5177e7972067cd2b5083
 
 [EnTT](https://github.com/skypjack/entt) v3.15.0
