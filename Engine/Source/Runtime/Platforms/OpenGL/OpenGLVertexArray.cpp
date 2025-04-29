@@ -8,16 +8,16 @@ namespace sl
 {
 
 OpenGLVertexArray::OpenGLVertexArray(std::unique_ptr<sl::VertexBuffer> pVertexBuffer,
-    std::unique_ptr<sl::IndexBuffer> pIndexBuffer, VertexLayout vertexLayout) :
+    std::unique_ptr<sl::IndexBuffer> pIndexBuffer, const VertexLayout &vertexLayout) :
     m_pVertexBuffer(std::move(pVertexBuffer)), m_pIndexBuffer(std::move(pIndexBuffer)),
-    m_vertexLayout(std::move(vertexLayout)), m_handle(0)
+    m_handle(0)
 {
     glCreateVertexArrays(1, &m_handle);
-    glVertexArrayVertexBuffer(m_handle, 0, m_pVertexBuffer->GetHandle(), 0, m_vertexLayout.GetStride());
+    glVertexArrayVertexBuffer(m_handle, 0, m_pVertexBuffer->GetHandle(), 0, vertexLayout.GetStride());
     glVertexArrayElementBuffer(m_handle, m_pIndexBuffer->GetHandle());
 
     uint32_t location = 0;
-    for (auto &element : m_vertexLayout)
+    for (auto &element : vertexLayout)
     {
         glVertexArrayAttribFormat(
             m_handle,

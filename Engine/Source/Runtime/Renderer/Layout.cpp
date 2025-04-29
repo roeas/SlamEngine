@@ -26,13 +26,13 @@ constexpr uint32_t AttribTypeSize[magic_enum::enum_count<AttribType>()] =
 } // namespace
 
 VertexLayoutElement::VertexLayoutElement(const char *pName, uint32_t count, AttribType type, bool normalize) :
-    m_name(pName), m_count(count), m_offset(0), m_size(count * AttribTypeSize[(size_t)type]),
+    m_pName(pName), m_count(count), m_offset(0), m_size(count * AttribTypeSize[(size_t)type]),
     m_type(type), m_normalize(normalize)
 {
     
 }
 
-VertexLayout::VertexLayout(std::initializer_list<VertexLayoutElement> elements) :
+VertexLayout::VertexLayout(std::vector<VertexLayoutElement> elements) :
     m_elements(std::move(elements)), m_stride(0)
 {
     uint32_t offset = 0;

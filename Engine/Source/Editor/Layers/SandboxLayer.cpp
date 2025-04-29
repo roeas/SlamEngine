@@ -15,7 +15,7 @@ SandboxLayer::SandboxLayer()
 {
     SL_PROFILE;
 
-    std::vector<float> vertices =
+    std::vector<float> vertices
     {
         // Position         // uv
         -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
@@ -23,8 +23,8 @@ SandboxLayer::SandboxLayer()
          1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
         -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
     };
-    std::vector<uint32_t> indices = { 0, 1, 2, 2, 3, 0 };
-    sl::VertexLayout layout
+    std::vector<uint32_t> indices{ 0, 1, 2, 2, 3, 0 };
+    std::vector<sl::VertexLayoutElement> elements
     {
         { "Position", 3, sl::AttribType::Float, false },
         { "UV", 2, sl::AttribType::Float, false },
@@ -32,7 +32,8 @@ SandboxLayer::SandboxLayer()
 
     // Mesh
     constexpr sl::StringHashType SquareMeshID = sl::StringHash("Square Mesh");
-    std::unique_ptr<sl::MeshResource> pSquareMesh = std::make_unique<sl::MeshResource>(std::move(vertices), std::move(indices), std::move(layout));
+    std::unique_ptr<sl::MeshResource> pSquareMesh = std::make_unique<sl::MeshResource>(
+        std::move(vertices), std::move(indices), sl::VertexLayout{ std::move(elements) });
     sl::ResourceManager::AddMeshResource(SquareMeshID, std::move(pSquareMesh));
 
     // Texture

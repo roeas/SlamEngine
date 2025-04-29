@@ -11,7 +11,7 @@ class OpenGLVertexArray : public VertexArray
 {
 public:
     OpenGLVertexArray(std::unique_ptr<sl::VertexBuffer> pVertexBuffer,
-        std::unique_ptr<sl::IndexBuffer> pIndexBuffer, VertexLayout vertexLayout);
+        std::unique_ptr<sl::IndexBuffer> pIndexBuffer, const VertexLayout &vertexLayout);
     virtual ~OpenGLVertexArray() override;
 
     void Bind() const override;
@@ -22,7 +22,6 @@ public:
 private:
     std::unique_ptr<VertexBuffer> m_pVertexBuffer;
     std::unique_ptr<IndexBuffer> m_pIndexBuffer;
-    VertexLayout m_vertexLayout;
     uint32_t m_handle;
 };
 

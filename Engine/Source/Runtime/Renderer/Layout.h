@@ -3,7 +3,6 @@
 #include "Core/Defines.h"
 #include "Utils/Hash.hpp"
 
-#include <initializer_list>
 #include <map>
 #include <string>
 #include <vector>
@@ -15,7 +14,7 @@ struct VertexLayoutElement
 {
     VertexLayoutElement(const char *pName, uint32_t count, AttribType type, bool normalize);
 
-    std::string m_name;
+    const char *m_pName;
     uint32_t m_count;
     uint32_t m_offset;
     uint32_t m_size;
@@ -26,7 +25,7 @@ struct VertexLayoutElement
 class VertexLayout final
 {
 public:
-    VertexLayout(std::initializer_list<VertexLayoutElement> elements);
+    VertexLayout(std::vector<VertexLayoutElement> elements);
 
     uint32_t GetStride() const { return m_stride; }
     uint32_t GetElementCount() const { return (uint32_t)m_elements.size(); }
