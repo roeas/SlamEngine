@@ -56,11 +56,15 @@ SandboxLayer::SandboxLayer()
     sl::ResourceManager::AddShaderResource(EntityIDShaderID, std::move(pEntityIDShaderIDResource));
 
     auto squareEntity = sl::World::CreateEntity("Square");
-    squareEntity.AddComponent<sl::RenderingComponent>(SquareMeshID, DebugUVTextureID, BaseShaderID, EntityIDShaderID);
+    auto &rendering = squareEntity.AddComponent<sl::RenderingComponent>();
+    rendering.m_meshResourceID = SquareMeshID;
+    rendering.m_textureResourceID = DebugUVTextureID;
+    rendering.m_shaderResourceID = BaseShaderID;
+    rendering.m_entityIDShaderResourceID = EntityIDShaderID;
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 
-    sl::ModelImporter importer{ "D:/Works/Model/venice_mask/scene.gltf" };
+    sl::ModelImporter importer{ "D:/Works/Model/slum_house/scene.gltf" };
     importer.Import();
 }
 

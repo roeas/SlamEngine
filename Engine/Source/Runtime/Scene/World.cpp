@@ -39,8 +39,9 @@ bool EntityNameMatch(std::string_view base, std::string_view str)
 
 Entity World::CreateEntity(const char *pName)
 {
-    uint32_t sameNameCount = 0;
     std::string newName{ pName };
+    uint32_t sameNameCount = 0;
+
     auto view = registry.view<TagComponent>();
     for (auto sameNameEntity : view)
     {

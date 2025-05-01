@@ -9,7 +9,7 @@ namespace sl
 
 MeshResource::MeshResource(std::vector<float> vertices, std::vector<uint32_t> indices, VertexLayout layout) :
     m_vertices(std::move(vertices)), m_indices(std::move(indices)), m_layout(std::move(layout)),
-    m_vertexCount((uint32_t)m_vertices.size()), m_indexCount((uint32_t)m_indices.size())
+    m_vertexCount((uint32_t)m_vertices.size() * sizeof(float) / m_layout.GetStride()), m_indexCount((uint32_t)m_indices.size())
 {
 
 }
