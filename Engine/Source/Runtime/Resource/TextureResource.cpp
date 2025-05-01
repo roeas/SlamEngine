@@ -26,7 +26,7 @@ TextureResource::~TextureResource()
 void TextureResource::OnImport()
 {
     SL_PROFILE;
-    SL_LOG_TRACE("Loading image \"{}\"", m_assettPath.data());
+    SL_LOG_TRACE("Importing image \"{}\"", m_assettPath.data());
     auto assetData = FileIO::ReadBinary(m_assettPath.data());
 
     // The first pixel should at the bottom left

@@ -60,7 +60,7 @@ SandboxLayer::SandboxLayer()
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 
-    sl::ModelImporter importer;
+    sl::ModelImporter importer{ "D:/Works/Model/venice_mask/scene.gltf" };
     importer.Import();
 }
 

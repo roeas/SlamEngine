@@ -94,11 +94,11 @@ ShaderResource::~ShaderResource()
 void ShaderResource::OnImport()
 {
     SL_PROFILE;
-    SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[0].m_assetPath.data());
+    SL_LOG_TRACE("Importing shader \"{}\"", m_shaders[0].m_assetPath.data());
     m_shaders[0].m_source = FileIO::ReadString(m_shaders[0].m_assetPath.data());
     if (m_shaderCount == 2)
     {
-        SL_LOG_TRACE("Loading shader \"{}\"", m_shaders[1].m_assetPath.c_str());
+        SL_LOG_TRACE("Importing shader \"{}\"", m_shaders[1].m_assetPath.c_str());
         m_shaders[1].m_source = FileIO::ReadString(m_shaders[1].m_assetPath.data());
     }
 
