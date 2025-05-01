@@ -2,6 +2,7 @@
 
 #include "Core/Path.h"
 #include "Renderer/RenderCore.h"
+#include "Resource/ModelImporter.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 #include "Utils/ProfilerCPU.h"
@@ -58,6 +59,9 @@ SandboxLayer::SandboxLayer()
     squareEntity.AddComponent<sl::RenderingComponent>(SquareMeshID, DebugUVTextureID, BaseShaderID, EntityIDShaderID);
 
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
+
+    sl::ModelImporter importer;
+    importer.Import();
 }
 
 void SandboxLayer::OnAttach()

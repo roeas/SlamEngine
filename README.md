@@ -43,6 +43,8 @@
 
 [Shaderc](https://github.com/google/shaderc) v2025.2
 
+[Assimp](https://github.com/assimp/assimp) v5.4.3
+
 [Tracy](https://github.com/wolfpld/tracy) v0.11.1
 
 [Noto Sans](https://fonts.google.com/noto)

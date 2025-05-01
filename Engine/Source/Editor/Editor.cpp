@@ -4,16 +4,15 @@
 #include "Core/Path.h"
 #include "Event/WindowEvent.h"
 #include "ImGui/ImGuiContext.h"
+#include "Layers/CameraControllerLayer.h"
+#include "Layers/ImGuiLayer.h"
+#include "Layers/RendererLayer.h"
+#include "Layers/SandboxLayer.h"
 #include "Renderer/RenderCore.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 #include "Utils/ProfilerCPU.h"
 #include "Window/Window.h"
-
-#include "Layers/CameraControllerLayer.h"
-#include "Layers/ImGuiLayer.h"
-#include "Layers/RendererLayer.h"
-#include "Layers/SandboxLayer.h"
 
 Editor::Editor(const EditorInitor &initor)
 {

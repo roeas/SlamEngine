@@ -45,6 +45,16 @@ cmake --build build --target shaderc_combined --config Debug
 cmake --build build --target shaderc_combined --config Release
 echo.
 
+rem assimp
+set "ASSIMP_PATH=%THIRD_PARTY_PATH%\assimp"
+echo [ Assimp ] path: %ASSIMP_PATH%
+cd %ASSIMP_PATH%
+
+cmake -B build -DBUILD_SHARED_LIBS=OFF
+cmake --build build --target assimp --config Debug
+cmake --build build --target assimp --config Release
+echo.
+
 rem Tracy
 set "TRACY_PATH=%THIRD_PARTY_PATH%\tracy"
 echo [ Tracy ] path: %TRACY_PATH%

@@ -37,6 +37,8 @@ project("Slam")
     {
         path.join(ThirdPartyPath, "sdl/include"),
         path.join(ThirdPartyPath, "shaderc/libshaderc/include"),
+        path.join(ThirdPartyPath, "assimp/include"),
+        path.join(ThirdPartyPath, "assimp/build/include"),
     }
 
     filter{ "configurations:Debug" }
@@ -45,11 +47,13 @@ project("Slam")
             path.join(ThirdPartyPath, "sdl/build/Debug"),
             path.join(ThirdPartyPath, "spdlog/build/Debug"),
             path.join(ThirdPartyPath, "shaderc/build/libshaderc/Debug"),
+            path.join(ThirdPartyPath, "assimp/build/lib/Debug"),
+            path.join(ThirdPartyPath, "assimp/build/contrib/zlib/Debug"),
             path.join(ThirdPartyPath, "tracy/build/Debug"),
         }
         links
         {
-            "SDL3", "spdlogd", "shaderc_combined", "TracyClient",
+            "SDL3", "spdlogd", "shaderc_combined", "assimp-vc143-mtd", "zlibstaticd", "TracyClient",
         }
     filter{ "configurations:Release or configurations:Final" }
         libdirs
@@ -57,10 +61,12 @@ project("Slam")
             path.join(ThirdPartyPath, "sdl/build/Release"),
             path.join(ThirdPartyPath, "spdlog/build/Release"),
             path.join(ThirdPartyPath, "shaderc/build/libshaderc/Release"),
+            path.join(ThirdPartyPath, "assimp/build/lib/Release"),
+            path.join(ThirdPartyPath, "assimp/build/contrib/zlib/Release"),
             path.join(ThirdPartyPath, "tracy/build/Release"),
         }
         links
         {
-            "SDL3", "spdlog", "shaderc_combined", "TracyClient",
+            "SDL3", "spdlog", "shaderc_combined", "assimp-vc143-mt", "zlibstatic", "TracyClient",
         }
     filter{}
