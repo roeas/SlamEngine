@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Resource/MaterialResource.h"
 #include "Resource/MeshResource.h"
 #include "Resource/ShaderResource.h"
 #include "Resource/TextureResource.h"
@@ -32,6 +33,9 @@ public:
     static void AddShaderResource(StringHashType key, std::unique_ptr<ShaderResource> pResource);
     static ShaderResource *GetShaderResource(StringHashType key);
 
+    static void AddMaterialResource(StringHashType key, std::unique_ptr<MaterialResource> pResource);
+    static MaterialResource *GetMaterialResource(StringHashType key);
+
 private:
     template<class T>
     static void AddResource(StringHashType key, std::unique_ptr<T> pResource);
@@ -41,6 +45,7 @@ private:
     static inline std::map<StringHashType, std::unique_ptr<MeshResource>> m_pMeshResources;
     static inline std::map<StringHashType, std::unique_ptr<TextureResource>> m_pTextureResources;
     static inline std::map<StringHashType, std::unique_ptr<ShaderResource>> m_pShaderResources;
+    static inline std::map<StringHashType, std::unique_ptr<MaterialResource>> m_pMaterialResources;
 };
 
 } // namespace sl

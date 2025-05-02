@@ -24,6 +24,10 @@ void ResourceManager::Update()
     {
         pResource->Update();
     }
+    for (auto &[_, pResource] : m_pMaterialResources)
+    {
+        pResource->Update();
+    }
 }
 
 void ResourceManager::AddMeshResource(StringHashType key, std::unique_ptr<MeshResource> pResource)
@@ -56,6 +60,16 @@ ShaderResource *ResourceManager::GetShaderResource(StringHashType key)
     return GetResource<ShaderResource>(key);
 }
 
+void ResourceManager::AddMaterialResource(StringHashType key, std::unique_ptr<MaterialResource> pResource)
+{
+    AddResource<MaterialResource>(key, std::move(pResource));
+}
+
+MaterialResource *ResourceManager::GetMaterialResource(StringHashType key)
+{
+    return GetResource<MaterialResource>(key);
+}
+
 template<class T>
 void ResourceManager::AddResource(StringHashType key, std::unique_ptr<T> pResource)
 {
@@ -80,6 +94,14 @@ void ResourceManager::AddResource(StringHashType key, std::unique_ptr<T> pResour
         if (!m_pShaderResources.contains(key))
         {
             m_pShaderResources.emplace(key, std::move(pResource));
+            return;
+        }
+    }
+    else if constexpr (std::same_as<T, MaterialResource>)
+    {
+        if (!m_pMaterialResources.contains(key))
+        {
+            m_pMaterialResources.emplace(key, std::move(pResource));
             return;
         }
     }
@@ -112,6 +134,13 @@ T *ResourceManager::GetResource(StringHashType key)
     else if constexpr (std::same_as<T, ShaderResource>)
     {
         if (auto it = m_pShaderResources.find(key); it != m_pShaderResources.end())
+        {
+            return it->second.get();
+        }
+    }
+    else if constexpr (std::same_as<T, MaterialResource>)
+    {
+        if (auto it = m_pMaterialResources.find(key); it != m_pMaterialResources.end())
         {
             return it->second.get();
         }

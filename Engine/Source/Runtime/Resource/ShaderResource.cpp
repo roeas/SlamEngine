@@ -95,6 +95,7 @@ void ShaderResource::OnImport()
 {
     SL_PROFILE;
     SL_LOG_TRACE("Importing shader \"{}\"", m_shaders[0].m_assetPath.data());
+
     m_shaders[0].m_source = FileIO::ReadString(m_shaders[0].m_assetPath.data());
     if (m_shaderCount == 2)
     {
@@ -116,6 +117,7 @@ void ShaderResource::OnBuild()
 {
     SL_PROFILE;
     SL_LOG_TRACE("Compiling SPIR-V {}", m_shaders[0].m_name.data());
+
     m_shaders[0].m_binary = ShaderCompiler::SourceToSpirv(m_shaders[0]);
     if (m_shaderCount == 2)
     {
@@ -141,8 +143,8 @@ void ShaderResource::OnBuild()
 void ShaderResource::OnLoad()
 {
     SL_PROFILE;
-
     SL_LOG_TRACE("Loading SPIR-V cache \"{}\"", m_shaders[0].m_internalPath.data());
+
     m_shaders[0].m_binary = FileIO::ReadBinary<uint32_t>(m_shaders[0].m_internalPath.data());
     if (m_shaderCount == 2)
     {
@@ -164,6 +166,7 @@ void ShaderResource::OnUpload()
 {
     SL_PROFILE;
     SL_LOG_TRACE("Uploading shader program {}", m_name.data());
+
     if (m_shaderCount == 2)
     {
         m_pShaderProgram.reset(Shader::Create(m_shaders[0].m_binary, m_shaders[1].m_binary));

@@ -27,13 +27,13 @@ void TextureResource::OnImport()
 {
     SL_PROFILE;
     SL_LOG_TRACE("Importing image \"{}\"", m_assettPath.data());
-    auto assetData = FileIO::ReadBinary(m_assettPath.data());
 
     // The first pixel should at the bottom left
     stbi_set_flip_vertically_on_load(true);
 
     void *pImageData;
     int width, height, channel;
+    auto assetData = FileIO::ReadBinary(m_assettPath.data());
     bool isHDR = stbi_is_hdr_from_memory((stbi_uc *)assetData.data(), (int)assetData.size());
     bool getInfoSuccess = stbi_info_from_memory((stbi_uc *)assetData.data(), (int)assetData.size(), &width, &height, &channel);
 

@@ -45,6 +45,7 @@ workspace("SlamEngine")
 
     includedirs
     {
+        AssetPath,
         RuntimePath,
         ThirdPartyPath,
         path.join(ThirdPartyPath, "spdlog/include"),
