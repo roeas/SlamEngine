@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/Hash.hpp"
+
 #include <string>
 
 struct aiScene;
@@ -21,8 +23,8 @@ public:
 private:
     void ProcessNode(const aiNode *pNode);
     void ProcessMesh(const aiMesh *pMesh);
-    std::string ProcessMaterial(const aiMaterial *pMaterial);
-    std::string ProcessTexture(const char *textureStr);
+    StringHashType ProcessMaterial(const aiMaterial *pMaterial);
+    StringHashType ProcessTexture(const char *textureStr);
 
     std::string m_path;
     const aiScene *m_pScene;

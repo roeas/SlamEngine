@@ -16,6 +16,28 @@ namespace
 constexpr sl::StringHashType CameraPosHash = sl::StringHash("ub_cameraPos");
 constexpr sl::StringHashType ViewProjHash = sl::StringHash("ub_viewProjection");
 
+void UploadMaterialPropertyGroup(sl::Shader *pShader, const auto &propertyGroup)
+{
+    if (propertyGroup.m_useTexture)
+    {
+        auto *pTextureResource = sl::ResourceManager::GetTextureResource(propertyGroup.m_textureID);
+        if (pTextureResource && pTextureResource->IsReady())
+        {
+            pTextureResource->GetTexture()->Bind(propertyGroup.m_textureSlot);
+            pShader->UploadUniform(propertyGroup.m_useTextureLocation, true);
+        }
+    }
+    else
+    {
+        // sl::RenderCore::ClearTextureSlot(propertyGroup.m_textureSlot);
+        pShader->UploadUniform(propertyGroup.m_useTextureLocation, false);
+    }
+
+    pShader->UploadUniform(propertyGroup.m_factorLocation, propertyGroup.m_factor);
+
+    // TODO: UV transform
+}
+
 } // namespace
 
 RendererLayer::RendererLayer()
@@ -101,22 +123,32 @@ void RendererLayer::BasePass()
 
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
         auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_shaderResourceID);
-        if (!pMeshResource || !pShaderResource || !pMeshResource->IsReady() || !pShaderResource->IsReady())
+        auto *pMaterialResource = sl::ResourceManager::GetMaterialResource(rendering.m_materialResourceID);
+        if (!pMeshResource || !pShaderResource || !pMaterialResource ||
+            !pMeshResource->IsReady() || !pShaderResource->IsReady() || !pMaterialResource->IsReady())
         {
             continue;
         }
 
-        pShaderResource->GetShaderProgram()->Bind();
-        pShaderResource->GetShaderProgram()->UploadUniform(0, transform.GetTransform());
+        auto *pShader = pShaderResource->GetShaderProgram();
+        pShader->Bind();
 
-        auto *pTextureResource = sl::ResourceManager::GetTextureResource(rendering.m_textureResourceID);
-        if (pTextureResource && pTextureResource->IsReady())
-        {
-            pTextureResource->GetTexture()->Bind(0);
-        }
+        // Model mat
+        glm::mat4 modelMat = transform.GetTransform();
+        pShader->UploadUniform(0, modelMat);
+        pShader->UploadUniform(1, glm::transpose(glm::inverse(modelMat)));
 
-        pShaderResource->GetShaderProgram()->Unbind();
-        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
+        UploadMaterialPropertyGroup(pShader, pMaterialResource->GetAlbedoPropertyGroup());
+        UploadMaterialPropertyGroup(pShader, pMaterialResource->GetNormalPropertyGroup());
+        UploadMaterialPropertyGroup(pShader, pMaterialResource->GetOcclusionPropertyGroup());
+        UploadMaterialPropertyGroup(pShader, pMaterialResource->GetRoughnessPropertyGroup());
+        UploadMaterialPropertyGroup(pShader, pMaterialResource->GetMetallicPropertyGroup());
+        UploadMaterialPropertyGroup(pShader, pMaterialResource->GetEmissivePropertyGroup());
+
+        // TODO: Two side
+
+        pShader->Unbind();
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShader);
     }
  
     sl::RenderCore::GetMainFramebuffer()->Unbind();
@@ -144,10 +176,11 @@ void RendererLayer::EntityIDPass()
             continue;
         }
 
-        pShaderResource->GetShaderProgram()->Bind();
-        pShaderResource->GetShaderProgram()->UploadUniform(0, transform.GetTransform());
-        pShaderResource->GetShaderProgram()->UploadUniform(1, (int)entity);
-        pShaderResource->GetShaderProgram()->Unbind();
+        auto *pShader = pShaderResource->GetShaderProgram();
+        pShader->Bind();
+        pShader->UploadUniform(0, transform.GetTransform());
+        pShader->UploadUniform(1, (int)entity);
+        pShader->Unbind();
 
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
     }

@@ -2,18 +2,17 @@
 
 #include "Resource/Resource.h"
 #include "Shader/Shared/PBRMaterial.h"
+#include "Utils/Hash.hpp"
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-
-#include <string>
 
 namespace sl
 {
 
 struct AlbedoPropertyGroup
 {
-    std::string m_texture;
+    StringHashType m_textureID = 0;
     glm::vec3 m_factor{ 1.0f };
 
     glm::vec2 m_offset{ 0.0f };
@@ -30,7 +29,7 @@ struct AlbedoPropertyGroup
 
 struct NormalPropertyGroup
 {
-    std::string m_texture;
+    StringHashType m_textureID = 0;
     glm::vec3 m_factor{ 1.0f };
 
     glm::vec2 m_offset{ 0.0f };
@@ -47,7 +46,7 @@ struct NormalPropertyGroup
 
 struct OcclusionPropertyGroup
 {
-    std::string m_texture;
+    StringHashType m_textureID = 0;
     float m_factor = 1.0f;
 
     glm::vec2 m_offset{ 0.0f };
@@ -64,7 +63,7 @@ struct OcclusionPropertyGroup
 
 struct RoughnessPropertyGroup
 {
-    std::string m_texture;
+    StringHashType m_textureID = 0;
     float m_factor = 1.0f;
 
     glm::vec2 m_offset{ 0.0f };
@@ -81,7 +80,7 @@ struct RoughnessPropertyGroup
 
 struct MetallicPropertyGroup
 {
-    std::string m_texture;
+    StringHashType m_textureID = 0;
     float m_factor = 1.0f;
 
     glm::vec2 m_offset{ 0.0f };
@@ -98,7 +97,7 @@ struct MetallicPropertyGroup
 
 struct EmissivePropertyGroup
 {
-    std::string m_texture;
+    StringHashType m_textureID = 0;
     glm::vec3 m_factor{ 0.0f };
 
     glm::vec2 m_offset{ 0.0f };
@@ -116,6 +115,7 @@ struct EmissivePropertyGroup
 class MaterialResource : public Resource
 {
 public:
+    MaterialResource() = default;
     MaterialResource(const MaterialResource &) = delete;
     MaterialResource &operator=(const MaterialResource &) = delete;
     MaterialResource(MaterialResource &&) = delete;
@@ -128,6 +128,15 @@ public:
     void SetRoughnessPropertyGroup(const RoughnessPropertyGroup &group) { m_roughnessPropertyGroup = group; }
     void SetMetallicPropertyGroup(const MetallicPropertyGroup &group) { m_metallicPropertyGroup = group; }
     void SetEmissivePropertyGroup(const EmissivePropertyGroup &group) { m_emissivePropertyGroup = group; }
+
+    const AlbedoPropertyGroup &GetAlbedoPropertyGroup(){ return m_albedoPropertyGroup; }
+    const NormalPropertyGroup &GetNormalPropertyGroup(){ return m_normalPropertyGroup; }
+    const OcclusionPropertyGroup &GetOcclusionPropertyGroup(){ return m_occlusionPropertyGroup; }
+    const RoughnessPropertyGroup &GetRoughnessPropertyGroup(){ return m_roughnessPropertyGroup; }
+    const MetallicPropertyGroup &GetMetallicPropertyGroup(){ return m_metallicPropertyGroup; }
+    const EmissivePropertyGroup &GetEmissivePropertyGroup() { return m_emissivePropertyGroup; }
+
+    void SetTwoSide(bool twoside) { m_twoSide = twoside; }
 
 private:
     void OnImport() override;
@@ -147,6 +156,8 @@ private:
     RoughnessPropertyGroup m_roughnessPropertyGroup;
     MetallicPropertyGroup m_metallicPropertyGroup;
     EmissivePropertyGroup m_emissivePropertyGroup;
+
+    bool m_twoSide = false;
 };
 
 } // namespace sl
