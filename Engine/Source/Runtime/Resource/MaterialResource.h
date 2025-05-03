@@ -148,7 +148,7 @@ private:
     void DestroyCPUData() override;
 
     // TODO: Material is a very complex concept,
-    // a better design would be to reflect any type of parameters from the shader.
+    // a better design would be to reflect any type of parameters from shader.
     // Anyway, lets support PBRMaterial by hard coding at first.
     AlbedoPropertyGroup m_albedoPropertyGroup;
     NormalPropertyGroup m_normalPropertyGroup;
