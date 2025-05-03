@@ -39,35 +39,42 @@ void LogSceneInfoDetail(const aiScene *pScene)
         SL_LOG_TRACE("\t\tIndex count: {}", pMesh->mNumFaces * 3);
     }
 
+    auto LogTextures = [](aiMaterial *pMaterial, aiTextureType type, const char *pName)
+    {
+        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(type, 0), texture) == AI_SUCCESS)
+        {
+            SL_LOG_TRACE("\t\t{}: {}", pName, texture.C_Str());
+        }
+    };
+
     for (size_t i = 0; i < pScene->mNumMaterials; ++i)
     {
         aiMaterial *pMaterial = pScene->mMaterials[i];
         SL_LOG_TRACE("\tMaterial: {}", pMaterial->GetName().C_Str());
 
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), texture) == AI_SUCCESS)
-        {
-            SL_LOG_TRACE("\t\tAlbedo: {}", texture.C_Str());
-        }
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_NORMALS, 0), texture) == AI_SUCCESS)
-        {
-            SL_LOG_TRACE("\t\tNormal: {}", texture.C_Str());
-        }
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_METALNESS, 0), texture) == AI_SUCCESS)
-        {
-            SL_LOG_TRACE("\t\tMetallic: {}", texture.C_Str());
-        }
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE_ROUGHNESS, 0), texture) == AI_SUCCESS)
-        {
-            SL_LOG_TRACE("\t\tRoughness: {}", texture.C_Str());
-        }
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_LIGHTMAP, 0), texture) == AI_SUCCESS)
-        {
-            SL_LOG_TRACE("\t\tOcclusion: {}", texture.C_Str());
-        }
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_EMISSIVE, 0), texture) == AI_SUCCESS)
-        {
-            SL_LOG_TRACE("\t\tEmission: {}", texture.C_Str());
-        }
+        // Assimp's textuere type matching is not trustworthy
+        LogTextures(pMaterial, aiTextureType_NONE, "None");
+        LogTextures(pMaterial, aiTextureType_DIFFUSE, "Diffuse");
+        LogTextures(pMaterial, aiTextureType_SPECULAR, "Specular");
+        LogTextures(pMaterial, aiTextureType_AMBIENT, "Ambient");
+        LogTextures(pMaterial, aiTextureType_EMISSIVE, "Emissive");
+        LogTextures(pMaterial, aiTextureType_HEIGHT, "Height");
+        LogTextures(pMaterial, aiTextureType_NORMALS, "Normal");
+        LogTextures(pMaterial, aiTextureType_SHININESS, "Shininess");
+        LogTextures(pMaterial, aiTextureType_OPACITY, "Opacity");
+        LogTextures(pMaterial, aiTextureType_DISPLACEMENT, "Displacement");
+        LogTextures(pMaterial, aiTextureType_LIGHTMAP, "Lightmap");
+        LogTextures(pMaterial, aiTextureType_REFLECTION, "Reflection");
+        LogTextures(pMaterial, aiTextureType_BASE_COLOR, "Base Color");
+        LogTextures(pMaterial, aiTextureType_NORMAL_CAMERA, "Noamel Camera");
+        LogTextures(pMaterial, aiTextureType_EMISSION_COLOR, "Emission Color");
+        LogTextures(pMaterial, aiTextureType_METALNESS, "Metalness");
+        LogTextures(pMaterial, aiTextureType_DIFFUSE_ROUGHNESS, "Diffuse Roughness");
+        LogTextures(pMaterial, aiTextureType_AMBIENT_OCCLUSION, "Ambient Occlusion");
+        LogTextures(pMaterial, aiTextureType_UNKNOWN, "Unknown");
+        LogTextures(pMaterial, aiTextureType_SHEEN, "Sheen");
+        LogTextures(pMaterial, aiTextureType_CLEARCOAT, "Clearcoat");
+        LogTextures(pMaterial, aiTextureType_TRANSMISSION, "Transmission");
     }
 
     if (pScene->mNumTextures)
