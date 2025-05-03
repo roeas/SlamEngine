@@ -5,6 +5,7 @@
 #include "Renderer/UniformBuffer.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
+#include "Shader/Shared.h"
 #include "Utils/ProfilerCPU.h"
 #include "Utils/ProfilerGPU.h"
 
@@ -61,7 +62,7 @@ RendererLayer::RendererLayer()
     cameraUniformBufferLayout.AddElement(CameraPosHash, sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
     cameraUniformBufferLayout.AddElement(ViewProjHash, sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
     cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
-    m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(0, std::move(cameraUniformBufferLayout)));
+    m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUniformBufferLayout)));
 }
 
 void RendererLayer::OnAttach()
@@ -135,8 +136,8 @@ void RendererLayer::BasePass()
 
         // Model mat
         glm::mat4 modelMat = transform.GetTransform();
-        pShader->UploadUniform(0, modelMat);
-        pShader->UploadUniform(1, glm::transpose(glm::inverse(modelMat)));
+        pShader->UploadUniform(SL_LOCATION_MODEL, modelMat);
+        pShader->UploadUniform(SL_LOCATION_MODEL_INV_TRANS, glm::transpose(glm::inverse(modelMat)));
 
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetAlbedoPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetNormalPropertyGroup());

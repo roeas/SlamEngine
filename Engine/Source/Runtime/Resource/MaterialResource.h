@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Resource/Resource.h"
-#include "Shader/Shared/PBRMaterial.h"
+#include "Shader/Shared.h"
 #include "Utils/Hash.hpp"
 
 #include <glm/vec2.hpp>

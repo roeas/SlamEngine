@@ -1,15 +1,18 @@
-#ifndef SL_PBRMATERIAL_H
-#define SL_PBRMATERIAL_H
+#ifndef SL_SHARED_H
+#define SL_SHARED_H
 
-// Textures
+// Uniform buffer
+#define SL_BINDING_POINT_CAMERA 0
+
+// Texture
 #define SL_SLOT_ALBEDO 0
 #define SL_SLOT_NORMAL 1
 #define SL_SLOT_ORM 2
 #define SL_SLOT_EMISSIVE 3
 
 // Model mat
-// #define SL_LOCATION_MODEL 0
-// #define SL_LOCATION_MODEL_INV_TRANS 1
+#define SL_LOCATION_MODEL 0
+#define SL_LOCATION_MODEL_INV_TRANS 1
 
 // Albedo
 #define SL_LOCATION_ALBEDO_USE_TEXTURE 2

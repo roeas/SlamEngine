@@ -1,7 +1,7 @@
 #ifndef SL_MATERIAL_GLSL
 #define SL_MATERIAL_GLSL
 
-#include "Shared/PBRMaterial.h"
+#include "Shared.h"
 
 // Sampler
 layout(binding = SL_SLOT_ALBEDO) uniform sampler2D s_albedo;
@@ -10,18 +10,19 @@ layout(binding = SL_SLOT_ORM) uniform sampler2D s_ORM;
 layout(binding = SL_SLOT_EMISSIVE) uniform sampler2D s_emissive;
 
 // Uniform
-layout(location = SL_LOCATION_ALBEDO_USE_TEXTURE) uniform bool u_useAlbedoTexture;
 layout(location = SL_LOCATION_ALBEDO_FACTOR) uniform vec3 u_albedoFactor;
-layout(location = SL_LOCATION_NORMAL_USE_TEXTURE) uniform bool u_useNormalTexture;
 layout(location = SL_LOCATION_NORMAL_FACTOR) uniform vec3 u_normalFactor;
-layout(location = SL_LOCATION_OCCLUSION_USE_TEXTURE) uniform bool u_useOcclusionTexture;
 layout(location = SL_LOCATION_OCCLUSION_FACTOR) uniform float u_occlusionFactor;
-layout(location = SL_LOCATION_ROUGHNESS_USE_TEXTURE) uniform bool u_useRoughnessTexture;
 layout(location = SL_LOCATION_ROUGHNESS_FACTOR) uniform float u_roughnessFactor;
-layout(location = SL_LOCATION_METALLIC_USE_TEXTURE) uniform bool u_useMetallicTexture;
 layout(location = SL_LOCATION_METALLIC_FACTOR) uniform float u_metallicFactor;
-layout(location = SL_LOCATION_EMISSIVE_USE_TEXTURE) uniform bool u_useEmissiveTexture;
 layout(location = SL_LOCATION_EMISSIVE_FACTOR) uniform vec3 u_emissiveFactor;
+
+layout(location = SL_LOCATION_ALBEDO_USE_TEXTURE) uniform bool u_useAlbedoTexture;
+layout(location = SL_LOCATION_NORMAL_USE_TEXTURE) uniform bool u_useNormalTexture;
+layout(location = SL_LOCATION_OCCLUSION_USE_TEXTURE) uniform bool u_useOcclusionTexture;
+layout(location = SL_LOCATION_ROUGHNESS_USE_TEXTURE) uniform bool u_useRoughnessTexture;
+layout(location = SL_LOCATION_METALLIC_USE_TEXTURE) uniform bool u_useMetallicTexture;
+layout(location = SL_LOCATION_EMISSIVE_USE_TEXTURE) uniform bool u_useEmissiveTexture;
 
 vec3 SampleAlbedoTexture(vec2 uv)
 {
@@ -42,7 +43,7 @@ vec3 SampleEmissiveTexture(vec2 uv)
     return pow(texture(s_emissive, uv).xyz, vec3(2.2));
 }
 
-struct PBRMaterial
+struct Material
 {
     vec3 albedo;
     vec3 normal;
@@ -52,9 +53,9 @@ struct PBRMaterial
     vec3 emissive;
 };
 
-PBRMaterial GetPBRMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
+Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
 {
-    PBRMaterial material;
+    Material material;
     material.albedo = u_albedoFactor;
     material.normal = normalize(normal * u_normalFactor);
     material.occlusion = u_occlusionFactor;

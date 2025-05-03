@@ -16,7 +16,7 @@ layout(location = 0) out vec4 o_color;
 void main()
 {
     vec3 cameraPos = GetCameraPos();
-    PBRMaterial material = GetPBRMaterial(v_uv0, v_normal, v_tangent, v_bitangent);
+    Material material = GetMaterial(v_uv0, v_normal, v_tangent, v_bitangent);
 
     vec3 directColor = material.albedo;
     directColor *= material.occlusion;

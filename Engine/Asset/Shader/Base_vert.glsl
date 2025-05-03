@@ -16,8 +16,8 @@ layout(location = 3) out vec3 v_bitangent;
 layout(location = 4) out vec2 v_uv0;
 
 // Uniform
-layout(location = 0) uniform mat4 u_model;
-layout(location = 1) uniform mat4 u_modelInvTrans;
+layout(location = SL_LOCATION_MODEL) uniform mat4 u_model;
+layout(location = SL_LOCATION_MODEL_INV_TRANS) uniform mat4 u_modelInvTrans;
 
 void main()
 {

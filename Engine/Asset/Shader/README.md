@@ -5,11 +5,12 @@
   - e.g. `CCC.glsl`
 
 ## Shared
-To ensure consistency between CPU and GPU, we defined some macros such as **texture slot** or **uniform location** in header files and include them in both cpp and shader side, which are placed in the `Shared` folder.
+To ensure consistency between CPU and GPU, we defined some macros such as **texture slot** and **uniform location** in `Shared.h` and include it in both cpp and shader side.
 
 ## Include
 - `#include "..."` will look for header file in the current path, which is `"/SlamEngine/Engine/Asset/Shader"`.
 - `#include <...>` will look for header file in a specific path, which is `"/SlamEngine/Engine/Asset/Shader/Lib"`.
+- Make sure the included file contains **include guard**.
 
 ## Version
 - The first line of shader must be `#version`.
