@@ -1,5 +1,8 @@
 #version 460 core
 
+#include <Camera.glsl>
+#include <Material.glsl>
+
 // Input
 layout(location = 0) in vec3 v_worldPos;
 layout(location = 1) in vec3 v_normal;
@@ -9,11 +12,6 @@ layout(location = 4) in vec2 v_uv0;
 
 // Output
 layout(location = 0) out vec4 o_color;
-
-#include "Shared/PBRMaterial.h"
-
-#include "Lib/Camera.glsl"
-#include "Lib/Material.glsl"
 
 void main()
 {

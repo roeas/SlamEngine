@@ -7,9 +7,9 @@
 #define SL_SLOT_ORM 2
 #define SL_SLOT_EMISSIVE 3
 
-// Model
-#define SL_LOCATION_MODEL 0
-#define SL_LOCATION_MODEL_INV_TRANS 1
+// Model mat
+// #define SL_LOCATION_MODEL 0
+// #define SL_LOCATION_MODEL_INV_TRANS 1
 
 // Albedo
 #define SL_LOCATION_ALBEDO_USE_TEXTURE 2

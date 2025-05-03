@@ -1,6 +1,6 @@
 #version 460 core
 
-#include "Lib/Camera.glsl"
+#include <Camera.glsl>
 
 // Input
 layout(location = 0) in vec3 a_position;

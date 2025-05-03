@@ -1,3 +1,8 @@
+#ifndef SL_MATERIAL_GLSL
+#define SL_MATERIAL_GLSL
+
+#include "Shared/PBRMaterial.h"
+
 // Sampler
 layout(binding = SL_SLOT_ALBEDO) uniform sampler2D s_albedo;
 layout(binding = SL_SLOT_NORMAL) uniform sampler2D s_normal;
@@ -92,3 +97,5 @@ PBRMaterial GetPBRMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
 
     return material;
 }
+
+#endif
