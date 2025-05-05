@@ -15,7 +15,7 @@ class Texture2D;
 class TextureResource : public Resource
 {
 public:
-    TextureResource(std::string sourcePath, bool mipmap, uint32_t flags = 0);
+    TextureResource(std::string assetPath, bool mipmap, uint32_t flags = 0);
     TextureResource(const TextureResource &) = delete;
     TextureResource &operator=(const TextureResource &) = delete;
     TextureResource(TextureResource &&) = delete;
@@ -33,6 +33,7 @@ private:
     void OnDestroy() override;
     void DestroyCPUData() override;
 
+    std::string m_assetPath;
     std::vector<unsigned char> m_imageData;
 
     uint32_t m_width;

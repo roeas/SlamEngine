@@ -11,8 +11,8 @@
 namespace sl
 {
 
-TextureResource::TextureResource(std::string sourcePath, bool mipmap, uint32_t flags) :
-    Resource(std::move(sourcePath), ""), m_width(0), m_height(0), m_channels(0),
+TextureResource::TextureResource(std::string assetPath, bool mipmap, uint32_t flags) :
+    m_assetPath(std::move(assetPath)), m_width(0), m_height(0), m_channels(0),
     m_format(TextureFormat::RGB8), m_isHDR(false), m_mipmap(mipmap), m_flags(flags)
 {
 
@@ -26,18 +26,18 @@ TextureResource::~TextureResource()
 void TextureResource::OnImport()
 {
     SL_PROFILE;
-    SL_LOG_TRACE("Importing image \"{}\"", m_assettPath.data());
+    SL_LOG_TRACE("Importing image \"{}\"", m_assetPath.data());
 
     // The first pixel should at the bottom left
     stbi_set_flip_vertically_on_load(true);
 
     void *pImageData;
     int width, height, channel;
-    auto assetData = FileIO::ReadBinary(m_assettPath.data());
+    auto assetData = FileIO::ReadBinary(m_assetPath.data());
     bool isHDR = stbi_is_hdr_from_memory((stbi_uc *)assetData.data(), (int)assetData.size());
     bool getInfoSuccess = stbi_info_from_memory((stbi_uc *)assetData.data(), (int)assetData.size(), &width, &height, &channel);
 
-    // Do not support 1 / 2 channel image for now
+    // NO support for 1 / 2 channel texture for now
     int desiredChannels = 0;
     if (channel == 1)
     {
@@ -146,7 +146,7 @@ void TextureResource::OnDestroy()
 void TextureResource::DestroyCPUData()
 {
     m_imageData.clear();
-    std::vector<uint8_t>{}.swap(m_imageData);
+    std::vector<unsigned char>{}.swap(m_imageData);
 
     m_optimized = true;
 }

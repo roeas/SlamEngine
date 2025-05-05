@@ -19,7 +19,7 @@ void main()
     Material material = GetMaterial(v_uv0, v_normal, v_tangent, v_bitangent);
 
     vec3 directColor = material.albedo;
-    directColor *= material.occlusion;
+    directColor *= vec3(material.occlusion);
 
     vec3 environmentColor = vec3(0.01);
 

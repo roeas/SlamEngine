@@ -30,8 +30,6 @@ enum class ResourcesType : uint8_t
 class Resource
 {
 public:
-    Resource() = default;
-    Resource(std::string assetPath, std::string internalPath);
     virtual ~Resource() = default;
 
     void Update();
@@ -52,9 +50,6 @@ protected:
     virtual void OnDestroy() = 0;
     // Destroy CPU data
     virtual void DestroyCPUData() = 0;
-
-    std::string m_assettPath;
-    std::string m_internalPath;
 
     ResourceState m_state = ResourceState::Importing;
     uint8_t m_destroyDelayFrame = 60;

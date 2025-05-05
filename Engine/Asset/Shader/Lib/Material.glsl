@@ -57,7 +57,7 @@ Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
 {
     Material material;
     material.albedo = u_albedoFactor;
-    material.normal = normalize(normal * u_normalFactor);
+    material.normal = normalize(u_normalFactor * normal);
     material.occlusion = u_occlusionFactor;
     material.roughness = u_roughnessFactor;
     material.metallic = u_metallicFactor;
@@ -65,35 +65,34 @@ Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
     
     if (u_useAlbedoTexture)
     {
-    	material.albedo *= SampleAlbedoTexture(uv);
+        material.albedo *= SampleAlbedoTexture(uv);
     }
     if (u_useNormalTexture)
     {
         mat3 TBN = mat3(tangent, bitangent, normal);
-        vec3 normalMap = SampleNormalTexture(uv);
-        material.normal = normalize(TBN * normalMap);
-        material.normal = normalize(material.normal * u_normalFactor);
+        material.normal = normalize(TBN * SampleNormalTexture(uv));
+        material.normal = normalize(u_normalFactor * material.normal);
     }
     if(!gl_FrontFacing)
     {
-        material.normal = -material.normal;
+        material.normal *= vec3(-1.0);
     }
     vec3 orm = SampleORMTexture(uv);
     if (u_useOcclusionTexture)
     {
-    	material.occlusion *= orm.x;
+        material.occlusion *= orm.x;
     }
     if (u_useRoughnessTexture)
     {
-    	material.roughness *= orm.y;
+        material.roughness *= orm.y;
     }
     if (u_useMetallicTexture)
     {
-    	material.metallic *= orm.z;
+        material.metallic *= orm.z;
     }
     if (u_useEmissiveTexture)
     {
-    	material.emissive *= SampleEmissiveTexture(uv);
+        material.emissive *= SampleEmissiveTexture(uv);
     }
 
     return material;

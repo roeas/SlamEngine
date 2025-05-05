@@ -349,14 +349,14 @@ StringHashType ModelImporter::ProcessMaterial(const aiMaterial *pMaterial)
 StringHashType ModelImporter::ProcessTexture(const char *pTexture)
 {
     std::string filePath = Path::Join(Path::Parent(m_path), pTexture);
-    StringHashType hash = StringHash(filePath);
-    if (!sl::ResourceManager::GetTextureResource(hash))
+    StringHashType textureID = StringHash(filePath);
+    if (!sl::ResourceManager::GetTextureResource(textureID))
     {
         auto pTextureResource = std::make_unique<sl::TextureResource>(std::move(filePath), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-        sl::ResourceManager::AddTextureResource(hash, std::move(pTextureResource));
+        sl::ResourceManager::AddTextureResource(textureID, std::move(pTextureResource));
     }
 
-    return hash;
+    return textureID;
 }
 
 } // namespace sl

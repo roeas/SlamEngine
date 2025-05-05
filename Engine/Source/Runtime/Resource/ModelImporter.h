@@ -24,7 +24,7 @@ private:
     void ProcessNode(const aiNode *pNode);
     void ProcessMesh(const aiMesh *pMesh);
     StringHashType ProcessMaterial(const aiMaterial *pMaterial);
-    StringHashType ProcessTexture(const char *textureStr);
+    StringHashType ProcessTexture(const char *pTexture);
 
     std::string m_path;
     const aiScene *m_pScene;
