@@ -1,5 +1,6 @@
 #include "RendererLayer.h"
 
+#include "Core/Path.h"
 #include "Renderer/RenderCore.h"
 #include "Renderer/Shader.h"
 #include "Renderer/UniformBuffer.h"
@@ -45,7 +46,7 @@ RendererLayer::RendererLayer()
 {
     SL_PROFILE;
 
-    // Create main framebuffer and ID framebuffer, size is meaningless here
+    // Main framebuffer and ID framebuffer, size is meaningless here
     sl::RenderCore::SetMainFramebuffer(sl::Framebuffer::Create(
     {
         sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
@@ -57,12 +58,20 @@ RendererLayer::RendererLayer()
         sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
     }));
 
-    // Create camera uniform buffer
+    // Camera uniform buffer
     sl::UniformBufferLayout cameraUniformBufferLayout;
     cameraUniformBufferLayout.AddElement(CameraPosHash, sl::UniformBufferLayoutElement{ 0, sizeof(glm::vec4) });
     cameraUniformBufferLayout.AddElement(ViewProjHash, sl::UniformBufferLayoutElement{ sizeof(glm::vec4), sizeof(glm::mat4) });
     cameraUniformBufferLayout.SetSize(sizeof(glm::vec4) + sizeof(glm::mat4));
     m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUniformBufferLayout)));
+
+    // Shaders
+    std::unique_ptr<sl::ShaderResource> pBaseShaderIDResource = std::make_unique<sl::ShaderResource>(
+        sl::Path::FromeAsset("Shader/Base_vert.glsl"), sl::Path::FromeAsset("Shader/Base_frag.glsl"));
+    std::unique_ptr<sl::ShaderResource> pEntityIDShaderIDResource = std::make_unique<sl::ShaderResource>(
+        sl::Path::FromeAsset("Shader/EntityID_vert.glsl"), sl::Path::FromeAsset("Shader/EntityID_frag.glsl"));
+    sl::ResourceManager::AddShaderResource(sl::StringHash("Base Shader"), std::move(pBaseShaderIDResource));
+    sl::ResourceManager::AddShaderResource(sl::StringHash("EntityID Shader"), std::move(pEntityIDShaderIDResource));
 }
 
 void RendererLayer::OnAttach()
