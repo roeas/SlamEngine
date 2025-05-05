@@ -10,6 +10,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <magic_enum/magic_enum.hpp>
 
 namespace sl
 {
@@ -31,22 +32,38 @@ void LogSceneInfoBrief(const aiScene *pScene)
 
 void LogSceneInfoDetail(const aiScene *pScene)
 {
+    // Vertices
     for (size_t i = 0; i < pScene->mNumMeshes; ++i)
     {
         aiMesh *pMesh = pScene->mMeshes[i];
         SL_LOG_TRACE("\tMesh: {}", pMesh->mName.C_Str());
         SL_LOG_TRACE("\t\tVertex count: {}", pMesh->mNumVertices);
         SL_LOG_TRACE("\t\tIndex count: {}", pMesh->mNumFaces * 3);
+        if (auto count = pMesh->GetNumUVChannels(); count > 1)
+        {
+            SL_LOG_WARN("UV channels count: {}", count);
+        }
     }
 
+    // Textures
     auto LogTextures = [](aiMaterial *pMaterial, aiTextureType type, const char *pName)
     {
-        if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(type, 0), texture) == AI_SUCCESS)
+        uint32_t count = pMaterial->GetTextureCount(type);
+        for (uint32_t index = 0; index < count; ++index)
         {
-            SL_LOG_TRACE("\t\t{}: {}", pName, texture.C_Str());
+            if (aiString texture; pMaterial->Get(AI_MATKEY_TEXTURE(type, index), texture) == AI_SUCCESS)
+            {
+                if (index)
+                {
+                    SL_LOG_WARN("{} {}: {}", pName, index, texture.C_Str());
+                }
+                else
+                {
+                    SL_LOG_TRACE("\t\t{} {}: {}", pName, index, texture.C_Str());
+                }
+            }
         }
     };
-
     for (size_t i = 0; i < pScene->mNumMaterials; ++i)
     {
         aiMaterial *pMaterial = pScene->mMaterials[i];
@@ -75,8 +92,13 @@ void LogSceneInfoDetail(const aiScene *pScene)
         LogTextures(pMaterial, aiTextureType_SHEEN, "Sheen");
         LogTextures(pMaterial, aiTextureType_CLEARCOAT, "Clearcoat");
         LogTextures(pMaterial, aiTextureType_TRANSMISSION, "Transmission");
+        LogTextures(pMaterial, aiTextureType_MAYA_BASE, "Maya Base");
+        LogTextures(pMaterial, aiTextureType_MAYA_SPECULAR, "Maya Specular");
+        LogTextures(pMaterial, aiTextureType_MAYA_SPECULAR_COLOR, "Maya Specular Color");
+        LogTextures(pMaterial, aiTextureType_MAYA_SPECULAR_ROUGHNESS, "Maya Specular Roughness");
     }
 
+    // Embedded textures
     if (pScene->mNumTextures)
     {
         SL_LOG_WARN("No support for embedded texture");
@@ -86,6 +108,22 @@ void LogSceneInfoDetail(const aiScene *pScene)
         }
     }
 }
+
+uint32_t TextureMappingU[magic_enum::enum_count<aiTextureMapMode>()]
+{
+    SL_SAMPLER_U_REPEAT,
+    SL_SAMPLER_U_CLAMP,
+    SL_SAMPLER_U_MIRROR,
+    SL_SAMPLER_U_BORDER,
+};
+
+uint32_t TextureMappingV[magic_enum::enum_count<aiTextureMapMode>()]
+{
+    SL_SAMPLER_V_REPEAT,
+    SL_SAMPLER_V_CLAMP,
+    SL_SAMPLER_V_MIRROR,
+    SL_SAMPLER_V_BORDER,
+};
 
 } //namespace
 
@@ -149,15 +187,12 @@ void ModelImporter::ProcessNode(const aiNode *pNode)
 {
     for (size_t i = 0; i < pNode->mNumMeshes; ++i)
     {
-        int meshIndex = pNode->mMeshes[i];
-        const aiMesh *pMesh = m_pScene->mMeshes[meshIndex];
-        ProcessMesh(pMesh);
+        ProcessMesh(m_pScene->mMeshes[pNode->mMeshes[i]]);
     }
 
     for (size_t i = 0; i < pNode->mNumChildren; ++i)
     {
-        const aiNode *pChildNode = pNode->mChildren[i];
-        ProcessNode(pChildNode);
+        ProcessNode(pNode->mChildren[i]);
     }
 }
 
@@ -201,162 +236,102 @@ void ModelImporter::ProcessMesh(const aiMesh *pMesh)
         SL_ASSERT(pMesh->mFaces[i].mNumIndices == 3);
         memcpy(&indices[i * 3], pMesh->mFaces[i].mIndices, 3 * sizeof(uint32_t));
     }
-    static_assert(std::same_as<std::remove_pointer_t<decltype((*pMesh->mFaces).mIndices)>, uint32_t>);
+    static_assert(std::same_as<decltype((*pMesh->mFaces).mIndices), uint32_t *>);
 
     // 3. Mesh resource
     const char *pMeshName = pMesh->mName.C_Str();
-    StringHashType meshNameHash = StringHash(m_path + pMeshName);
+    StringHashType meshID = StringHash(m_path + pMeshName);
     auto pMeshResource = std::make_unique<sl::MeshResource>(std::move(vertices), std::move(indices), std::move(layout));
-    sl::ResourceManager::AddMeshResource(meshNameHash, std::move(pMeshResource));
+    sl::ResourceManager::AddMeshResource(meshID, std::move(pMeshResource));
 
     // 4. Material resource
-    StringHashType materialResourceName = ProcessMaterial(m_pScene->mMaterials[pMesh->mMaterialIndex]);
+    StringHashType materialID = ProcessMaterial(m_pScene->mMaterials[pMesh->mMaterialIndex]);
 
     // 5. Entity and component
     auto &rendering = sl::World::CreateEntity(pMeshName).AddComponent<sl::RenderingComponent>();
-    rendering.m_meshResourceID = meshNameHash;
+    rendering.m_meshResourceID = meshID;
     rendering.m_shaderResourceID = sl::StringHash("Base Shader");
     rendering.m_entityIDShaderResourceID = sl::StringHash("EntityID Shader");
-    rendering.m_materialResourceID = materialResourceName;
+    rendering.m_materialResourceID = materialID;
 }
 
 StringHashType ModelImporter::ProcessMaterial(const aiMaterial *pMaterial)
 {
-    // Albedo
-    AlbedoPropertyGroup albedoPropertyGroup;
-    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE, 0), textureStr) == AI_SUCCESS)
-    {
-        albedoPropertyGroup.m_textureID = ProcessTexture(textureStr.C_Str());
-        albedoPropertyGroup.m_useTexture = true;
-    }
-    if (aiColor3D factor; pMaterial->Get(AI_MATKEY_BASE_COLOR, factor) == AI_SUCCESS)
-    {
-        albedoPropertyGroup.m_factor = glm::vec3{ factor.r, factor.g , factor.b };
-    }
-    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_DIFFUSE, 0), transform) == AI_SUCCESS)
-    {
-        albedoPropertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
-        albedoPropertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
-        albedoPropertyGroup.m_rotation = transform.mRotation;
-    }
+    /*
+     * Due to assimp's poor support for PBR texture, we have to get these textures with a weird mapping.
+     * These #aiTextureType configurations apply to gltf, but other formats are untested.
+     */
+    auto pMaterialResource = std::make_unique<MaterialResource>();
 
-    // Normal
-    NormalPropertyGroup normalPropertyGroup;
-    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_NORMALS, 0), textureStr) == AI_SUCCESS)
-    {
-        normalPropertyGroup.m_textureID = ProcessTexture(textureStr.C_Str());
-        normalPropertyGroup.m_useTexture = true;
-    }
-    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_NORMALS, 0), transform) == AI_SUCCESS)
-    {
-        normalPropertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
-        normalPropertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
-        normalPropertyGroup.m_rotation = transform.mRotation;
-    }
+    pMaterialResource->SetAlbedoPropertyGroup(CreatePropertyGroup<AlbedoPropertyGroup>(pMaterial, aiTextureType_BASE_COLOR));
+    pMaterialResource->SetNormalPropertyGroup(CreatePropertyGroup<NormalPropertyGroup>(pMaterial, aiTextureType_NORMALS));
+    pMaterialResource->SetOcclusionPropertyGroup(CreatePropertyGroup<OcclusionPropertyGroup>(pMaterial, aiTextureType_LIGHTMAP));
+    pMaterialResource->SetRoughnessPropertyGroup(CreatePropertyGroup<RoughnessPropertyGroup>(pMaterial, aiTextureType_DIFFUSE_ROUGHNESS));
+    pMaterialResource->SetMetallicPropertyGroup(CreatePropertyGroup<MetallicPropertyGroup>(pMaterial, aiTextureType_METALNESS));
+    pMaterialResource->SetEmissivePropertyGroup(CreatePropertyGroup<EmissivePropertyGroup>(pMaterial, aiTextureType_EMISSIVE));
 
-    // Occlusion
-    OcclusionPropertyGroup occlusionPropertyGroup;
-    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_LIGHTMAP, 0), textureStr) == AI_SUCCESS)
-    {
-        occlusionPropertyGroup.m_textureID = ProcessTexture(textureStr.C_Str());
-        occlusionPropertyGroup.m_useTexture = true;
-    }
-    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_LIGHTMAP, 0), transform) == AI_SUCCESS)
-    {
-        occlusionPropertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
-        occlusionPropertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
-        occlusionPropertyGroup.m_rotation = transform.mRotation;
-    }
-
-    // Roughness
-    RoughnessPropertyGroup roughnessPropertyGroup;
-    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_DIFFUSE_ROUGHNESS, 0), textureStr) == AI_SUCCESS)
-    {
-        roughnessPropertyGroup.m_textureID = ProcessTexture(textureStr.C_Str());
-        roughnessPropertyGroup.m_useTexture = true;
-    }
-    if (float factor; pMaterial->Get(AI_MATKEY_ROUGHNESS_FACTOR, factor) == AI_SUCCESS)
-    {
-        roughnessPropertyGroup.m_factor = factor;
-    }
-    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_DIFFUSE_ROUGHNESS, 0), transform) == AI_SUCCESS)
-    {
-        roughnessPropertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
-        roughnessPropertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
-        roughnessPropertyGroup.m_rotation = transform.mRotation;
-    }
-
-    // Metallic
-    MetallicPropertyGroup metallicPropertyGroup;
-    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_METALNESS, 0), textureStr) == AI_SUCCESS)
-    {
-        metallicPropertyGroup.m_textureID = ProcessTexture(textureStr.C_Str());
-        metallicPropertyGroup.m_useTexture = true;
-    }
-    if (float factor; pMaterial->Get(AI_MATKEY_METALLIC_FACTOR, factor) == AI_SUCCESS)
-    {
-        metallicPropertyGroup.m_factor = factor;
-    }
-    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_METALNESS, 0), transform) == AI_SUCCESS)
-    {
-        metallicPropertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
-        metallicPropertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
-        metallicPropertyGroup.m_rotation = transform.mRotation;
-    }
-
-    // Emissive
-    EmissivePropertyGroup emissivePropertyGroup;
-    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(aiTextureType_EMISSIVE, 0), textureStr) == AI_SUCCESS)
-    {
-        emissivePropertyGroup.m_textureID = ProcessTexture(textureStr.C_Str());
-        emissivePropertyGroup.m_useTexture = true;
-        emissivePropertyGroup.m_factor = glm::vec3{ 1.0f };
-    }
-    if (aiColor3D factor; pMaterial->Get(AI_MATKEY_EMISSIVE_INTENSITY, factor) == AI_SUCCESS)
-    {
-        emissivePropertyGroup.m_factor = glm::vec3{ factor.r, factor.g , factor.b };
-    }
-    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_EMISSIVE, 0), transform) == AI_SUCCESS)
-    {
-        emissivePropertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
-        emissivePropertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
-        emissivePropertyGroup.m_rotation = transform.mRotation;
-    }
-
-    // Twoside
-    bool isTwoSide = false;
     if (int twoSide; pMaterial->Get(AI_MATKEY_TWOSIDED, twoSide))
     {
-        isTwoSide = (bool)twoSide;
+        pMaterialResource->SetTwoSide((bool)twoSide);
     }
-    
-    auto pMaterialResource = std::make_unique<MaterialResource>();
-    pMaterialResource->SetAlbedoPropertyGroup(albedoPropertyGroup);
-    pMaterialResource->SetNormalPropertyGroup(normalPropertyGroup);
-    pMaterialResource->SetOcclusionPropertyGroup(occlusionPropertyGroup);
-    pMaterialResource->SetRoughnessPropertyGroup(roughnessPropertyGroup);
-    pMaterialResource->SetMetallicPropertyGroup(metallicPropertyGroup);
-    pMaterialResource->SetEmissivePropertyGroup(emissivePropertyGroup);
-    pMaterialResource->SetTwoSide(isTwoSide);
 
-    // Material resource
-    StringHashType hash = StringHash(m_path + pMaterial->GetName().C_Str());
-    sl::ResourceManager::AddMaterialResource(hash, std::move(pMaterialResource));
+    StringHashType materialID = StringHash(m_path + pMaterial->GetName().C_Str());
+    sl::ResourceManager::AddMaterialResource(materialID, std::move(pMaterialResource));
 
-    return hash;
+    return materialID;
 }
 
-StringHashType ModelImporter::ProcessTexture(const char *pTexture)
+StringHashType ModelImporter::ProcessTexture(const char *pTexture, uint32_t mapping)
 {
     std::string filePath = Path::Join(Path::Parent(m_path), pTexture);
     StringHashType textureID = StringHash(filePath);
     if (!sl::ResourceManager::GetTextureResource(textureID))
     {
-        auto pTextureResource = std::make_unique<sl::TextureResource>(std::move(filePath), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+        auto pTextureResource = std::make_unique<sl::TextureResource>(std::move(filePath), true, mapping | SL_SAMPLER_LINEAR);
         sl::ResourceManager::AddTextureResource(textureID, std::move(pTextureResource));
     }
 
     return textureID;
+}
+
+template<typename T>
+T ModelImporter::CreatePropertyGroup(const aiMaterial *pMaterial, int type)
+{
+    requires
+    {
+        T propertyGroup;
+        propertyGroup.m_textureID;
+        propertyGroup.m_useTexture;
+        propertyGroup.m_offset;
+        propertyGroup.m_scale;
+        propertyGroup.m_rotation;
+    };
+
+    T propertyGroup;
+    if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(type, 0), textureStr) == AI_SUCCESS)
+    {
+        int mappingU = 0; // SL_SAMPLER_U_REPEAT
+        int mappingV = 0; // SL_SAMPLER_V_REPEAT
+        if (int mapping; pMaterial->Get(AI_MATKEY_MAPPINGMODE_U(type, 0), mapping) == AI_SUCCESS)
+        {
+            mappingU = mapping;
+        }
+        if (int mapping; pMaterial->Get(AI_MATKEY_MAPPINGMODE_V(type, 0), mapping) == AI_SUCCESS)
+        {
+            mappingV = mapping;
+        }
+
+        propertyGroup.m_textureID = ProcessTexture(textureStr.C_Str(), TextureMappingU[mappingU] | TextureMappingV[mappingV]);
+        propertyGroup.m_useTexture = true;
+    }
+    if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(type, 0), transform) == AI_SUCCESS)
+    {
+        propertyGroup.m_offset = glm::vec2{ transform.mTranslation.x, transform.mTranslation.y };
+        propertyGroup.m_scale = glm::vec2{ transform.mScaling.x, transform.mScaling.y };
+        propertyGroup.m_rotation = transform.mRotation;
+    }
+
+    return propertyGroup;
 }
 
 } // namespace sl
