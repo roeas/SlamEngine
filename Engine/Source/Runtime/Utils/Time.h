@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Core.h"
+
 #include <chrono>
 
 namespace sl
@@ -8,18 +10,19 @@ namespace sl
 class Clock final
 {
 public:
-    void Tick()
+    Clock() : m_preTimePoint(std::chrono::steady_clock::now()), m_crtTimePoint(std::chrono::steady_clock::now()) {}
+
+    SL_FORCEINLINE void Tick()
     {
         m_preTimePoint = m_crtTimePoint;
         m_crtTimePoint = std::chrono::steady_clock::now();
     }
 
     // Returns in milliseconds
-    float GetDeltatIme() const
+    SL_FORCEINLINE float GetDeltatIme() const
     {
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
-            m_crtTimePoint - m_preTimePoint).count();
-        return (float)duration * 0.001f;
+        auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(m_crtTimePoint - m_preTimePoint).count();
+        return (float)deltaTime * 0.001f;
     }
 
 private:
@@ -32,17 +35,16 @@ class Timer final
 public:
     Timer() : m_startTimePoint(std::chrono::steady_clock::now()) {}
 
-    void Reset()
+    SL_FORCEINLINE void Reset()
     {
         m_startTimePoint = std::chrono::steady_clock::now();
     }
 
     // Returns in milliseconds
-    float GetDuration() const
+    SL_FORCEINLINE float GetDuration() const
     {
-        auto deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(
-            std::chrono::steady_clock::now() - m_startTimePoint).count();
-        return (float)deltaTime * 0.001f;
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - m_startTimePoint).count();
+        return (float)duration * 0.001f;
     }
 
 private:
