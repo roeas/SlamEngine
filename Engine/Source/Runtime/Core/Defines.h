@@ -7,7 +7,7 @@ namespace sl
 
 enum class GraphicsBackend : uint8_t
 {
-    None = 0,
+    None,
     OpenGL,
     Vulkan,
     DirectX11,
@@ -15,9 +15,64 @@ enum class GraphicsBackend : uint8_t
     Metal,
 };
 
+enum class Function : uint8_t
+{
+    Never,
+    Less,
+    Greater,
+    Equal,
+    LessEqual,
+    GreaterEqual,
+    NotEqual,
+    Always,
+};
+
+enum class Operation : uint8_t
+{
+    Keep,
+    Zero,
+    Replace,
+    Increase,
+    IncreaseWarp,
+    Decrease,
+    DecreaseWarp,
+    Invert,
+};
+
+enum class Factor : uint8_t
+{
+    Zero,
+    One,
+    SourceColor,
+    OneMinusSourceColor,
+    DestinationColor,
+    OneMinusDestinationColor,
+    SourceAlpha,
+    OneMinusSourceAlpha,
+    DestinationAlpha,
+    OneMinusDestinationAlpha,
+    ConstantColor,
+    OneMinusConstantColor,
+    ConstantAlpha,
+    OneMinusConstantAlpha,
+};
+
+enum class Face : uint8_t
+{
+    Front,
+    Back,
+    FrontAndBack,
+};
+
+enum class Winding : uint8_t
+{
+    Clockwise,
+    Counterclockwise,
+};
+
 enum class AttribType : uint8_t
 {
-    Int8 = 0,
+    Int8,
     Uint8,
     Int16,
     Uint16,
@@ -30,10 +85,10 @@ enum class AttribType : uint8_t
 
 enum class TextureFormat : uint8_t
 {
-    R8 = 0, // Unsigned normalized integer
-    R8S,    // Signed normalized integer
-    R8U,    // Unsigned integer
-    R8I,    // Signed integer
+    R8,  // Unsigned normalized integer
+    R8S, // Signed normalized integer
+    R8U, // Unsigned integer
+    R8I, // Signed integer
     R16,
     R16S,
     R16U,
@@ -101,7 +156,7 @@ enum class AttachmentType : uint8_t
     DepthAndStencil,
 };
 
-constexpr AttachmentType TextureFormatToAttachmentType[magic_enum::enum_count<TextureFormat>()] =
+constexpr AttachmentType TextureFormatToAttachmentType[magic_enum::enum_count<TextureFormat>()]
 {
     AttachmentType::Color,           // TextureFormat::R8
     AttachmentType::Color,           // TextureFormat::R8S
@@ -162,13 +217,14 @@ constexpr AttachmentType TextureFormatToAttachmentType[magic_enum::enum_count<Te
 
 enum class ShaderType : uint8_t
 {
-    VertexShader = 0,
+    VertexShader,
     FragmentShader,
     ComputeShader,
 };
 
 } // namespace sl
 
+// Clear
 #define SL_CLEAR_NONE          UINT8_C(0x00)
 
 #define SL_CLEAR_COLOR         UINT8_C(0x01)
@@ -189,6 +245,7 @@ enum class ShaderType : uint8_t
     | SL_CLEAR_STENCIL \
     )
 
+// Sampler
 #define SL_SAMPLER_NONE                   UINT32_C(0x00000000)
 
 #define SL_SAMPLER_U_REPEAT               UINT32_C(0x00000001)

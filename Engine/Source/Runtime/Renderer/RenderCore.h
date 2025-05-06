@@ -36,6 +36,21 @@ public:
     static void ClearDepth(float depth);
     static void ClearStencil(int stencil);
 
+    static void DepthTest(bool enable);
+    static void DepthTestFunction(Function fun);
+
+    static void StencilTest(bool enable);
+    static void StencilFunction(Function fun, int32_t ref, uint32_t mask);
+    static void StencilOperation(Operation sfail, Operation dpfail, Operation dppass);
+
+    static void Blending(bool enable);
+    static void BlendFunction(Factor source, Factor destination);
+    static void BlendColor(const glm::vec4 &color);
+
+    static void Culling(bool enable);
+    static void CullingFace(Face face);
+    static void FrontFace(Winding winding);
+
     static void Submit(VertexArray *pVertexArray, Shader *pShader);
 
 private:

@@ -8,7 +8,62 @@
 namespace sl
 {
 
-constexpr GLenum GLAttribType[magic_enum::enum_count<AttribType>()] =
+constexpr GLenum GLFunction[magic_enum::enum_count<Function>()]
+{
+    GL_NEVER,    // Function::Never
+    GL_LESS,     // Function::Less
+    GL_GREATER,  // Function::Greater
+    GL_EQUAL,    // Function::Equal
+    GL_LEQUAL,   // Function::LessEqual
+    GL_GEQUAL,   // Function::GreaterEqual
+    GL_NOTEQUAL, // Function::NotEqual
+    GL_ALWAYS,   // Function::Always
+};
+
+constexpr GLenum GLOperation[magic_enum::enum_count<Operation>()]
+{
+    GL_KEEP,      // Operation::Keep
+    GL_ZERO,      // Operation::Zero
+    GL_REPLACE,   // Operation::Replace
+    GL_INCR,      // Operation::Increase
+    GL_INCR_WRAP, // Operation::IncreaseWarp
+    GL_DECR,      // Operation::Decrease
+    GL_DECR_WRAP, // Operation::DecreaseWarp
+    GL_INVERT,    // Operation::Invert
+};
+
+constexpr GLenum GLFactor[magic_enum::enum_count<Factor>()]
+{
+    GL_ZERO,                     // Factor::Zero
+    GL_ONE,                      // Factor::One
+    GL_SRC_COLOR,                // Factor::SourceColor
+    GL_ONE_MINUS_SRC_COLOR,      // Factor::OneMinusSourceColor
+    GL_DST_COLOR,                // Factor::DestinationColor
+    GL_ONE_MINUS_DST_COLOR,      // Factor::OneMinusDestinationColor
+    GL_SRC_ALPHA,                // Factor::SourceAlpha
+    GL_ONE_MINUS_SRC_ALPHA,      // Factor::OneMinusSourceAlpha
+    GL_DST_ALPHA,                // Factor::DestinationAlpha
+    GL_ONE_MINUS_DST_ALPHA,      // Factor::OneMinusDestinationAlpha
+    GL_CONSTANT_COLOR,           // Factor::ConstantColor
+    GL_ONE_MINUS_CONSTANT_COLOR, // Factor::OneMinusConstantColor
+    GL_CONSTANT_ALPHA,           // Factor::ConstantAlpha
+    GL_ONE_MINUS_CONSTANT_ALPHA, // Factor::OneMinusConstantAlpha
+};
+
+constexpr GLenum GLCullingMode[magic_enum::enum_count<Face>()]
+{
+    GL_FRONT,          // Face::Front
+    GL_BACK,           // Face::Back
+    GL_FRONT_AND_BACK, // Face::FrontAndBack
+};
+
+constexpr GLenum GLWinding[magic_enum::enum_count<Winding>()]
+{
+    GL_CW,  // Winding::Clockwise
+    GL_CCW, // Winding::Counterclockwise
+};
+
+constexpr GLenum GLAttribType[magic_enum::enum_count<AttribType>()]
 {
     GL_BYTE,           // AttribType::Int8
     GL_UNSIGNED_BYTE,  // AttribType::Uint8
@@ -21,7 +76,7 @@ constexpr GLenum GLAttribType[magic_enum::enum_count<AttribType>()] =
     GL_DOUBLE,         // AttribType::Double
 };
 
-constexpr GLenum GLTextureInternalFormat[magic_enum::enum_count<TextureFormat>()] =
+constexpr GLenum GLTextureInternalFormat[magic_enum::enum_count<TextureFormat>()]
 {
     GL_R8,                 // TextureFormat::R8
     GL_R8_SNORM,           // TextureFormat::R8S
@@ -84,7 +139,7 @@ constexpr GLenum GLTextureInternalFormat[magic_enum::enum_count<TextureFormat>()
     GL_DEPTH32F_STENCIL8,  // TextureFormat::D32FS8
 };
 
-constexpr GLenum GLTextureFormat[magic_enum::enum_count<TextureFormat>()] =
+constexpr GLenum GLTextureFormat[magic_enum::enum_count<TextureFormat>()]
 {
     GL_RED,             // TextureFormat::R8
     GL_RED,             // TextureFormat::R8S
@@ -147,7 +202,7 @@ constexpr GLenum GLTextureFormat[magic_enum::enum_count<TextureFormat>()] =
     GL_DEPTH_STENCIL,   // TextureFormat::D32FS8
 };
 
-constexpr GLenum GLDataType[magic_enum::enum_count<TextureFormat>()] =
+constexpr GLenum GLDataType[magic_enum::enum_count<TextureFormat>()]
 {
     GL_UNSIGNED_BYTE,                  // TextureFormat::R8
     GL_BYTE,                           // TextureFormat::R8S
@@ -210,7 +265,7 @@ constexpr GLenum GLDataType[magic_enum::enum_count<TextureFormat>()] =
     GL_FLOAT_32_UNSIGNED_INT_24_8_REV, // TextureFormat::D32FS8
 };
 
-constexpr GLbitfield GLClearBufferBit[] =
+constexpr GLbitfield GLClearBufferBit[]
 {
     0,                     // SL_CLEAR_NONE
     GL_COLOR_BUFFER_BIT,   // SL_CLEAR_COLOR
@@ -219,7 +274,7 @@ constexpr GLbitfield GLClearBufferBit[] =
     GL_STENCIL_BUFFER_BIT, // SL_CLEAR_STENCIL
 };
 
-constexpr GLint GLTextureWrap[] =
+constexpr GLint GLTextureWrap[]
 {
     0,
     GL_REPEAT,
@@ -228,14 +283,14 @@ constexpr GLint GLTextureWrap[] =
     GL_CLAMP_TO_BORDER,
 };
 
-constexpr GLint GLTextureFilter[] =
+constexpr GLint GLTextureFilter[]
 {
     0,
     GL_NEAREST,
     GL_LINEAR,
 };
 
-constexpr GLint GLTextureMipmapFilter[] =
+constexpr GLint GLTextureMipmapFilter[]
 {
     0,
     GL_NEAREST_MIPMAP_NEAREST,
@@ -244,7 +299,7 @@ constexpr GLint GLTextureMipmapFilter[] =
     GL_LINEAR_MIPMAP_LINEAR,
 };
 
-constexpr GLenum GLAttachmentPoint[magic_enum::enum_count<AttachmentType>()] =
+constexpr GLenum GLAttachmentPoint[magic_enum::enum_count<AttachmentType>()]
 {
     GL_COLOR_ATTACHMENT0,        // AttachmentType::Color
     GL_DEPTH_ATTACHMENT,         // AttachmentType::Depth
@@ -252,7 +307,7 @@ constexpr GLenum GLAttachmentPoint[magic_enum::enum_count<AttachmentType>()] =
     GL_DEPTH_STENCIL_ATTACHMENT, // AttachmentType::DepthAndStencil
 };
 
-constexpr GLenum GLShaderType[magic_enum::enum_count<ShaderType>()] =
+constexpr GLenum GLShaderType[magic_enum::enum_count<ShaderType>()]
 {
     GL_VERTEX_SHADER,   // ShaderType::VertexShader
     GL_FRAGMENT_SHADER, // ShaderType::FragmentShader

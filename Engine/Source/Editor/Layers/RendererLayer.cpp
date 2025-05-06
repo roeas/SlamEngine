@@ -107,6 +107,11 @@ void RendererLayer::OnRender()
 {
     SL_PROFILE;
 
+    // State
+    sl::RenderCore::DepthTestFunction(sl::Function::LessEqual);
+    sl::RenderCore::BlendFunction(sl::Factor::SourceAlpha, sl::Factor::OneMinusSourceAlpha);
+    sl::RenderCore::CullingFace(sl::Face::Back);
+
     // Upload camera uniform buffer
     sl::Entity mainCamera = sl::World::GetMainCameraEntity();
     m_pCameraUniformBuffer->Upload(CameraPosHash, glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
@@ -164,7 +169,10 @@ void RendererLayer::BasePass()
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetMetallicPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetEmissivePropertyGroup());
 
-        // TODO: Two side
+        if (pMaterialResource->GetTwoSide())
+        {
+            sl::RenderCore::Culling(false);
+        }
 
         pShader->Unbind();
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShader);
@@ -190,15 +198,24 @@ void RendererLayer::EntityIDPass()
 
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
         auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_entityIDShaderResourceID);
-        if (!pMeshResource || !pShaderResource || !pMeshResource->IsReady() || !pShaderResource->IsReady())
+        auto *pMaterialResource = sl::ResourceManager::GetMaterialResource(rendering.m_materialResourceID);
+        if (!pMeshResource || !pShaderResource || !pMaterialResource ||
+            !pMeshResource->IsReady() || !pShaderResource->IsReady() || !pMaterialResource->IsReady())
         {
             continue;
         }
 
         auto *pShader = pShaderResource->GetShaderProgram();
         pShader->Bind();
+        
         pShader->UploadUniform(0, transform.GetTransform());
         pShader->UploadUniform(1, (int)entity);
+
+        if (pMaterialResource->GetTwoSide())
+        {
+            sl::RenderCore::Culling(false);
+        }
+
         pShader->Unbind();
 
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
