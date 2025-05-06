@@ -10,11 +10,6 @@
 
 SandboxLayer::SandboxLayer()
 {
-    // Texture
-    std::unique_ptr<sl::TextureResource> pResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-    sl::ResourceManager::AddTextureResource(sl::StringHash("DebugUV Texture"), std::move(pResource));
-
     // Camera
     sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
 

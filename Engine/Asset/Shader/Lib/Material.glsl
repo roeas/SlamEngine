@@ -24,6 +24,8 @@ layout(location = SL_LOCATION_ROUGHNESS_USE_TEXTURE) uniform bool u_useRoughness
 layout(location = SL_LOCATION_METALLIC_USE_TEXTURE) uniform bool u_useMetallicTexture;
 layout(location = SL_LOCATION_EMISSIVE_USE_TEXTURE) uniform bool u_useEmissiveTexture;
 
+// TODO: UV transform
+
 vec3 SampleAlbedoTexture(vec2 uv)
 {
     // TODO: Compile albedo textures to linear space before rendering

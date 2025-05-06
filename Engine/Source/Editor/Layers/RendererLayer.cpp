@@ -66,12 +66,21 @@ RendererLayer::RendererLayer()
     m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUniformBufferLayout)));
 
     // Shaders
-    std::unique_ptr<sl::ShaderResource> pBaseShaderIDResource = std::make_unique<sl::ShaderResource>(
+    std::unique_ptr<sl::ShaderResource> pBaseShaderResource = std::make_unique<sl::ShaderResource>(
         sl::Path::FromeAsset("Shader/Base_vert.glsl"), sl::Path::FromeAsset("Shader/Base_frag.glsl"));
-    std::unique_ptr<sl::ShaderResource> pEntityIDShaderIDResource = std::make_unique<sl::ShaderResource>(
+    std::unique_ptr<sl::ShaderResource> pEntityIDShaderResource = std::make_unique<sl::ShaderResource>(
         sl::Path::FromeAsset("Shader/EntityID_vert.glsl"), sl::Path::FromeAsset("Shader/EntityID_frag.glsl"));
-    sl::ResourceManager::AddShaderResource(sl::StringHash("Base Shader"), std::move(pBaseShaderIDResource));
-    sl::ResourceManager::AddShaderResource(sl::StringHash("EntityID Shader"), std::move(pEntityIDShaderIDResource));
+    sl::ResourceManager::AddShaderResource(sl::StringHash("Base Shader"), std::move(pBaseShaderResource));
+    sl::ResourceManager::AddShaderResource(sl::StringHash("EntityID Shader"), std::move(pEntityIDShaderResource));
+
+    // Textures
+    std::unique_ptr<sl::TextureResource> pNoResourceTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/NoResource.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(sl::StringHash("NoResource Texture"), std::move(pNoResourceTextureResource));
+
+    std::unique_ptr<sl::TextureResource> pDebugUVTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(sl::StringHash("DebugUV Texture"), std::move(pDebugUVTextureResource));
 }
 
 void RendererLayer::OnAttach()
