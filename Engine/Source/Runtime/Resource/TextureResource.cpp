@@ -127,12 +127,9 @@ void TextureResource::OnUpload()
 
 void TextureResource::OnReady()
 {
-    if (!m_optimized) [[unlikely]]
+    if (!m_optimized && !m_destroyDelayFrame--) [[unlikely]]
     {
-        if (!m_destroyDelayFrame--)
-        {
-            DestroyCPUData();
-        }
+        DestroyCPUData();
     }
 }
 

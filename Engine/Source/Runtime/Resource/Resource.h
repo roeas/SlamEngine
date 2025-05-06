@@ -33,7 +33,8 @@ public:
     virtual ~Resource() = default;
 
     void Update();
-    bool IsReady() { return m_state == ResourceState::Ready; }
+    bool IsReady() const { return m_state == ResourceState::Ready; }
+    bool IsOptimized() const { return m_optimized; }
 
 protected:
     // Import asset file from original format
@@ -52,7 +53,7 @@ protected:
     virtual void DestroyCPUData() = 0;
 
     ResourceState m_state = ResourceState::Importing;
-    uint8_t m_destroyDelayFrame = 60;
+    int8_t m_destroyDelayFrame = 60;
     bool m_optimized = false;
 };
 
