@@ -22,6 +22,8 @@ public:
     ShaderResource &operator=(ShaderResource &&) = delete;
     ~ShaderResource() override;
 
+    const std::string &GetName() const { return m_name; }
+
     Shader *GetShaderProgram() const { return m_pShaderProgram.get(); }
 
 private:

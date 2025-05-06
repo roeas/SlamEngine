@@ -4,6 +4,8 @@
 #include "ImGui/ImGuiContext.h"
 #include "Panels/ImGuiData.h"
 #include "Panels/ImGuiUtils.h"
+#include "Renderer/Texture.h"
+#include "Resource/ResourceManager.h"
 #include "Scene/World.h"
 #include "Utils/ProfilerCPU.h"
 
@@ -37,7 +39,7 @@ glm::vec3 RotationMod(const glm::vec3 &v)
 
 float StartWithText(const char *pText, float offset = 0.0f)
 {
-    // Align component parameter widgets
+    // Align component parameters widgets
     static sl::Entity s_crtEntity;
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
     if (s_crtEntity != pData->m_selectedEntity)
@@ -79,7 +81,7 @@ float StartWithText(const char *pText, float offset = 0.0f)
 template<typename T>
 void DrawComponent(const char *pLabel, auto drawParametersFun)
 {
-    constexpr ImGuiTreeNodeFlags DefaultTreeFlags =
+    constexpr ImGuiTreeNodeFlags TreeFlags =
         ImGuiTreeNodeFlags_Framed |
         ImGuiTreeNodeFlags_AllowOverlap |
         ImGuiTreeNodeFlags_NoTreePushOnOpen |
@@ -90,8 +92,6 @@ void DrawComponent(const char *pLabel, auto drawParametersFun)
         ImGuiTreeNodeFlags_SpanAvailWidth;
 
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-    static_assert(requires{ drawParametersFun(pData->m_selectedEntity.TryGetComponents<T>()); });
-
     T *pComponent = pData->m_selectedEntity.TryGetComponents<T>();
     if (!pComponent)
     {
@@ -100,7 +100,7 @@ void DrawComponent(const char *pLabel, auto drawParametersFun)
 
     ImGui::PushID(nameof::nameof_type<T>().data());
     ImGui::PushFont(sl::ImGuiContext::GetBoldFont());
-    bool componentTreeOpen = ImGui::TreeNodeEx(pLabel, DefaultTreeFlags);
+    bool componentTreeOpen = ImGui::TreeNodeEx(pLabel, TreeFlags);
     ImGui::PopFont();
 
     // Draw component menu button
@@ -161,21 +161,19 @@ void DrawComponent(const char *pLabel, auto drawParametersFun)
         ImGui::EndPopup();
     }
 
-    // Draw component specific parameters ui.
+    // Draw component parameters widgets
     if (componentTreeOpen && !removeComponent)
     {
         drawParametersFun(pComponent);
     }
 
     ImGui::PopID();
-    ImGui::Separator();
 }
 
 template<typename T>
 void AddComponentMenuItem(const char *pLabel)
 {
     ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
-    static_assert(requires{ pData->m_selectedEntity.TryGetComponents<T>(); });
 
     if (ImGui::MenuItem(pLabel))
     {
@@ -212,7 +210,7 @@ void Details::OnUpdate(float deltaTime)
 {
     SL_PROFILE;
 
-    constexpr ImGuiTreeNodeFlags DefaultSubTreeFlags =
+    constexpr ImGuiTreeNodeFlags SubTreeFlags =
         ImGuiTreeNodeFlags_NoTreePushOnOpen |
         ImGuiTreeNodeFlags_DefaultOpen |
         ImGuiTreeNodeFlags_OpenOnDoubleClick |
@@ -226,10 +224,10 @@ void Details::OnUpdate(float deltaTime)
         ImGui::End();
         return;
     }
-    ImGui::PushID((int)pData->m_selectedEntity.GetHandle());
+    ImGui::PushID((void *)(uint64_t)(uint32_t)pData->m_selectedEntity.GetHandle());
 
     // Draw tag component
-    DrawComponent<sl::TagComponent>("Tag", [this, pData](sl::TagComponent *pComponent)
+    DrawComponent<sl::TagComponent>("Tag", [pData](sl::TagComponent *pComponent)
     {
         StartWithText("ID");
         ImGui::Text("%d", (uint32_t)pData->m_selectedEntity.GetHandle());
@@ -256,7 +254,7 @@ void Details::OnUpdate(float deltaTime)
     });
 
     // Draw transform component
-    DrawComponent<sl::TransformComponent>("Transform", [this, pData](sl::TransformComponent *pComponent)
+    DrawComponent<sl::TransformComponent>("Transform", [pData](sl::TransformComponent *pComponent)
     {
         bool cameraMightDirty = false;
 
@@ -274,9 +272,9 @@ void Details::OnUpdate(float deltaTime)
         StartWithText("Scale");
         ImGui::DragFloat3("##Scale", glm::value_ptr(pComponent->m_scale), 0.1f);
 
+        // If we select a camera entitiy
         if (auto *pCamera = pData->m_selectedEntity.TryGetComponents<sl::CameraComponent>(); pCamera && cameraMightDirty)
         {
-            // If we select a camera entitiy
             pCamera->m_position = pComponent->m_position;
             pCamera->m_rotation = pComponent->m_rotation;
             pCamera->m_isDirty = true;
@@ -284,7 +282,7 @@ void Details::OnUpdate(float deltaTime)
     });
 
     // Draw Camera component
-    DrawComponent<sl::CameraComponent>("Camera", [this, pData](sl::CameraComponent *pComponent)
+    DrawComponent<sl::CameraComponent>("Camera", [pData](sl::CameraComponent *pComponent)
     {
         bool cameraMightDirty = false;
 
@@ -324,38 +322,38 @@ void Details::OnUpdate(float deltaTime)
         }
 
         ImGui::Separator();
-        if (ImGui::TreeNodeEx("Perspective", DefaultSubTreeFlags))
+        if (ImGui::TreeNodeEx("Perspective", SubTreeFlags))
         {
-            float fovDegrees = glm::degrees(pComponent->m_fov);
             StartWithText("FOV");
-            if (ImGui::DragFloat("##FOV", &fovDegrees, 0.1f, 1.0f, 120.0f))
+            float fovDegrees = glm::degrees(pComponent->m_fov);
+            if (ImGui::DragFloat("##FOV", &fovDegrees, 1.0f, 1.0f, 120.0f))
             {
                 pComponent->m_fov = glm::radians(fovDegrees);
                 cameraMightDirty = true;
             }
 
             StartWithText("Near Plane");
-            cameraMightDirty |= ImGui::DragFloat("##NearPlane", &(pComponent->m_nearPlane), 0.001f, 0.01f, 1.0f);
+            cameraMightDirty |= ImGui::DragFloat("##NearPlane", &(pComponent->m_nearPlane), 0.1f, 0.1f, 1.0f);
 
             StartWithText("Far Plane");
-            cameraMightDirty |= ImGui::DragFloat("##FarPlane", &(pComponent->m_farPlane), 10.0f, 1.0f, 100000.0f);
+            cameraMightDirty |= ImGui::DragFloat("##FarPlane", &(pComponent->m_farPlane), 1.0f, 1.0f, 10000.0f);
         }
 
         ImGui::Separator();
-        if (ImGui::TreeNodeEx("Orthographic", DefaultSubTreeFlags))
+        if (ImGui::TreeNodeEx("Orthographic", SubTreeFlags))
         {
             StartWithText("Size");
-            cameraMightDirty |= ImGui::DragFloat("##Size", &(pComponent->m_orthoSize), 0.1f, 1.0f, 100000.0f);
+            cameraMightDirty |= ImGui::DragFloat("##Size", &(pComponent->m_orthoSize), 1.0f, 1.0f, 10000.0f);
 
             StartWithText("Near Clip");
-            cameraMightDirty |= ImGui::DragFloat("##NearClip", &(pComponent->m_orthoNearClip), 0.1f, -100000.0f, 100000.0f);
+            cameraMightDirty |= ImGui::DragFloat("##NearClip", &(pComponent->m_orthoNearClip), 1.0f, -10000.0f, 10000.0f);
 
             StartWithText("Far Clip");
-            cameraMightDirty |= ImGui::DragFloat("##FarClip", &(pComponent->m_orthoFarClip), 0.1f, -100000.0f, 100000.0f);
+            cameraMightDirty |= ImGui::DragFloat("##FarClip", &(pComponent->m_orthoFarClip), 1.0f, -10000.0f, 10000.0f);
         }
 
         ImGui::Separator();
-        if (ImGui::TreeNodeEx("Controller", DefaultSubTreeFlags))
+        if (ImGui::TreeNodeEx("Controller", SubTreeFlags))
         {
             float rotateSpeedDegrees = glm::degrees(pComponent->m_rotateSpeed);
             StartWithText("Rotate Speed");
@@ -365,35 +363,113 @@ void Details::OnUpdate(float deltaTime)
             }
 
             StartWithText("Shift Multiplier");
-            ImGui::DragFloat("##ShiftMultiplier", &(pComponent->m_moveSpeedKeyShiftMultiplier), 0.01f, 1.0f, 10.0f);
+            ImGui::DragFloat("##ShiftMultiplier", &(pComponent->m_moveSpeedKeyShiftMultiplier), 0.1f, 0.1f, 10.0f);
 
             StartWithText("Scroll Multiplier");
-            ImGui::DragFloat("##ScrollMultiplier", &(pComponent->m_moveSpeedMouseScrollMultiplier), 0.01f, 0.1f, 10.0f);
+            ImGui::DragFloat("##ScrollMultiplier", &(pComponent->m_moveSpeedMouseScrollMultiplier), 0.1f, 0.1f, 10.0f);
         }
 
         pComponent->m_isDirty |= cameraMightDirty;
     });
 
     // Draw render component
-    DrawComponent<sl::RenderingComponent>("Rendering", [this, pData](sl::RenderingComponent *pComponent)
+    DrawComponent<sl::RenderingComponent>("Rendering", [pData](sl::RenderingComponent *pComponent)
     {
-        if (ImGui::TreeNodeEx("Mesh", DefaultSubTreeFlags))
+        if (ImGui::TreeNodeEx("Material", SubTreeFlags))
         {
-            StartWithText("Name");
-            ImGui::TextUnformatted("");
+            if (auto *pMaterialResource = sl::ResourceManager::GetMaterialResource(pComponent->m_materialResourceID); pMaterialResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pMaterialResource->GetName().data());
 
-            StartWithText("Index");
-            ImGui::TextUnformatted("");
+                auto DrawPropertyGroup = [](const char *pLabel, auto &propertyGroup)
+                {
+                    ImGui::PushID(pLabel);
+                    ImGuiData *pData = static_cast<ImGuiData *>(ImGui::GetIO().UserData);
+
+                    float offset = StartWithText(pLabel);
+                    constexpr ImVec2 TextureSize{ 64.0f, 64.0f };
+                    if (auto *pTexture = sl::ResourceManager::GetTextureResource(propertyGroup.m_textureID); pTexture)
+                    {
+                        ImGui::Image((ImTextureID)pTexture->GetTexture()->GetHandle(), TextureSize, ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
+                        ImGui::SameLine(offset + pData->m_maxTextSize);
+                        ImGui::TextUnformatted(pTexture->GetName().data());
+                    }
+                    else
+                    {
+                        // Show a No Resource texture when required texture resource not exist
+                        ImGui::Image((ImTextureID)sl::ResourceManager::GetTextureResource(sl::StringHash("DebugUV Texture"))->GetTexture()->GetHandle(),
+                            TextureSize, ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
+                    }
+
+                    StartWithText("Use texture", offset);
+                    ImGui::Checkbox("##UseTexture", &propertyGroup.m_useTexture);
+                    StartWithText("Factor", offset);
+                    if constexpr (std::same_as<decltype(propertyGroup.m_factor), glm::vec3>)
+                    {
+                        ImGui::DragFloat3("##Factor", glm::value_ptr(propertyGroup.m_factor), 0.1f, 0.0f, 1000.0f);
+                    }
+                    else if constexpr (std::same_as<decltype(propertyGroup.m_factor), glm::vec2>)
+                    {
+                        ImGui::DragFloat2("##Factor", glm::value_ptr(propertyGroup.m_factor), 0.1f, 0.0f, 1000.0f);
+                    }
+                    else if constexpr (std::same_as<decltype(propertyGroup.m_factor), float>)
+                    {
+                        ImGui::DragFloat("##Factor", &propertyGroup.m_factor, 0.1f, 0.0f, 1000.0f);
+                    }
+                    StartWithText("Offset", offset);
+                    ImGui::DragFloat2("##Offset", glm::value_ptr(propertyGroup.m_offset));
+                    StartWithText("Scale", offset);
+                    ImGui::DragFloat2("##Scale", glm::value_ptr(propertyGroup.m_scale));
+                    StartWithText("Rotation", offset);
+                    ImGui::DragFloat("##Rotation", &propertyGroup.m_rotation);
+
+                    ImGui::PopID();
+                };
+
+                ImGui::Separator();
+                DrawPropertyGroup("Albedo", pMaterialResource->GetAlbedoPropertyGroup());
+                ImGui::Separator();
+                DrawPropertyGroup("Normal", pMaterialResource->GetNormalPropertyGroup());
+                ImGui::Separator();
+                DrawPropertyGroup("Occlusion", pMaterialResource->GetOcclusionPropertyGroup());
+                ImGui::Separator();
+                DrawPropertyGroup("Roughness", pMaterialResource->GetRoughnessPropertyGroup());
+                ImGui::Separator();
+                DrawPropertyGroup("Metallic", pMaterialResource->GetMetallicPropertyGroup());
+                ImGui::Separator();
+                DrawPropertyGroup("Emissive", pMaterialResource->GetEmissivePropertyGroup());
+
+                ImGui::Separator();
+                StartWithText("TwoSide");
+                ImGui::Checkbox("##TwoSide", &pMaterialResource->GetTwoSide());
+            }
         }
-        if (ImGui::TreeNodeEx("Shader", DefaultSubTreeFlags))
+
+        ImGui::Separator();
+        if (ImGui::TreeNodeEx("Shader", SubTreeFlags))
         {
-            StartWithText("Name");
-            ImGui::TextUnformatted("");
+            if (auto *pShaderResource = sl::ResourceManager::GetShaderResource(pComponent->m_shaderResourceID); pShaderResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pShaderResource->GetName().data());
+            }
         }
-        if (ImGui::TreeNodeEx("Material", DefaultSubTreeFlags))
+
+        ImGui::Separator();
+        if (ImGui::TreeNodeEx("Mesh", SubTreeFlags))
         {
-            StartWithText("Name");
-            ImGui::TextUnformatted("");
+            if (auto *pMeshResource = sl::ResourceManager::GetMeshResource(pComponent->m_meshResourceID); pMeshResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pMeshResource->GetName().data());
+
+                StartWithText("Vertex");
+                ImGui::Text("%i", pMeshResource->GetVerticesCount());
+
+                StartWithText("Index");
+                ImGui::Text("%i", pMeshResource->GetIndicesCount());
+            }
         }
     });
 
@@ -406,6 +482,7 @@ void Details::OnUpdate(float deltaTime)
     if (ImGui::BeginPopup("##AddComponentPopup"))
     {
         AddComponentMenuItem<sl::CameraComponent>("Camera");
+        AddComponentMenuItem<sl::RenderingComponent>("Rendering");
         ImGui::EndPopup();
     }
 

@@ -242,6 +242,7 @@ void ModelImporter::ProcessMesh(const aiMesh *pMesh)
     const char *pMeshName = pMesh->mName.C_Str();
     StringHashType meshID = StringHash(m_path + pMeshName);
     auto pMeshResource = std::make_unique<sl::MeshResource>(std::move(vertices), std::move(indices), std::move(layout));
+    pMeshResource->SetName(pMeshName);
     sl::ResourceManager::AddMeshResource(meshID, std::move(pMeshResource));
 
     // 4. Material resource
@@ -262,6 +263,7 @@ StringHashType ModelImporter::ProcessMaterial(const aiMaterial *pMaterial)
      * These #aiTextureType configurations apply to gltf, but other formats are untested.
      */
     auto pMaterialResource = std::make_unique<MaterialResource>();
+    pMaterialResource->SetName(pMaterial->GetName().C_Str());
 
     pMaterialResource->SetAlbedoPropertyGroup(CreatePropertyGroup<AlbedoPropertyGroup>(pMaterial, aiTextureType_BASE_COLOR));
     pMaterialResource->SetNormalPropertyGroup(CreatePropertyGroup<NormalPropertyGroup>(pMaterial, aiTextureType_NORMALS));
@@ -288,6 +290,7 @@ StringHashType ModelImporter::ProcessTexture(const char *pTexture, uint32_t mapp
     if (!sl::ResourceManager::GetTextureResource(textureID))
     {
         auto pTextureResource = std::make_unique<sl::TextureResource>(std::move(filePath), true, mapping | SL_SAMPLER_LINEAR);
+        pTextureResource->SetName(Path::NameWithoutExtension(pTexture));
         sl::ResourceManager::AddTextureResource(textureID, std::move(pTextureResource));
     }
 
@@ -297,16 +300,6 @@ StringHashType ModelImporter::ProcessTexture(const char *pTexture, uint32_t mapp
 template<typename T>
 T ModelImporter::CreatePropertyGroup(const aiMaterial *pMaterial, int type)
 {
-    requires
-    {
-        T propertyGroup;
-        propertyGroup.m_textureID;
-        propertyGroup.m_useTexture;
-        propertyGroup.m_offset;
-        propertyGroup.m_scale;
-        propertyGroup.m_rotation;
-    };
-
     T propertyGroup;
     if (aiString textureStr; pMaterial->Get(AI_MATKEY_TEXTURE(type, 0), textureStr) == AI_SUCCESS)
     {

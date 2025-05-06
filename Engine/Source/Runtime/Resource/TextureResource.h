@@ -22,6 +22,9 @@ public:
     TextureResource &operator=(TextureResource &&) = delete;
     ~TextureResource() override;
 
+    void SetName(std::string name) { m_name = std::move(name); }
+    const std::string &GetName() const { return m_name; }
+
     Texture2D *GetTexture() const { return m_pTexture.get(); }
 
 private:
@@ -33,6 +36,7 @@ private:
     void OnDestroy() override;
     void DestroyCPUData() override;
 
+    std::string m_name;
     std::string m_assetPath;
     std::vector<unsigned char> m_imageData;
 

@@ -122,6 +122,9 @@ public:
     MaterialResource &operator=(MaterialResource &&) = delete;
     ~MaterialResource() override;
 
+    void SetName(std::string name) { m_name = std::move(name); }
+    const std::string &GetName() const { return m_name; }
+
     void SetAlbedoPropertyGroup(const AlbedoPropertyGroup &group) { m_albedoPropertyGroup = group; }
     void SetNormalPropertyGroup(const NormalPropertyGroup &group) { m_normalPropertyGroup = group; }
     void SetOcclusionPropertyGroup(const OcclusionPropertyGroup &group) { m_occlusionPropertyGroup = group; }
@@ -129,14 +132,23 @@ public:
     void SetMetallicPropertyGroup(const MetallicPropertyGroup &group) { m_metallicPropertyGroup = group; }
     void SetEmissivePropertyGroup(const EmissivePropertyGroup &group) { m_emissivePropertyGroup = group; }
 
-    const AlbedoPropertyGroup &GetAlbedoPropertyGroup(){ return m_albedoPropertyGroup; }
-    const NormalPropertyGroup &GetNormalPropertyGroup(){ return m_normalPropertyGroup; }
-    const OcclusionPropertyGroup &GetOcclusionPropertyGroup(){ return m_occlusionPropertyGroup; }
-    const RoughnessPropertyGroup &GetRoughnessPropertyGroup(){ return m_roughnessPropertyGroup; }
-    const MetallicPropertyGroup &GetMetallicPropertyGroup(){ return m_metallicPropertyGroup; }
-    const EmissivePropertyGroup &GetEmissivePropertyGroup() { return m_emissivePropertyGroup; }
+    AlbedoPropertyGroup &GetAlbedoPropertyGroup() { return m_albedoPropertyGroup; }
+    NormalPropertyGroup &GetNormalPropertyGroup() { return m_normalPropertyGroup; }
+    OcclusionPropertyGroup &GetOcclusionPropertyGroup() { return m_occlusionPropertyGroup; }
+    RoughnessPropertyGroup &GetRoughnessPropertyGroup() { return m_roughnessPropertyGroup; }
+    MetallicPropertyGroup &GetMetallicPropertyGroup() { return m_metallicPropertyGroup; }
+    EmissivePropertyGroup &GetEmissivePropertyGroup() { return m_emissivePropertyGroup; }
+
+    const AlbedoPropertyGroup &GetAlbedoPropertyGroup() const { return m_albedoPropertyGroup; }
+    const NormalPropertyGroup &GetNormalPropertyGroup() const { return m_normalPropertyGroup; }
+    const OcclusionPropertyGroup &GetOcclusionPropertyGroup() const { return m_occlusionPropertyGroup; }
+    const RoughnessPropertyGroup &GetRoughnessPropertyGroup() const { return m_roughnessPropertyGroup; }
+    const MetallicPropertyGroup &GetMetallicPropertyGroup() const { return m_metallicPropertyGroup; }
+    const EmissivePropertyGroup &GetEmissivePropertyGroup() const { return m_emissivePropertyGroup; }
 
     void SetTwoSide(bool twoside) { m_twoSide = twoside; }
+    bool &GetTwoSide() { return m_twoSide; }
+    const bool &GetTwoSide() const { return m_twoSide; }
 
 private:
     void OnImport() override;
@@ -146,6 +158,8 @@ private:
     void OnReady() override;
     void OnDestroy() override;
     void DestroyCPUData() override;
+
+    std::string m_name;
 
     // TODO: Material is a very complex concept,
     // a better design would be to reflect any type of parameters from shader.
