@@ -63,7 +63,7 @@ Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
     material.occlusion = u_occlusionFactor;
     material.roughness = u_roughnessFactor;
     material.metallic = u_metallicFactor;
-    material.emissive = u_emissiveFactor;
+    material.emissive = vec3(0.0);
     
     if (u_useAlbedoTexture)
     {
@@ -94,7 +94,7 @@ Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
     }
     if (u_useEmissiveTexture)
     {
-        material.emissive *= SampleEmissiveTexture(uv);
+        material.emissive = u_emissiveFactor * SampleEmissiveTexture(uv);
     }
 
     return material;

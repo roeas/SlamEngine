@@ -98,7 +98,7 @@ struct MetallicPropertyGroup
 struct EmissivePropertyGroup
 {
     StringHashType m_textureID = 0;
-    glm::vec3 m_factor{ 0.0f };
+    glm::vec3 m_factor{ 1.0f };
 
     glm::vec2 m_offset{ 0.0f };
     glm::vec2 m_scale{ 1.0f };
