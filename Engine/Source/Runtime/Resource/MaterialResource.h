@@ -10,6 +10,13 @@
 namespace sl
 {
 
+/*
+ * TODO: Material is a very complex concept.
+ * We can provide some built-in shaders and store the corresponding materials as files,
+ * and a more flexible way is to reflect any type of parameters from the user custom shader.
+ * Anyway, lets support PBR material by hard coding at first.
+ */
+
 struct AlbedoPropertyGroup
 {
     StringHashType m_textureID = 0;
@@ -161,9 +168,6 @@ private:
 
     std::string m_name;
 
-    // TODO: Material is a very complex concept,
-    // a better design would be to reflect any type of parameters from shader.
-    // Anyway, lets support PBR material by hard coding at first.
     AlbedoPropertyGroup m_albedoPropertyGroup;
     NormalPropertyGroup m_normalPropertyGroup;
     OcclusionPropertyGroup m_occlusionPropertyGroup;
