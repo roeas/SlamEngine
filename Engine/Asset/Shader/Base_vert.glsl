@@ -24,7 +24,7 @@ void main()
     v_worldPos = (u_model * vec4(a_position, 1.0)).xyz;
     v_normal = normalize((u_modelInvTrans * vec4(a_normal, 0.0)).xyz);
     v_tangent = normalize((u_modelInvTrans * vec4(a_tangent, 0.0)).xyz);
-    v_bitangent = normalize(cross(v_normal, v_tangent));
+    v_bitangent = normalize(cross(v_tangent, v_normal));
     v_uv0 = a_uv0;
 
     gl_Position = GetViewProjectionMat() * u_model * vec4(a_position, 1.0);

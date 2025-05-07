@@ -20,18 +20,14 @@ constexpr sl::StringHashType ViewProjHash = sl::StringHash("ub_viewProjection");
 
 void UploadMaterialPropertyGroup(sl::Shader *pShader, const auto &propertyGroup)
 {
-    if (propertyGroup.m_useTexture)
+    auto *pTextureResource = sl::ResourceManager::GetTextureResource(propertyGroup.m_textureID);
+    if (propertyGroup.m_useTexture && pTextureResource && pTextureResource->IsReady())
     {
-        auto *pTextureResource = sl::ResourceManager::GetTextureResource(propertyGroup.m_textureID);
-        if (pTextureResource && pTextureResource->IsReady())
-        {
-            pTextureResource->GetTexture()->Bind(propertyGroup.m_textureSlot);
-            pShader->UploadUniform(propertyGroup.m_useTextureLocation, true);
-        }
+        pTextureResource->GetTexture()->Bind(propertyGroup.m_textureSlot);
+        pShader->UploadUniform(propertyGroup.m_useTextureLocation, true);
     }
     else
     {
-        // sl::RenderCore::ClearTextureSlot(propertyGroup.m_textureSlot);
         pShader->UploadUniform(propertyGroup.m_useTextureLocation, false);
     }
 

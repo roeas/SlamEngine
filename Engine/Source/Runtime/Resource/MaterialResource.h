@@ -13,7 +13,7 @@ namespace sl
 struct AlbedoPropertyGroup
 {
     StringHashType m_textureID = 0;
-    glm::vec3 m_factor{ 1.0f };
+    glm::vec3 m_factor{ 0.5f };
 
     glm::vec2 m_offset{ 0.0f };
     glm::vec2 m_scale{ 1.0f };
@@ -64,7 +64,7 @@ struct OcclusionPropertyGroup
 struct RoughnessPropertyGroup
 {
     StringHashType m_textureID = 0;
-    float m_factor = 1.0f;
+    float m_factor = 0.9f;
 
     glm::vec2 m_offset{ 0.0f };
     glm::vec2 m_scale{ 1.0f };
@@ -81,7 +81,7 @@ struct RoughnessPropertyGroup
 struct MetallicPropertyGroup
 {
     StringHashType m_textureID = 0;
-    float m_factor = 1.0f;
+    float m_factor = 0.1f;
 
     glm::vec2 m_offset{ 0.0f };
     glm::vec2 m_scale{ 1.0f };
@@ -98,7 +98,7 @@ struct MetallicPropertyGroup
 struct EmissivePropertyGroup
 {
     StringHashType m_textureID = 0;
-    glm::vec3 m_factor{ 1.0f };
+    glm::vec3 m_factor{ 0.0f };
 
     glm::vec2 m_offset{ 0.0f };
     glm::vec2 m_scale{ 1.0f };

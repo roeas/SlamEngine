@@ -315,6 +315,7 @@ T ModelImporter::CreatePropertyGroup(const aiMaterial *pMaterial, int type)
         }
 
         propertyGroup.m_textureID = ProcessTexture(textureStr.C_Str(), TextureMappingU[mappingU] | TextureMappingV[mappingV]);
+        propertyGroup.m_factor = decltype(propertyGroup.m_factor){ 1.0f };
         propertyGroup.m_useTexture = true;
     }
     if (aiUVTransform transform; pMaterial->Get(AI_MATKEY_UVTRANSFORM(type, 0), transform) == AI_SUCCESS)
