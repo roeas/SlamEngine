@@ -109,6 +109,7 @@ void TextureResource::OnImport()
 
 void TextureResource::OnBuild()
 {
+    // TODO: Compression
     m_state = ResourceState::Uploading;
 }
 

@@ -39,9 +39,10 @@ OpenGLFramebuffer::OpenGLFramebuffer(std::initializer_list<Texture2D *> pTexture
         uint32_t textureHeight = pTexture->GetHeight();
         if (minWidth != textureWidth || minHeight != textureHeight)
         {
+            SL_LOG_WARN("Creating framebuffer with textures of different sizes, shrink to the minimal one: ({}, {})", minWidth, minHeight);
             minWidth = std::min(minWidth, textureWidth);
             minHeight = std::min(minHeight, textureHeight);
-            SL_LOG_WARN("Creating framebuffer with textures of different sizes, shrink to the minimal one: ({}, {})", minWidth, minHeight);
+            pTexture->Resize(minWidth, minHeight);
         }
     }
 

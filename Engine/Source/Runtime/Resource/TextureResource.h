@@ -10,7 +10,7 @@
 namespace sl
 {
 
-class Texture2D;
+class Texture;
 
 class TextureResource : public Resource
 {
@@ -25,7 +25,7 @@ public:
     void SetName(std::string name) { m_name = std::move(name); }
     const std::string &GetName() const { return m_name; }
 
-    Texture2D *GetTexture() const { return m_pTexture.get(); }
+    Texture *GetTexture() const { return m_pTexture.get(); }
 
 private:
     void OnImport() override;
@@ -48,7 +48,7 @@ private:
     bool m_mipmap;
     uint32_t m_flags;
 
-    std::unique_ptr<Texture2D> m_pTexture;
+    std::unique_ptr<Texture> m_pTexture;
 };
 
 } // namespace sl
