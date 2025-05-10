@@ -1,4 +1,4 @@
-![gli](doc/logo.png)
+![gli](/doc/manual/logo-mini.png)
 
 [OpenGL Image](http://gli.g-truc.net/) (*GLI*) is a header only C++ image library for graphics software.
 
@@ -8,17 +8,17 @@ This library works perfectly with *[OpenGL](https://www.opengl.org)* or *[Vulkan
 It is a good candidate for software rendering (raytracing / rasterisation), image processing, image based software testing or any development context that requires a simple and convenient image library.
 
 *GLI* is written in C++11. It is a platform independent library with no dependence and it supports the following compilers:
-- [Apple Clang 5.0](https://developer.apple.com/library/mac/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html) and higher
-- [GCC](http://gcc.gnu.org/) 4.6 and higher
+- [Apple Clang 6.0](https://developer.apple.com/library/mac/documentation/CompilerTools/Conceptual/LLVMCompilerOverview/index.html) and higher
+- [GCC](http://gcc.gnu.org/) 4.7 and higher
 - [Intel C++ Composer](https://software.intel.com/en-us/intel-compilers) XE 2013 and higher
-- [LLVM](http://llvm.org/) 3.2 and higher
-- [Visual C++](http://www.visualstudio.com/) 2010 and higher
-- Any conform C++11 compiler
+- [LLVM](http://llvm.org/) 3.4 and higher
+- [Visual C++](http://www.visualstudio.com/) 2013 and higher
+- Any C++11 compiler
 
-For more information about *GLI*, please have a look at the [manual](manual.md) and the [API reference documentation](http://gli.g-truc.net/0.8.0/api/index.html).
+For more information about *GLI*, please have a look at the [manual](manual.md) and the [API reference documentation](http://gli.g-truc.net/0.8.2/api/index.html).
 The source code and the documentation are licensed under the [Happy Bunny License (Modified MIT) or the MIT License](manual.md#section0).
 
-Thanks for contributing to the project by [submitting issues](https://github.com/g-truc/gli/issues) for bug reports and feature requests. Any feedback is welcome at [gli@g-truc.net](mailto://gli@g-truc.net).
+Thanks for contributing to the project by [submitting pull requests](https://github.com/g-truc/glm/pulls).
 
 ```cpp
 #include <gli/gli.hpp>
@@ -59,11 +59,21 @@ GLuint CreateTexture(char const* Filename)
 
 | Service | System | Compiler | Status |
 | ------- | ------ | -------- | ------ |
-| [Drone](https://drone.io/github.com/g-truc/gli) | Linux 64 bits | GCC 4.6.3 | [![Build Status](https://drone.io/github.com/g-truc/gli/status.png)](https://drone.io/github.com/g-truc/gli/latest) |
+| [Travis CI](https://travis-ci.org/g-truc/gli)| Linux 64 bits | Clang 3.9, Clang 7, Clang 9, Clang 10, GCC 4.8, GCC 7.4, GCC 9, GCC 10 | [![Travis CI](https://travis-ci.org/g-truc/gli.svg?branch=master)](https://travis-ci.org/g-truc/gli)
+| [AppVeyor](https://ci.appveyor.com/project/Groovounet/gli)| Windows 32 and 64 | Visual Studio 2013 | [![AppVeyor](https://ci.appveyor.com/api/projects/status/32r7s2skrgm9ubva?svg=true)](https://ci.appveyor.com/project/Groovounet/gli)
 
 ## Release notes
+### [GLI 0.8.3.0](https://github.com/g-truc/gli/releases/latest) - 2017-XX-XX
+#### Features:
+- Added decompression and sampling of DXT1, DXT3, DXT5, ATI1N and ATI2N #110 #119
+- Added depth and stencil format queries #119
+- Added texture_grad to samplers
 
-### [GLI 0.8.2.0](https://github.com/g-truc/gli/releases/latest) - 2016-11-13
+#### Fixes:
+- Fixed R8 SRGB #120
+
+---
+### [GLI 0.8.2.0](https://github.com/g-truc/gli/releases/tag/0.8.2.0) - 2016-11-13
 #### Features:
 - Extend flip() for S3TC compressed textures #94
 - Added format property queries #102
@@ -71,6 +81,9 @@ GLuint CreateTexture(char const* Filename)
 #### Improvements:
 - Fixed texture operator=
 - Added initial manual
+
+#### Fixes:
+- Fixed ATI2N swizzle parameters #121
 
 ---
 ### [GLI 0.8.1.1](https://github.com/g-truc/gli/releases/tag/0.8.1.1) - 2016-09-11

@@ -391,6 +391,10 @@ int main()
 {
 	int Error(0);
 
+	const int levels = gli::levels(1600);
+
+
+
 	std::vector<gli::format> FormatsA;
 	FormatsA.push_back(gli::FORMAT_RGBA8_UNORM_PACK8);
 	FormatsA.push_back(gli::FORMAT_RGB8_UNORM_PACK8);

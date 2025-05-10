@@ -15,4 +15,5 @@
 |EnTT|header only|
 |Shaderc|static|
 |Assimp|static|
+|GLM|header only|
 |Tracy|static|

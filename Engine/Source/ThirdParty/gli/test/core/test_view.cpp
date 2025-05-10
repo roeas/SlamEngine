@@ -137,7 +137,7 @@ namespace dim
 			gli::texture2d TextureA(Formats[i], TextureSize, gli::levels(TextureSize));
 
 			for(std::size_t Index = 0; Index < TextureA.size(); ++Index)
-				*(TextureA.data<glm::byte>() + Index) = glm::byte(Index);
+				*(TextureA.data<gli::byte>() + Index) = gli::byte(Index);
 
 			gli::texture2d TextureViewA(gli::view(
 				TextureA, TextureA.base_level(), TextureA.max_level()));

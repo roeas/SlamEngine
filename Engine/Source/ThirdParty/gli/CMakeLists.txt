@@ -1,11 +1,11 @@
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-cmake_policy(VERSION 2.6)
-if (NOT CMAKE_VERSION VERSION_LESS "3.1")
-	cmake_policy(SET CMP0054 NEW)
-endif()
+cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_policy(SET CMP0054 NEW)
 
 project(gli)
-set(GLI_VERSION "0.8.1")
+set(GLI_VERSION "0.8.3")
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -13,6 +13,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 enable_testing()
+option(GLI_TEST_ENABLE "Build unit tests" ON)
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_definitions(-DSOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
@@ -24,7 +25,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif()
 
 if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang") OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel") AND UNIX))
-	set(CMAKE_CXX_FLAGS "-std=c++0x")
 	add_definitions(-Wall)
 endif()
 
@@ -69,12 +69,6 @@ macro(addExternalPackageGTC NAME DIRECTORY)
 endmacro(addExternalPackageGTC)
 
 ################################
-# Add GLM 
-
-set(GLM_DIRECTORY glm)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external/${GLM_DIRECTORY})
-
-################################
 # Add subdirectory
 
 add_subdirectory(gli)
@@ -117,23 +111,22 @@ install(
 	DESTINATION ${GLI_INSTALL_CONFIGDIR}
 )
 
-if (NOT CMAKE_VERSION VERSION_LESS "3.0")
-	add_library(gli INTERFACE)
-	target_include_directories(gli INTERFACE
-		$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-	)
-	install(TARGETS gli EXPORT gliTargets)
+add_library(gli INTERFACE)
+target_include_directories(gli INTERFACE
+	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external>
+)
+install(TARGETS gli EXPORT gliTargets)
 
-	export(
-		EXPORT gliTargets
-		FILE "${CMAKE_CURRENT_BINARY_DIR}/gliTargets.cmake"
-	)
+export(
+	EXPORT gliTargets
+	FILE "${CMAKE_CURRENT_BINARY_DIR}/gliTargets.cmake"
+)
 
-	install(
-		EXPORT gliTargets FILE gliTargets.cmake
-		DESTINATION ${GLI_INSTALL_CONFIGDIR}
-	)
-endif()
+install(
+	EXPORT gliTargets FILE gliTargets.cmake
+	DESTINATION ${GLI_INSTALL_CONFIGDIR}
+)
 
 export(PACKAGE gli)

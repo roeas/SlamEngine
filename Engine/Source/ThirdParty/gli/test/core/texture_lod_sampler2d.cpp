@@ -1,7 +1,6 @@
 #include <gli/sampler2d.hpp>
 #include <gli/comparison.hpp>
-#include <glm/gtx/component_wise.hpp>
-#include <glm/gtc/epsilon.hpp>
+#include <glm/ext/vector_relational.hpp>
 #include <ctime>
 #include <limits>
 #include <array>
@@ -62,16 +61,19 @@ namespace texture_lod
 			Texture.store(gli::extent2d(2, 3), 0, gli::u8vec4(  0, 127, 255, 255));
 			Texture.store(gli::extent2d(3, 3), 0, gli::u8vec4(  0, 127, 255, 255));
 
-			gli::sampler2d<float> Sampler(Texture, gli::WRAP_CLAMP_TO_EDGE, gli::FILTER_LINEAR, gli::FILTER_LINEAR, gli::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+			gli::sampler2d<float> const Sampler(Texture, gli::WRAP_CLAMP_TO_EDGE, gli::FILTER_LINEAR, gli::FILTER_LINEAR, gli::vec4(1.0f, 0.5f, 0.0f, 1.0f));
 
-			gli::vec4 SampleA = Sampler.texture_lod(gli::fsampler2D::normalized_type(0.25f), 0.0f);
-			Error += gli::all(gli::epsilonEqual(SampleA, gli::vec4(1.0f, 0.5f, 0.0f, 1.0f), 0.01f)) ? 0 : 1;
+			gli::vec4 const SampleA = Sampler.texture_lod(gli::fsampler2D::normalized_type(0.25f), 0.0f);
+			Error += gli::all(glm::equal(SampleA, gli::vec4(1.0f, 0.5f, 0.0f, 1.0f), 0.01f)) ? 0 : 1;
 
-			gli::vec4 SampleB = Sampler.texture_lod(gli::fsampler2D::normalized_type(0.8f), 0.0f);
-			Error += gli::all(gli::epsilonEqual(SampleB, gli::vec4(0.0f, 0.5f, 1.0f, 1.0f), 0.01f)) ? 0 : 1;
+			gli::vec4 const SampleB = Sampler.texture_lod(gli::fsampler2D::normalized_type(0.8f), 0.0f);
+			Error += gli::all(glm::equal(SampleB, gli::vec4(0.0f, 0.5f, 1.0f, 1.0f), 0.01f)) ? 0 : 1;
 
-			gli::vec4 SampleC = Sampler.texture_lod(gli::fsampler2D::normalized_type(0.20f, 0.8f), 0.0f);
-			Error += gli::all(gli::epsilonEqual(SampleC, gli::vec4(0.0f, 0.0f, 0.0f, 1.0f), 0.01f)) ? 0 : 1;
+			gli::vec4 const SampleC = Sampler.texture_lod(gli::fsampler2D::normalized_type(0.20f, 0.8f), 0.0f);
+			Error += gli::all(glm::equal(SampleC, gli::vec4(0.0f, 0.0f, 0.0f, 1.0f), 0.01f)) ? 0 : 1;
+
+			gli::vec4 const SampleD = Sampler.texture_grad(gli::fsampler2D::normalized_type(0.25f), gli::fsampler2D::normalized_type(0.0f), gli::fsampler2D::normalized_type(0.0f));
+			Error += gli::all(glm::equal(SampleA, gli::vec4(1.0f, 0.5f, 0.0f, 1.0f), 0.01f)) ? 0 : 1;
 		}
 
 		return Error;

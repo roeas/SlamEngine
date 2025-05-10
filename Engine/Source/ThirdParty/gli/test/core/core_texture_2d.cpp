@@ -151,11 +151,11 @@ int test_texture2d_image_access()
 
 		gli::image Image0(gli::FORMAT_RGBA8_UINT_PACK8, gli::image::extent_type(2, 2, 1));
 		for(std::size_t i = 0; i < Image0.size(); ++i)
-			*(Image0.data<glm::byte>() + i) = glm::byte(i);
+			*(Image0.data<gli::byte>() + i) = gli::byte(i);
 
 		gli::image Image1(gli::FORMAT_RGBA8_UINT_PACK8, gli::image::extent_type(1, 1, 1));
 		for(std::size_t i = 0; i < Image1.size(); ++i)
-			*(Image1.data<glm::byte>() + i) = glm::byte(i + 100);
+			*(Image1.data<gli::byte>() + i) = gli::byte(i + 100);
 
 		gli::texture2d Texture(gli::FORMAT_RGBA8_UINT_PACK8, gli::texture2d::extent_type(2), 2);
 

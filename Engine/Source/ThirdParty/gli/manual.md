@@ -1,6 +1,6 @@
-![Alt](/doc/logo.png "GLI Logo")
+![Alt](/doc/manual/logo-mini.png "GLI Logo")
 
-# GLI 0.8.2 Manual
+# GLI 0.8.3 Manual
 
 ![Alt](/doc/manual/g-truc.png "G-Truc Logo")
 
@@ -9,16 +9,19 @@
 + [0. Licenses](#section0)
 + [1. Getting started](#section1)
 + [1.1. Setup](#section1_1)
++ [1.2. Dependencies](#section1_2)
 + [2. Code samples](#section2)
 + [2.1. Generating mipmaps and converting float textures to rgb9e5](#section2_1)
 + [2.2. Creating an OpenGL texture object from file](#section2_2)
++ [3. References](#section3)
++ [3.1. Equivalent for other languages](#section3_1)
 
 ---
 ## Licenses <a name="section0"></a>
 
 ### The Happy Bunny License (Modified MIT License)
 
-Copyright (c) 2010 - 2016 G-Truc Creation
+Copyright (c) 2010 - 2020 G-Truc Creation
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -46,7 +49,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 ### The MIT License
 
-Copyright (c) 2010 - 2016 G-Truc Creation
+Copyright (c) 2010 - 2020 G-Truc Creation
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -120,6 +123,10 @@ Core GLI features can be included using individual headers to allow faster user 
 #include <gli/type.hpp> // extent*d types
 #include <gli/view.hpp> // create a texture view, same storage but a different scope or interpretation of the data
 ```
+
+### 1.2. Dependencies <a name="section1_2"></a>
+
+GLI does not depend on external libraries or headers such as `<GL/gl.h>`, [`<GL/glcorearb.h>`](http://www.opengl.org/registry/api/GL/glcorearb.h), `<GLES3/gl3.h>`, `<GL/glu.h>`, or `<windows.h>`.
 
 ---
 ## 2. Code samples <a name="section2"></a>
@@ -279,3 +286,10 @@ GLuint create_texture(char const* Filename)
 	return TextureName;
 }
 ```
+
+---
+## <a name="section3"></a> 3. References
+
+### <a name="section3_1"></a> 3.1. Equivalent for other languages
+
+* [JVM OpenGL Image (GLI)](https://github.com/kotlin-graphics/gli)

@@ -57,11 +57,11 @@ int test_textureCube_texture2D_access()
 	{
 		gli::texture2d Texture2DA(gli::FORMAT_RGBA8_UINT_PACK8, gli::texture2d::extent_type(2, 2), 1);
 		for(std::size_t i = 0; i < Texture2DA.size(); ++i)
-			*(Texture2DA.data<glm::byte>() + i) = glm::byte(i);
+			*(Texture2DA.data<gli::byte>() + i) = gli::byte(i);
 
 		gli::texture2d Texture2DB(gli::FORMAT_RGBA8_UINT_PACK8, gli::texture2d::extent_type(2, 2), 1);
 		for(std::size_t i = 0; i < Texture2DB.size(); ++i)
-			*(Texture2DB.data<glm::byte>() + i) = glm::byte(i + 100);
+			*(Texture2DB.data<gli::byte>() + i) = gli::byte(i + 100);
 
 		gli::texture_cube TextureCube(gli::FORMAT_RGBA8_UINT_PACK8, gli::texture_cube::extent_type(2), 2);
 
