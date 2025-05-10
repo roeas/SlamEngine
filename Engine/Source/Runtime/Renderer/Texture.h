@@ -8,6 +8,8 @@
 namespace sl
 {
 
+// TODO: Wrap texture parameters into a common structure
+
 class Texture
 {
 public:
@@ -25,7 +27,6 @@ public:
 class Texture2D : public Texture
 {
 public:
-    // TODO: Wrap these texture parameters into a common structure
     static Texture2D *Create(uint32_t width, uint32_t height, TextureFormat format, bool mipmap, uint32_t flags, const void *pData = nullptr);
 
 public:
@@ -42,8 +43,7 @@ class Texture3D
 class TextureCube : public Texture
 {
 public:
-    // TODO: Wrap these texture parameters into a common structure
-    static TextureCube *Create(uint32_t width, uint32_t height, TextureFormat format, bool genMipmap, uint32_t flags, std::vector<std::vector<const void *>> pDatas);
+    static TextureCube *Create(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void **pDatas = nullptr);
 };
 
 } // namespace sl

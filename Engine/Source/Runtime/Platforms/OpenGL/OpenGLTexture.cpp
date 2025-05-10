@@ -88,10 +88,10 @@ void OpenGLTexture2D::Create(const void *pData)
     }
 }
 
-OpenGLTextureCube::OpenGLTextureCube(uint32_t width, uint32_t height, TextureFormat format, bool genMipmap, uint32_t flags, std::vector<std::vector<const void *>> pDatas) :
-    m_handle(0), m_width(width), m_height(height), m_flags(flags), m_format(format), m_genMipmap(genMipmap)
+OpenGLTextureCube::OpenGLTextureCube(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void **pDatas) :
+    m_handle(0), m_width(width), m_height(height), m_mipmapCount(mipmapCount), m_flags(flags), m_format(format), m_genMipmap(genMipmap)
 {
-    Create(std::move(pDatas));
+    Create(pDatas);
 }
 
 OpenGLTextureCube::~OpenGLTextureCube()
@@ -104,7 +104,7 @@ void OpenGLTextureCube::Bind(uint32_t slot) const
     glBindTextureUnit(slot, m_handle);
 }
 
-void OpenGLTextureCube::Create(std::vector<std::vector<const void *>> pDatas)
+void OpenGLTextureCube::Create(const void **pDatas)
 {
     if (m_handle)
     {
@@ -117,19 +117,15 @@ void OpenGLTextureCube::Create(std::vector<std::vector<const void *>> pDatas)
     glTextureStorage2D(m_handle, 1, GLTextureInternalFormat[(size_t)m_format], m_width, m_height);
 
     // Data
-    bool hasMipmap = false;
-    if (!pDatas.empty())
+    bool hasMipmap = m_mipmapCount > 1;
+    if (pDatas)
     {
-        SL_ASSERT(pDatas.size() == 6);
-        size_t mipmap = pDatas[0].size();
-        hasMipmap = mipmap > 1;
-        for (GLint face = 0; face < 6; ++face)
+        for (size_t face = 0; face < 6; ++face)
         {
-            SL_ASSERT(pDatas[face].size() == mipmap);
-            for (GLint mip = 0; mip < mipmap; ++mip)
+            for (size_t mip = 0; mip < m_mipmapCount; ++mip)
             {
-                glTextureSubImage3D(m_handle, mip, 0, 0, face, m_width, m_height, 1,
-                    GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pDatas[face][mip]);
+                glTextureSubImage3D(m_handle, (GLint)mip, 0, 0, (GLint)face, m_width, m_height, 1,
+                    GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pDatas[face * 6 + mip]);
             }
         }
     }

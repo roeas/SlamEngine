@@ -39,16 +39,16 @@ private:
     std::string m_name;
     std::string m_assetPath;
     std::vector<unsigned char> m_imageData;
+    std::array<std::vector<const void *>, 6> m_cubeImageData; // TMP
+    std::unique_ptr<Texture> m_pTexture;
 
     uint32_t m_width;
     uint32_t m_height;
-    uint8_t m_channels;
-    sl::TextureFormat m_format;
-    bool m_isHDR;
-    bool m_mipmap;
+    uint32_t m_mipmapCount;
     uint32_t m_flags;
-
-    std::unique_ptr<Texture> m_pTexture;
+    sl::TextureFormat m_format;
+    bool m_mipmap;
+    bool m_isCubemap;
 };
 
 } // namespace sl

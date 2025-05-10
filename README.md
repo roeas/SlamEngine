@@ -45,6 +45,8 @@
 
 [Assimp](https://github.com/assimp/assimp) v5.4.3
 
+[GLI](https://github.com/g-truc/gli) 779b99ac6656e4d30c3b24e96e0136a59649a869
+
 [Tracy](https://github.com/wolfpld/tracy) v0.11.1
 
 [Noto Sans](https://fonts.google.com/noto)

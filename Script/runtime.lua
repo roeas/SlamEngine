@@ -39,6 +39,7 @@ project("Slam")
         path.join(ThirdPartyPath, "shaderc/libshaderc/include"),
         path.join(ThirdPartyPath, "assimp/include"),
         path.join(ThirdPartyPath, "assimp/build/include"),
+        path.join(ThirdPartyPath, "gli"),
     }
 
     filter{ "configurations:Debug" }
