@@ -29,7 +29,7 @@ Texture2D *Texture2D::Create(uint32_t width, uint32_t height, TextureFormat form
     }
 }
 
-TextureCube *TextureCube::Create(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void **pDatas)
+TextureCube *TextureCube::Create(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void *pData)
 {
     switch (RenderCore::GetBackend())
     {
@@ -40,7 +40,7 @@ TextureCube *TextureCube::Create(uint32_t width, uint32_t height, uint32_t mipma
         }
         case GraphicsBackend::OpenGL:
         {
-            return new OpenGLTextureCube{ width, height, mipmapCount, format, genMipmap, flags, pDatas };
+            return new OpenGLTextureCube{ width, height, mipmapCount, format, genMipmap, flags, pData };
             break;
         }
         default:

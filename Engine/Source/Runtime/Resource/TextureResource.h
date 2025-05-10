@@ -39,7 +39,6 @@ private:
     std::string m_name;
     std::string m_assetPath;
     std::vector<unsigned char> m_imageData;
-    std::array<std::vector<const void *>, 6> m_cubeImageData; // TMP
     std::unique_ptr<Texture> m_pTexture;
 
     uint32_t m_width;

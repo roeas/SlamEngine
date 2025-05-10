@@ -48,19 +48,31 @@ void TextureResource::OnImport()
             return;
         }
 
-        m_width = texture.extent().x;
-        m_height = texture.extent().y;
-        m_mipmapCount = (uint32_t)texture.levels();
+        size_t layer = texture.layers();
+        size_t face = texture.faces();
+        size_t level = texture.levels();
+        size_t textureSize = texture.size();
+        size_t faceSize = textureSize / face;
+        auto extent = texture.extent();
+        SL_ASSERT(layer == 1 && face == 6);
+
+        m_width = extent.x;
+        m_height = extent.y;
+        m_mipmapCount = (uint32_t)level;
         m_format = TextureFormat::RGBA32F;
 
-        for (std::size_t layer = 0; layer < texture.layers(); ++layer)
+        SL_LOG_TRACE("\tWidth: {}, Height: {}, Mipmap: {}, Channels: {}, Format: {}, IsHDR: {}",
+            m_width, m_height, m_mipmapCount, 4, "RGBA32F", true);
+
+        m_imageData.resize(textureSize);
+        for (size_t f = 0; f < face; ++f)
         {
-            for (std::size_t face = 0; face < texture.faces(); ++face)
+            unsigned char *pOffset = m_imageData.data() + f * faceSize;
+            for (size_t l = 0; l < level; ++l)
             {
-                for (std::size_t level = 0; level < texture.levels(); ++level)
-                {
-                    m_cubeImageData[face][level] = texture.data(layer, face, level);
-                }
+                size_t levelSize = texture.size(l);
+                memcpy(pOffset, texture.data(0, f, l), levelSize);
+                pOffset += levelSize;
             }
         }
     }
@@ -161,7 +173,7 @@ void TextureResource::OnUpload()
 
     if (m_isCubemap)
     {
-        m_pTexture.reset(TextureCube::Create(m_width, m_height, m_mipmapCount, m_format, m_mipmap, m_flags, m_cubeImageData[0].data()));
+        m_pTexture.reset(TextureCube::Create(m_width, m_height, m_mipmapCount, m_format, m_mipmap, m_flags, m_imageData.data()));
     }
     else
     {

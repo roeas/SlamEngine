@@ -43,7 +43,7 @@ class Texture3D
 class TextureCube : public Texture
 {
 public:
-    static TextureCube *Create(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void **pDatas = nullptr);
+    static TextureCube *Create(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void *pData = nullptr);
 };
 
 } // namespace sl

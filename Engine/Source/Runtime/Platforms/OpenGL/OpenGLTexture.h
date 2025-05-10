@@ -37,7 +37,7 @@ private:
 class OpenGLTextureCube : public TextureCube
 {
 public:
-    OpenGLTextureCube(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void **pDatas = nullptr);
+    OpenGLTextureCube(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void *pData = nullptr);
     ~OpenGLTextureCube() override;
 
     void Bind(uint32_t slot) const override;
@@ -49,7 +49,7 @@ public:
     uint32_t GetFlags() const override { return m_flags; }
 
 private:
-    void Create(const void **pDatas);
+    void Create(const void *pData = nullptr);
 
     uint32_t m_handle;
     uint32_t m_width;

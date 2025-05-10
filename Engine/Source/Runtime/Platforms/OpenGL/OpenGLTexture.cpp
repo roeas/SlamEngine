@@ -88,10 +88,10 @@ void OpenGLTexture2D::Create(const void *pData)
     }
 }
 
-OpenGLTextureCube::OpenGLTextureCube(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void **pDatas) :
+OpenGLTextureCube::OpenGLTextureCube(uint32_t width, uint32_t height, uint32_t mipmapCount, TextureFormat format, bool genMipmap, uint32_t flags, const void *pData) :
     m_handle(0), m_width(width), m_height(height), m_mipmapCount(mipmapCount), m_flags(flags), m_format(format), m_genMipmap(genMipmap)
 {
-    Create(pDatas);
+    Create(pData);
 }
 
 OpenGLTextureCube::~OpenGLTextureCube()
@@ -104,7 +104,7 @@ void OpenGLTextureCube::Bind(uint32_t slot) const
     glBindTextureUnit(slot, m_handle);
 }
 
-void OpenGLTextureCube::Create(const void **pDatas)
+void OpenGLTextureCube::Create(const void *pData)
 {
     if (m_handle)
     {
@@ -118,14 +118,19 @@ void OpenGLTextureCube::Create(const void **pDatas)
 
     // Data
     bool hasMipmap = m_mipmapCount > 1;
-    if (pDatas)
+    if (pData)
     {
+        constexpr size_t FaceSize = 256 * 256 * 4 * 32 / 8;
         for (size_t face = 0; face < 6; ++face)
         {
+            size_t mipSize = FaceSize;
             for (size_t mip = 0; mip < m_mipmapCount; ++mip)
             {
+                const void *pFaceMipData = (unsigned char *)pData + face * FaceSize + mip * mipSize;
+                mipSize /= 4;
+
                 glTextureSubImage3D(m_handle, (GLint)mip, 0, 0, (GLint)face, m_width, m_height, 1,
-                    GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pDatas[face * 6 + mip]);
+                    GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pFaceMipData);
             }
         }
     }

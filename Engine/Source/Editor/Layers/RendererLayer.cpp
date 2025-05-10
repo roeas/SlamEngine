@@ -77,6 +77,18 @@ RendererLayer::RendererLayer()
     std::unique_ptr<sl::TextureResource> pDebugUVTextureResource = std::make_unique<sl::TextureResource>(
         sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
     sl::ResourceManager::AddTextureResource(sl::StringHash("DebugUV Texture"), std::move(pDebugUVTextureResource));
+
+    std::unique_ptr<sl::TextureResource> pSkyTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Sky.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(sl::StringHash("Sky Texture"), std::move(pSkyTextureResource));
+
+    std::unique_ptr<sl::TextureResource> pRadTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Rad.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(sl::StringHash("Rad Texture"), std::move(pRadTextureResource));
+
+    std::unique_ptr<sl::TextureResource> pIrrTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Irr.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(sl::StringHash("Irr Texture"), std::move(pIrrTextureResource));
 }
 
 void RendererLayer::OnAttach()
