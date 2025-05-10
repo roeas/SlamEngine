@@ -120,6 +120,7 @@ void OpenGLTextureCube::Create(const void *pData)
     bool hasMipmap = m_mipmapCount > 1;
     if (pData)
     {
+        // TMP
         constexpr size_t FaceSize = 256 * 256 * 4 * 32 / 8;
         for (size_t face = 0; face < 6; ++face)
         {

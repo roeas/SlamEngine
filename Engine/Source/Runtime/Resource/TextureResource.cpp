@@ -39,10 +39,17 @@ void TextureResource::OnImport()
 
     if(m_isCubemap) // Use GLI to import KTX and DDS
     {
+        /*
+         * We pre-convolve skybox by cmft and store it as ktx or dds,
+         * texture format is hardcoded here for now.
+         * See "SlamEngine/Tool/cmft/cmft.bat" for details.
+         * 
+         * TODO: Support KTX2
+         */
+
         gli::texture texture = gli::load((char const *)assetData.data(), assetData.size());
         if (texture.empty() || texture.target() != gli::TARGET_CUBE || texture.format() != gli::FORMAT_RGBA32_SFLOAT_PACK32)
         {
-            // cmft
             SL_LOG_ERROR("Invalid image.");
             m_state = ResourceState::Destroying;
             return;
