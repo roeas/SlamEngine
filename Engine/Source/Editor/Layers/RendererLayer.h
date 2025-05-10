@@ -27,7 +27,10 @@ public:
     void OnEvent(sl::Event &event) override;
 
 private:
+    void ClearMainFramebuffer();
+
     void BasePass();
+    void SkyPass();
     void EntityIDPass();
 
     std::unique_ptr<sl::UniformBuffer> m_pCameraUniformBuffer;
