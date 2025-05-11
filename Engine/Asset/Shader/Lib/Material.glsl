@@ -3,7 +3,7 @@
 
 #include "Shared.h"
 
-// Sampler
+// Texture
 layout(binding = SL_SLOT_ALBEDO) uniform sampler2D s_albedo;
 layout(binding = SL_SLOT_NORMAL) uniform sampler2D s_normal;
 layout(binding = SL_SLOT_ORM) uniform sampler2D s_ORM;

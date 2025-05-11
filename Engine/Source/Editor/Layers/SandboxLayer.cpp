@@ -8,10 +8,85 @@
 
 // Just some temporary codes here
 
+namespace
+{
+
+constexpr sl::StringHashType SkyboxMeshID = sl::StringHash("Skybox Mesh");
+constexpr sl::StringHashType BaseShaderID = sl::StringHash("Base Shader");
+constexpr sl::StringHashType SkyboxShaderID = sl::StringHash("Skybox Shader");
+constexpr sl::StringHashType EntityIDShaderID = sl::StringHash("EntityID Shader");
+constexpr sl::StringHashType NoResourceTextureID = sl::StringHash("NoResource Texture");
+constexpr sl::StringHashType DebugUVTextureID = sl::StringHash("DebugUV Texture");
+constexpr sl::StringHashType SkyTextureID = sl::StringHash("Skybox Texture");
+constexpr sl::StringHashType RadianceTextureID = sl::StringHash("Radiance Texture");
+constexpr sl::StringHashType IrradianceTextureID = sl::StringHash("Irradiance Texture");
+
+} // namespace
+
 SandboxLayer::SandboxLayer()
 {
-    // Camera
-    sl::World::SetMainCameraTransform({ 0.0f, 0.0f, 4.0f }, { 0.0f, glm::radians(-90.0f), 0.0f });
+    // Meshes
+    std::vector<float> skyboxVertices
+    {
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+    };
+    std::vector<uint32_t> skyboxIndices
+    {
+        0, 2, 1, 0, 3, 2,
+        5, 7, 4, 5, 6, 7,
+        3, 6, 2, 3, 7, 6,
+        4, 1, 5, 4, 0, 1,
+        4, 3, 0, 4, 7, 3,
+        1, 6, 5, 1, 2, 6,
+    };
+    std::vector<sl::VertexLayoutElement> elements
+    {
+        { "Position", 3, sl::AttribType::Float, false }
+    };
+    sl::VertexLayout layout{ std::move(elements) };
+    auto pMeshResource = std::make_unique<sl::MeshResource>(std::move(skyboxVertices), std::move(skyboxIndices), layout);
+    sl::ResourceManager::AddMeshResource(SkyboxMeshID, std::move(pMeshResource));
+
+    // Shaders
+    std::unique_ptr<sl::ShaderResource> pBaseShaderResource = std::make_unique<sl::ShaderResource>(
+        sl::Path::FromeAsset("Shader/Base_vert.glsl"), sl::Path::FromeAsset("Shader/Base_frag.glsl"));
+    std::unique_ptr<sl::ShaderResource> pSkyboxShaderResource = std::make_unique<sl::ShaderResource>(
+        sl::Path::FromeAsset("Shader/Skybox_vert.glsl"), sl::Path::FromeAsset("Shader/Skybox_frag.glsl"));
+    std::unique_ptr<sl::ShaderResource> pEntityIDShaderResource = std::make_unique<sl::ShaderResource>(
+        sl::Path::FromeAsset("Shader/EntityID_vert.glsl"), sl::Path::FromeAsset("Shader/EntityID_frag.glsl"));
+    sl::ResourceManager::AddShaderResource(BaseShaderID, std::move(pBaseShaderResource));
+    sl::ResourceManager::AddShaderResource(SkyboxShaderID, std::move(pSkyboxShaderResource));
+    sl::ResourceManager::AddShaderResource(EntityIDShaderID, std::move(pEntityIDShaderResource));
+
+    // Textures
+    std::unique_ptr<sl::TextureResource> pNoResourceTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/NoResource.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pDebugUVTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pSkyboxTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Sky.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pRadianceTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Rad.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pIrradianceTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Irr.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(NoResourceTextureID, std::move(pNoResourceTextureResource));
+    sl::ResourceManager::AddTextureResource(DebugUVTextureID, std::move(pDebugUVTextureResource));
+    sl::ResourceManager::AddTextureResource(SkyTextureID, std::move(pSkyboxTextureResource));
+    sl::ResourceManager::AddTextureResource(RadianceTextureID, std::move(pRadianceTextureResource));
+    sl::ResourceManager::AddTextureResource(IrradianceTextureID, std::move(pIrradianceTextureResource));
+
+    // Skybox entity
+    auto &skyComponent = sl::World::CreateEntity("Sky").AddComponent<sl::SkyComponent>();
+    skyComponent.m_meshResourceID = SkyboxMeshID;
+    skyComponent.m_shaderResourceID = SkyboxShaderID;
+    skyComponent.m_textureResourceID = SkyTextureID;
 
     // Model
     std::string modelPath{ "D:/Works/Model/slum_house/scene.gltf" };
@@ -25,6 +100,9 @@ SandboxLayer::SandboxLayer()
         sl::ModelImporter importer{ std::move(modelPath) };
         importer.Import();
     }
+
+    // Camera
+    sl::World::SetMainCameraTransform({ 6.0f, 5.5f, 12.0f }, { glm::radians(-18.5f), glm::radians(-118.0f), 0.0f });
 }
 
 void SandboxLayer::OnAttach()
