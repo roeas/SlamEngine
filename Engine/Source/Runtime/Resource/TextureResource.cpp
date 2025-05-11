@@ -20,7 +20,7 @@ TextureResource::TextureResource(std::string assetPath, bool mipmap, uint32_t fl
     m_assetPath(std::move(assetPath)), m_width(0), m_height(0), m_mipmapCount(1),
     m_flags(flags), m_format(TextureFormat::RGBA8), m_mipmap(mipmap), m_isCubemap(false)
 {
-
+    m_name = Path::NameWithoutExtension(m_assetPath);
 }
 
 TextureResource::~TextureResource()

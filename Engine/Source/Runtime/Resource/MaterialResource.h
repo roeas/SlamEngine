@@ -129,9 +129,6 @@ public:
     MaterialResource &operator=(MaterialResource &&) = delete;
     ~MaterialResource() override;
 
-    void SetName(std::string name) { m_name = std::move(name); }
-    const std::string &GetName() const { return m_name; }
-
     void SetAlbedoPropertyGroup(const AlbedoPropertyGroup &group) { m_albedoPropertyGroup = group; }
     void SetNormalPropertyGroup(const NormalPropertyGroup &group) { m_normalPropertyGroup = group; }
     void SetOcclusionPropertyGroup(const OcclusionPropertyGroup &group) { m_occlusionPropertyGroup = group; }
@@ -165,8 +162,6 @@ private:
     void OnReady() override;
     void OnDestroy() override;
     void DestroyCPUData() override;
-
-    std::string m_name;
 
     AlbedoPropertyGroup m_albedoPropertyGroup;
     NormalPropertyGroup m_normalPropertyGroup;

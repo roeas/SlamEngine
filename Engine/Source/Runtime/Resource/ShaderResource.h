@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Defines.h"
+#include "Renderer/Shader.h"
 #include "Resource/Resource.h"
 #include "Resource/ShaderInfo.h"
 
@@ -8,8 +9,6 @@
 
 namespace sl
 {
-
-class Shader;
 
 class ShaderResource : public Resource
 {
@@ -21,8 +20,6 @@ public:
     ShaderResource(ShaderResource &&) = delete;
     ShaderResource &operator=(ShaderResource &&) = delete;
     ~ShaderResource() override;
-
-    const std::string &GetName() const { return m_name; }
 
     Shader *GetShaderProgram() const { return m_pShaderProgram.get(); }
 
@@ -41,7 +38,6 @@ private:
      * Vertex Shader: XXX_vert.glsl
      * Fragment Shader: XXX_frag.glsl
      */
-    std::string m_name;
     size_t m_shaderCount;
     ShaderInfo m_shaders[2];
 

@@ -290,7 +290,6 @@ StringHashType ModelImporter::ProcessTexture(const char *pTexture, uint32_t mapp
     if (!sl::ResourceManager::GetTextureResource(textureID))
     {
         auto pTextureResource = std::make_unique<sl::TextureResource>(std::move(filePath), true, mapping | SL_SAMPLER_LINEAR);
-        pTextureResource->SetName(Path::NameWithoutExtension(pTexture));
         sl::ResourceManager::AddTextureResource(textureID, std::move(pTextureResource));
     }
 

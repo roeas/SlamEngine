@@ -36,6 +36,9 @@ public:
     bool IsReady() const { return m_state == ResourceState::Ready; }
     bool IsOptimized() const { return m_optimized; }
 
+    void SetName(std::string name) { m_name = std::move(name); }
+    const std::string &GetName() const { return m_name; }
+
 protected:
     // Import asset file from original format
     virtual void OnImport() = 0;
@@ -52,6 +55,7 @@ protected:
     // Destroy CPU data
     virtual void DestroyCPUData() = 0;
 
+    std::string m_name;
     ResourceState m_state = ResourceState::Importing;
     int8_t m_destroyDelayFrame = 60;
     bool m_optimized = false;

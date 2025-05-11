@@ -473,6 +473,51 @@ void Details::OnUpdate(float deltaTime)
         }
     });
 
+    // Draw sky component
+    DrawComponent<sl::SkyComponent>("Sky", [pData](sl::SkyComponent *pComponent)
+    {
+        if (ImGui::TreeNodeEx("Texture", SubTreeFlags))
+        {
+            if (auto *pTextureResource = sl::ResourceManager::GetTextureResource(pComponent->m_textureResourceID); pTextureResource)
+            {
+                StartWithText("Sky");
+                ImGui::TextUnformatted(pTextureResource->GetName().data());
+            }
+
+            StartWithText("Radiance");
+            ImGui::TextUnformatted("");
+
+            StartWithText("Irradiance");
+            ImGui::TextUnformatted("");
+        }
+        
+        ImGui::Separator();
+        if (ImGui::TreeNodeEx("Shader", SubTreeFlags))
+        {
+            if (auto *pShaderResource = sl::ResourceManager::GetShaderResource(pComponent->m_shaderResourceID); pShaderResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pShaderResource->GetName().data());
+            }
+        }
+        
+        ImGui::Separator();
+        if (ImGui::TreeNodeEx("Mesh", SubTreeFlags))
+        {
+            if (auto *pMeshResource = sl::ResourceManager::GetMeshResource(pComponent->m_meshResourceID); pMeshResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pMeshResource->GetName().data());
+
+                StartWithText("Vertex");
+                ImGui::Text("%i", pMeshResource->GetVerticesCount());
+
+                StartWithText("Index");
+                ImGui::Text("%i", pMeshResource->GetIndicesCount());
+            }
+        }
+    });
+
     // Add component button
     AlignNextWidget("Add Component");
     if (ImGui::Button("Add Component"))

@@ -52,6 +52,7 @@ SandboxLayer::SandboxLayer()
     };
     sl::VertexLayout layout{ std::move(elements) };
     auto pMeshResource = std::make_unique<sl::MeshResource>(std::move(skyboxVertices), std::move(skyboxIndices), layout);
+    pMeshResource->SetName("Cube");
     sl::ResourceManager::AddMeshResource(SkyboxMeshID, std::move(pMeshResource));
 
     // Shaders

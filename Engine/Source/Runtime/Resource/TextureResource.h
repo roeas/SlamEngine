@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Defines.h"
+#include "Renderer/Texture.h"
 #include "Resource/Resource.h"
 
 #include <memory>
@@ -9,8 +10,6 @@
 
 namespace sl
 {
-
-class Texture;
 
 class TextureResource : public Resource
 {
@@ -21,9 +20,6 @@ public:
     TextureResource(TextureResource &&) = delete;
     TextureResource &operator=(TextureResource &&) = delete;
     ~TextureResource() override;
-
-    void SetName(std::string name) { m_name = std::move(name); }
-    const std::string &GetName() const { return m_name; }
 
     Texture *GetTexture() const { return m_pTexture.get(); }
 
@@ -36,7 +32,6 @@ private:
     void OnDestroy() override;
     void DestroyCPUData() override;
 
-    std::string m_name;
     std::string m_assetPath;
     std::vector<unsigned char> m_imageData;
     std::unique_ptr<Texture> m_pTexture;
