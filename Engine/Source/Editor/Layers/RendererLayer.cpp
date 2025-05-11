@@ -101,6 +101,7 @@ void RendererLayer::OnRender()
     sl::RenderCore::DepthTestFunction(sl::Function::LessEqual);
     sl::RenderCore::BlendFunction(sl::Factor::SourceAlpha, sl::Factor::OneMinusSourceAlpha);
     sl::RenderCore::CullingFace(sl::Face::Back);
+    sl::RenderCore::SeamlessCubemap(true);
 
     // Upload camera uniform buffer
     sl::Entity mainCamera = sl::World::GetMainCameraEntity();

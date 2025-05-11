@@ -131,6 +131,18 @@ void RenderCore::FrontFace(Winding winding)
     pRenderAPI->FrontFace(winding);
 }
 
+void RenderCore::SeamlessCubemap(bool enable)
+{
+    if (enable)
+    {
+        pRenderAPI->EnableSeamlessCubemap();
+    }
+    else
+    {
+        pRenderAPI->DisableSeamlessCubemap();
+    }
+}
+
 void RenderCore::Submit(VertexArray *pVertexArray, Shader *pShader)
 {
     pVertexArray->Bind();

@@ -104,6 +104,16 @@ void OpenGLRenderAPI::FrontFace(Winding winding)
     glFrontFace(GLWinding[(size_t)winding]);
 }
 
+void OpenGLRenderAPI::EnableSeamlessCubemap()
+{
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+}
+
+void OpenGLRenderAPI::DisableSeamlessCubemap()
+{
+    glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+}
+
 void OpenGLRenderAPI::DrawIndexed(uint32_t count)
 {
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);

@@ -32,6 +32,9 @@ public:
     void CullingFace(Face face) override;
     void FrontFace(Winding winding) override;
 
+    void EnableSeamlessCubemap() override;
+    void DisableSeamlessCubemap() override;
+
     void DrawIndexed(uint32_t count) override;
 };
 

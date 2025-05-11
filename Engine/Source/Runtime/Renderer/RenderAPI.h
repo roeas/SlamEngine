@@ -39,6 +39,9 @@ public:
     virtual void CullingFace(Face face) = 0;
     virtual void FrontFace(Winding winding) = 0;
 
+    virtual void EnableSeamlessCubemap() = 0;
+    virtual void DisableSeamlessCubemap() = 0;
+
     virtual void DrawIndexed(uint32_t count) = 0;
 };
 

@@ -51,6 +51,8 @@ public:
     static void CullingFace(Face face);
     static void FrontFace(Winding winding);
 
+    static void SeamlessCubemap(bool enable);
+
     static void Submit(VertexArray *pVertexArray, Shader *pShader);
 
 private:
