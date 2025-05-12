@@ -75,7 +75,7 @@ public:
     SL_FORCEINLINE static std::string Join(auto &&...args)
     {
         std::filesystem::path result;
-        (result /= ... /= std::filesystem::path(args));
+        (result /= ... /= std::filesystem::path{ std::forward<decltype(args)>(args) });
         return result.generic_string();
     }
 };
