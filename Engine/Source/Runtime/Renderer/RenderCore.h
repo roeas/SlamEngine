@@ -29,6 +29,8 @@ public:
 
     static void SetMainFramebuffer(Framebuffer *pFrameBuffer);
     static Framebuffer *GetMainFramebuffer() { return pMainFrameBuffer.get(); }
+    static void SetFinalFramebuffer(Framebuffer *pFrameBuffer);
+    static Framebuffer *GetFinalFramebuffer() { return pFinalFrameBuffer.get(); }
     static void SetEntityIDFramebuffer(Framebuffer *pFrameBuffer);
     static Framebuffer *GetEntityIDFramebuffer() { return pEntityIDFrameBuffer.get(); }
 
@@ -61,6 +63,7 @@ private:
 
     // TODO: Can we move these to #RendererLayer?
     inline static std::unique_ptr<Framebuffer> pMainFrameBuffer;
+    inline static std::unique_ptr<Framebuffer> pFinalFrameBuffer;
     inline static std::unique_ptr<Framebuffer> pEntityIDFrameBuffer;
 };
 

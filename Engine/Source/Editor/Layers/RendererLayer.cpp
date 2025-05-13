@@ -47,8 +47,12 @@ RendererLayer::RendererLayer()
     // Main framebuffer and ID framebuffer, size is meaningless here
     sl::RenderCore::SetMainFramebuffer(sl::Framebuffer::Create(
     {
-        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB32F, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
         sl::Texture2D::Create(1, 1, sl::TextureFormat::D32, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
+    }));
+    sl::RenderCore::SetFinalFramebuffer(sl::Framebuffer::Create(
+    {
+        sl::Texture2D::Create(1, 1, sl::TextureFormat::RGB8, false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR),
     }));
     sl::RenderCore::SetEntityIDFramebuffer(sl::Framebuffer::Create(
     {
@@ -115,7 +119,7 @@ void RendererLayer::OnRender()
     ClearMainFramebuffer();
     BasePass();
     SkyPass();
-
+    PostProcessingPass();
     EntityIDPass();
 }
 
@@ -133,7 +137,7 @@ void RendererLayer::ClearMainFramebuffer()
 {
     auto pFramebuffer = sl::RenderCore::GetMainFramebuffer();
     pFramebuffer->Bind();
-    sl::RenderCore::ClearColor(glm::vec4{ 0.1f, 0.1f, 0.1f, 1.0f });
+    sl::RenderCore::ClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
     sl::RenderCore::ClearDepth(1.0f);
     pFramebuffer->Unbind();
 }
@@ -212,6 +216,35 @@ void RendererLayer::SkyPass()
         auto *pShader = pShaderResource->GetShaderProgram();
         pShader->Bind();
         pTextureResource->GetTexture()->Bind(0);
+        pShader->Unbind();
+
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
+    }
+
+    pFramebuffer->Unbind();
+}
+
+void RendererLayer::PostProcessingPass()
+{
+    auto pFramebuffer = sl::RenderCore::GetFinalFramebuffer();
+    pFramebuffer->Bind();
+
+    sl::RenderCore::ClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
+
+    auto view = sl::World::GetRegistry().view<sl::PostProcessingComponent>();
+    for (auto entity : view)
+    {
+        auto &postProcessing = view.get<sl::PostProcessingComponent>(entity);
+        auto *pMeshResource = sl::ResourceManager::GetMeshResource(postProcessing.m_meshResourceID);
+        auto *pShaderResource = sl::ResourceManager::GetShaderResource(postProcessing.m_shaderResourceID);
+        if (!pMeshResource || !pShaderResource || !pMeshResource->IsReady() || !pShaderResource->IsReady())
+        {
+            continue;
+        }
+
+        auto *pShader = pShaderResource->GetShaderProgram();
+        pShader->Bind();
+        sl::RenderCore::GetMainFramebuffer()->GetAttachment(0)->Bind(0);
         pShader->Unbind();
 
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());

@@ -18,6 +18,11 @@ void RenderCore::SetMainFramebuffer(Framebuffer *pFrameBuffer)
     pMainFrameBuffer.reset(pFrameBuffer);
 }
 
+void RenderCore::SetFinalFramebuffer(Framebuffer *pFrameBuffer)
+{
+    pFinalFrameBuffer.reset(pFrameBuffer);
+}
+
 void RenderCore::SetEntityIDFramebuffer(Framebuffer *pFrameBuffer)
 {
     pEntityIDFrameBuffer.reset(pFrameBuffer);

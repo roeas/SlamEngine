@@ -518,6 +518,35 @@ void Details::OnUpdate(float deltaTime)
         }
     });
 
+    // Draw post processing component
+    DrawComponent<sl::PostProcessingComponent>("Post Processing", [pData](sl::PostProcessingComponent *pComponent)
+    {
+        if (ImGui::TreeNodeEx("Shader", SubTreeFlags))
+        {
+            if (auto *pShaderResource = sl::ResourceManager::GetShaderResource(pComponent->m_shaderResourceID); pShaderResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pShaderResource->GetName().data());
+            }
+        }
+
+        ImGui::Separator();
+        if (ImGui::TreeNodeEx("Mesh", SubTreeFlags))
+        {
+            if (auto *pMeshResource = sl::ResourceManager::GetMeshResource(pComponent->m_meshResourceID); pMeshResource)
+            {
+                StartWithText("Name");
+                ImGui::TextUnformatted(pMeshResource->GetName().data());
+
+                StartWithText("Vertex");
+                ImGui::Text("%i", pMeshResource->GetVerticesCount());
+
+                StartWithText("Index");
+                ImGui::Text("%i", pMeshResource->GetIndicesCount());
+            }
+        }
+    });
+
     // Add component button
     AlignNextWidget("Add Component");
     if (ImGui::Button("Add Component"))

@@ -31,6 +31,7 @@ private:
 
     void BasePass();
     void SkyPass();
+    void PostProcessingPass();
     void EntityIDPass();
 
     std::unique_ptr<sl::UniformBuffer> m_pCameraUniformBuffer;

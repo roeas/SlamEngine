@@ -134,7 +134,7 @@ int OpenGLFramebuffer::ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t 
     return data;
 }
 
-uint32_t OpenGLFramebuffer::GetAttachmentHandle(size_t attachmentIndex) const
+Texture2D *OpenGLFramebuffer::GetAttachment(size_t attachmentIndex) const
 {
     if (attachmentIndex >= m_attachments.size())
     {
@@ -142,7 +142,7 @@ uint32_t OpenGLFramebuffer::GetAttachmentHandle(size_t attachmentIndex) const
         return 0;
     }
 
-    return m_attachments[attachmentIndex].m_pTexture->GetHandle();
+    return m_attachments[attachmentIndex].m_pTexture;
 }
 
 void OpenGLFramebuffer::Create()

@@ -73,6 +73,7 @@ void Viewport::OnUpdate(float deltaTime)
 
         // Resize main framebuffer
         sl::RenderCore::GetMainFramebuffer()->Resize(m_windowSizeX, m_windowSizeY);
+        sl::RenderCore::GetFinalFramebuffer()->Resize(m_windowSizeX, m_windowSizeY);
         sl::RenderCore::GetEntityIDFramebuffer()->Resize(m_windowSizeX, m_windowSizeY);
 
         // Update main camera aspect
@@ -84,7 +85,7 @@ void Viewport::OnUpdate(float deltaTime)
     }
 
     // Draw main frame buffer color attachment
-    uint32_t handle = sl::RenderCore::GetMainFramebuffer()->GetAttachmentHandle(0);
+    uint32_t handle = sl::RenderCore::GetFinalFramebuffer()->GetAttachment(0)->GetHandle();
     ImGui::Image((ImTextureID)handle, ImVec2{ (float)m_windowSizeX, (float)m_windowSizeY },
         ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
 

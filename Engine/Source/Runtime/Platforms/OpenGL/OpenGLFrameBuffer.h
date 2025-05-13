@@ -28,7 +28,7 @@ public:
 
     uint32_t GetWidth() const override { return m_width; }
     uint32_t GetHeight() const override { return m_height; }
-    uint32_t GetAttachmentHandle(size_t attachmentIndex) const override;
+    Texture2D *GetAttachment(size_t attachmentIndex) const override;
 
 private:
     void Create();
