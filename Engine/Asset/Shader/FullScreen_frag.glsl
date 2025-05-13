@@ -11,5 +11,10 @@ layout(binding = 0) uniform sampler2D s_preResult;
 
 void main()
 {
-    o_color = vec4(texture(s_preResult, v_uv).xyz, 1.0);
+    vec3 finalColor = texture(s_preResult, v_uv).xyz;
+
+    // Gamma
+    finalColor = pow(finalColor, vec3(0.45));
+
+    o_color = vec4(finalColor, 1.0);
 }

@@ -18,13 +18,13 @@ void main()
     vec3 cameraPos = GetCameraPos();
     Material material = GetMaterial(v_uv0, v_normal, v_tangent, v_bitangent);
 
+    // Direct
     vec3 directColor = material.albedo;
     directColor *= vec3(material.occlusion);
 
+    // Environment
     vec3 environmentColor = vec3(0.01);
 
-    // Post processing
     vec3 finalColor = directColor + environmentColor + material.emissive;
-    finalColor = pow(finalColor, vec3(1.0 / 2.2));
     o_color = vec4(finalColor, 1.0);
 }
