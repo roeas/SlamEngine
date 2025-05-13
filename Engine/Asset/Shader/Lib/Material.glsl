@@ -1,7 +1,7 @@
 #ifndef SL_MATERIAL_GLSL
 #define SL_MATERIAL_GLSL
 
-#include "Shared.h"
+#include "Shared/Standard.h"
 
 // Texture
 layout(binding = SL_SLOT_ALBEDO) uniform sampler2D s_albedo;

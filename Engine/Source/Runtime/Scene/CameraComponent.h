@@ -9,13 +9,13 @@ namespace sl
 
 enum class ProjectionType : uint8_t
 {
-    Perspective = 0,
+    Perspective,
     Orthographic,
 };
 
 enum class CameraControllerMode : uint8_t
 {
-    None = 0,
+    None,
     FPS,
     Editor,
 };

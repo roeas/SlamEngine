@@ -37,7 +37,7 @@ namespace sl
 
 enum class EventType
 {
-    None = 0,
+    None,
     WindowResize, WindowMinimize, WindowMaximize, WindowRestore,
     WindowGetFocus, WindowLostFocus, WindowClose,
     KeyDown, KeyUp, KeyType,

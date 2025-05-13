@@ -521,6 +521,23 @@ void Details::OnUpdate(float deltaTime)
     // Draw post processing component
     DrawComponent<sl::PostProcessingComponent>("Post Processing", [pData](sl::PostProcessingComponent *pComponent)
     {
+        if (ImGui::TreeNodeEx("Tone Mapping", SubTreeFlags))
+        {
+            StartWithText("Mode");
+            if (ImGui::BeginCombo("##Mode", magic_enum::enum_name(pComponent->m_toneMappingMode).data(), ImGuiComboFlags_WidthFitPreview))
+            {
+                for (size_t i = 0; i < magic_enum::enum_count<sl::ToneMappingMode>(); ++i)
+                {
+                    sl::ToneMappingMode mode = (sl::ToneMappingMode)i;
+                    if (ImGui::Selectable(magic_enum::enum_name(mode).data(), mode == pComponent->m_toneMappingMode))
+                    {
+                        pComponent->m_toneMappingMode = mode;
+                    }
+                }
+                ImGui::EndCombo();
+            }
+        }
+
         if (ImGui::TreeNodeEx("Shader", SubTreeFlags))
         {
             if (auto *pShaderResource = sl::ResourceManager::GetShaderResource(pComponent->m_shaderResourceID); pShaderResource)

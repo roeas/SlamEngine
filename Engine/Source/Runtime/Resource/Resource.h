@@ -8,7 +8,7 @@ namespace sl
 
 enum class ResourceState : uint8_t
 {
-    Importing = 0,
+    Importing,
     Building,
     Loading,
     Uploading,
@@ -19,7 +19,7 @@ enum class ResourceState : uint8_t
 
 enum class ResourcesType : uint8_t
 {
-    Mesh = 0,
+    Mesh,
     Bone,
     Animation,
     Texture,

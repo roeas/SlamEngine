@@ -1,7 +1,7 @@
 #ifndef SL_CAMERA_GLSL
 #define SL_CAMERA_GLSL
 
-#include "Shared.h"
+#include "Shared/Standard.h"
 
 layout(std140, binding = SL_BINDING_POINT_CAMERA) uniform UBCamera
 {

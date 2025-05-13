@@ -1,9 +1,20 @@
 #pragma once
 
+#include "Shader/Shared/ToneMapping.h"
 #include "Utils/Hash.hpp"
 
 namespace sl
 {
+
+enum class ToneMappingMode : uint8_t
+{
+    Clamp       = SL_TONEMAPPING_CLAMP,
+    Reinhard    = SL_TONEMAPPING_REINHARD,
+    HableFilmic = SL_TONEMAPPING_HABLEFILMIC,
+    ACES        = SL_TONEMAPPING_ACES,
+    ACES_Simple = SL_TONEMAPPING_ACES_SIMPLE,
+    PBRNeutral  = SL_TONEMAPPING_PBRNEUTRAL,
+};
 
 struct PostProcessingComponent
 {
@@ -11,6 +22,8 @@ struct PostProcessingComponent
     {
 
     }
+
+    ToneMappingMode m_toneMappingMode = ToneMappingMode::PBRNeutral;
 
     StringHashType m_meshResourceID = 0;
     StringHashType m_shaderResourceID = 0;

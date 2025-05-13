@@ -5,7 +5,7 @@
 #include "Renderer/UniformBuffer.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
-#include "Shader/Shared.h"
+#include "Shader/Shared/Standard.h"
 #include "Utils/ProfilerCPU.h"
 #include "Utils/ProfilerGPU.h"
 
@@ -244,7 +244,10 @@ void RendererLayer::PostProcessingPass()
 
         auto *pShader = pShaderResource->GetShaderProgram();
         pShader->Bind();
+
         sl::RenderCore::GetMainFramebuffer()->GetAttachment(0)->Bind(0);
+        pShader->UploadUniform(0, (int)postProcessing.m_toneMappingMode);
+
         pShader->Unbind();
 
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());

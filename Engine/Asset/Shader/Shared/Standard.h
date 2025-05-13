@@ -1,5 +1,5 @@
-#ifndef SL_SHARED_H
-#define SL_SHARED_H
+#ifndef SL_SHARED_STANDARD_H
+#define SL_SHARED_STANDARD_H
 
 // Uniform buffer
 #define SL_BINDING_POINT_CAMERA 0
