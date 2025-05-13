@@ -14,7 +14,7 @@ namespace
 constexpr sl::StringHashType SkyboxMeshID = sl::StringHash("Skybox Mesh");
 constexpr sl::StringHashType FullScreenMeshID = sl::StringHash("Full Screen Mesh");
 
-constexpr sl::StringHashType BaseShaderID = sl::StringHash("Base Shader");
+constexpr sl::StringHashType StandardShaderID = sl::StringHash("Standard Shader");
 constexpr sl::StringHashType SkyboxShaderID = sl::StringHash("Skybox Shader");
 constexpr sl::StringHashType FullScreenShaderID = sl::StringHash("Full Screen Shader");
 constexpr sl::StringHashType EntityIDShaderID = sl::StringHash("EntityID Shader");
@@ -88,15 +88,15 @@ SandboxLayer::SandboxLayer()
 
     // Shaders
     {
-        std::unique_ptr<sl::ShaderResource> pBaseShaderResource = std::make_unique<sl::ShaderResource>(
-            sl::Path::FromeAsset("Shader/Base_vert.glsl"), sl::Path::FromeAsset("Shader/Base_frag.glsl"));
+        std::unique_ptr<sl::ShaderResource> pStandardShaderResource = std::make_unique<sl::ShaderResource>(
+            sl::Path::FromeAsset("Shader/Standard_vert.glsl"), sl::Path::FromeAsset("Shader/Standard_frag.glsl"));
         std::unique_ptr<sl::ShaderResource> pSkyboxShaderResource = std::make_unique<sl::ShaderResource>(
             sl::Path::FromeAsset("Shader/Skybox_vert.glsl"), sl::Path::FromeAsset("Shader/Skybox_frag.glsl"));
         std::unique_ptr<sl::ShaderResource> pFullScreenShaderResource = std::make_unique<sl::ShaderResource>(
             sl::Path::FromeAsset("Shader/FullScreen_vert.glsl"), sl::Path::FromeAsset("Shader/FullScreen_frag.glsl"));
         std::unique_ptr<sl::ShaderResource> pEntityIDShaderResource = std::make_unique<sl::ShaderResource>(
             sl::Path::FromeAsset("Shader/EntityID_vert.glsl"), sl::Path::FromeAsset("Shader/EntityID_frag.glsl"));
-        sl::ResourceManager::AddShaderResource(BaseShaderID, std::move(pBaseShaderResource));
+        sl::ResourceManager::AddShaderResource(StandardShaderID, std::move(pStandardShaderResource));
         sl::ResourceManager::AddShaderResource(SkyboxShaderID, std::move(pSkyboxShaderResource));
         sl::ResourceManager::AddShaderResource(FullScreenShaderID, std::move(pFullScreenShaderResource));
         sl::ResourceManager::AddShaderResource(EntityIDShaderID, std::move(pEntityIDShaderResource));

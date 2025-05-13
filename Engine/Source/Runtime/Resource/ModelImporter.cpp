@@ -251,7 +251,7 @@ void ModelImporter::ProcessMesh(const aiMesh *pMesh)
     // 5. Entity and component
     auto &rendering = sl::World::CreateEntity(pMeshName).AddComponent<sl::RenderingComponent>();
     rendering.m_meshResourceID = meshID;
-    rendering.m_shaderResourceID = sl::StringHash("Base Shader");
+    rendering.m_shaderResourceID = sl::StringHash("Standard Shader");
     rendering.m_entityIDShaderResourceID = sl::StringHash("EntityID Shader");
     rendering.m_materialResourceID = materialID;
 }

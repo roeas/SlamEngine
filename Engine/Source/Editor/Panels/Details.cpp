@@ -398,7 +398,7 @@ void Details::OnUpdate(float deltaTime)
                     else
                     {
                         // Draw a placeholder texture when required texture resource not exist
-                        ImGui::Image((ImTextureID)sl::ResourceManager::GetTextureResource(sl::StringHash("NoResource Texture"))->GetTexture()->GetHandle(),
+                        ImGui::Image((ImTextureID)sl::ResourceManager::GetTextureResource(sl::StringHash("No Resource Texture"))->GetTexture()->GetHandle(),
                             TextureSize, ImVec2{ 0.0f, 1.0f }, ImVec2{ 1.0f, 0.0f });
                     }
 
