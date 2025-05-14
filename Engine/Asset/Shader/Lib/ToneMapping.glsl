@@ -12,12 +12,12 @@ vec3 Reinhard(vec3 color)
 
 vec3 HableFilmicPartial(vec3 x)
 {
-    float A = 0.15;
-    float B = 0.50;
-    float C = 0.10;
-    float D = 0.20;
-    float E = 0.02;
-    float F = 0.30;
+    const float A = 0.15;
+    const float B = 0.50;
+    const float C = 0.10;
+    const float D = 0.20;
+    const float E = 0.02;
+    const float F = 0.30;
 
     return ((x * (x * A + C * B) + D * E) / (x * (x * A + B) + D * F)) - E / F;
 }
@@ -54,14 +54,14 @@ vec3 ACES(vec3 color)
 
 vec3 ACES_Simple(vec3 color)
 {
-    const float a = 2.51;
-    const float b = 0.03;
-    const float c = 2.43;
-    const float d = 0.59;
-    const float e = 0.14;
+    const float A = 2.51;
+    const float B = 0.03;
+    const float C = 2.43;
+    const float D = 0.59;
+    const float E = 0.14;
     color *= 0.6;
 
-    return (color * (color * a + b)) / (color * (color * c + d) + e);
+    return (color * (color * A + B)) / (color * (color * C + D) + E);
 }
 
 vec3 PBRNeutral(vec3 color)
