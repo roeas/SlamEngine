@@ -3,6 +3,11 @@
 
 ![Preview](Engine/Asset/Texture/Preview.png)
 
+# Getting up
+1. Install [CMake](https://cmake.org/download/#latest)
+2. Install [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
+4. Run **Setup.bat**
+
 # Config diff
 ||Debug|Release|Final|
 |:-|:-:|:-:|:-:|
