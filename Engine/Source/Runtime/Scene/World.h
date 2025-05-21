@@ -2,6 +2,7 @@
 
 #include "Core/Log.h"
 #include "Scene/CameraComponent.h"
+#include "Scene/LightComponent.h"
 #include "Scene/PostProcessingComponent.h"
 #include "Scene/RenderingComponent.h"
 #include "Scene/SkyComponent.h"

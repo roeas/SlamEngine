@@ -52,8 +52,8 @@
 struct SL_LightUniformBuffer
 {
     int type;
-    float range;
     float intensity;
+    float range;
     float scale;
     float offset;
     float colorR, colorG, colorB;

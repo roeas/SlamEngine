@@ -372,7 +372,48 @@ void Details::OnUpdate(float deltaTime)
         pComponent->m_isDirty |= cameraMightDirty;
     });
 
-    // Draw render component
+    // Draw light component
+    DrawComponent<sl::LightComponent>("Light", [pData](sl::LightComponent *pComponent)
+    {
+        StartWithText("Type");
+        if (ImGui::BeginCombo("##LightType", magic_enum::enum_name(pComponent->m_type).data(), ImGuiComboFlags_WidthFitPreview))
+        {
+            for (size_t i = 0; i < magic_enum::enum_count<sl::LightType>(); ++i)
+            {
+                sl::LightType type = (sl::LightType)i;
+                if (ImGui::Selectable(magic_enum::enum_name(type).data(), type == pComponent->m_type))
+                {
+                    pComponent->m_type = type;
+                }
+            }
+            ImGui::EndCombo();
+        }
+
+        StartWithText("Color");
+        ImGui::DragFloat3("##Color", glm::value_ptr(pComponent->m_color), 0.1f);
+        StartWithText("Intensity");
+        ImGui::DragFloat("##Intensity", &pComponent->m_intensity, 0.1f);
+        StartWithText("Range");
+        ImGui::DragFloat("##Range", &pComponent->m_range, 0.1f);
+
+        if (pComponent->m_type == sl::LightType::Spot)
+        {
+            StartWithText("Outer");
+            float outer = glm::degrees(pComponent->m_outer);
+            if (ImGui::DragFloat("##Outer", &outer, 0.1f))
+            {
+                pComponent->m_outer = glm::radians(outer);
+            }
+            StartWithText("Inner");
+            float inner = glm::degrees(pComponent->m_inner);
+            if (ImGui::DragFloat("##Inner", &inner, 0.1f))
+            {
+                pComponent->m_inner = glm::radians(inner);
+            }
+        }
+    });
+
+    // Draw rendering component
     DrawComponent<sl::RenderingComponent>("Rendering", [pData](sl::RenderingComponent *pComponent)
     {
         if (ImGui::TreeNodeEx("Material", SubTreeFlags))

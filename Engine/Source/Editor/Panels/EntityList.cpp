@@ -110,6 +110,30 @@ void EntityList::OnUpdate(float deltaTime)
         {
             pData->m_selectedEntity = sl::World::CreateEntity();
         }
+        if (ImGui::MenuItem("Creat Directional Light"))
+        {
+            auto entity = sl::World::CreateEntity("Directional Light");
+            auto light = entity.AddComponent<sl::LightComponent>();
+            light.m_type = sl::LightType::Directional;
+
+            pData->m_selectedEntity = entity;
+        }
+        if (ImGui::MenuItem("Creat Point Light"))
+        {
+            auto entity = sl::World::CreateEntity("Point Light");
+            auto light = entity.AddComponent<sl::LightComponent>();
+            light.m_type = sl::LightType::Point;
+
+            pData->m_selectedEntity = entity;
+        }
+        if (ImGui::MenuItem("Creat Spot Light"))
+        {
+            auto entity = sl::World::CreateEntity("Spot Light");
+            auto light = entity.AddComponent<sl::LightComponent>();
+            light.m_type = sl::LightType::Spot;
+
+            pData->m_selectedEntity = entity;
+        }
         ImGui::EndPopup();
     }
     ImGui::End(); // Entity List

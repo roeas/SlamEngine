@@ -135,9 +135,30 @@ void RendererLayer::OnRender()
     // Upload light uniform buffer
     static std::vector<SL_LightUniformBuffer> s_lightSharedData(SL_LIGHT_MAX_COUNT);
     s_lightSharedData.clear();
-    // light component -> uniform buffer
-    uint32_t lightCount = 0;
-    m_pLightUniformBuffer->Upload(LightsID, s_lightSharedData.data()); // sizeof(SL_LightUniformBuffer) * lightCount
+    auto group = sl::World::GetRegistry().group<sl::LightComponent, sl::TransformComponent>();
+    int lightCount = (int)group.size();
+    for (auto entity : group)
+    {
+        auto [light, transform] = group.get<sl::LightComponent, sl::TransformComponent>(entity);
+        SL_LightUniformBuffer lightData;
+        lightData.type = (int)light.m_type;
+        lightData.intensity = light.m_intensity;
+        lightData.range = light.m_range;
+
+        float cosInner = std::cos(light.m_inner);
+        float cosOuter = std::cos(light.m_outer);
+        lightData.scale = 1.0f / std::max(cosInner - cosOuter, 0.001f);
+        lightData.offset = -cosOuter * lightData.scale;
+
+        memcpy(&lightData.colorR, &light.m_color, sizeof(float) * 3);
+        memcpy(&lightData.positionX, &transform.m_position, sizeof(float) * 3);
+        glm::vec4 dir = glm::vec4{ 1.0f, 0.0f, 0.0f, 0.0f } * transform.GetRotate();
+        memcpy(&lightData.directionX, &dir, sizeof(float) * 3);
+
+        s_lightSharedData.push_back(lightData);
+    }
+
+    m_pLightUniformBuffer->Upload(LightsID, s_lightSharedData.data(), sizeof(SL_LightUniformBuffer) * lightCount);
     m_pLightUniformBuffer->Upload(LightCountID, &lightCount);
 
     ClearMainFramebuffer();
