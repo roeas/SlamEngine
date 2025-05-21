@@ -19,6 +19,8 @@ constexpr sl::StringHashType ViewMatID = sl::StringHash("ub_viewMat");
 constexpr sl::StringHashType ProjectionMatID = sl::StringHash("ub_projectionMat");
 constexpr sl::StringHashType ViewProjectionMatID = sl::StringHash("ub_viewProjctionMat");
 constexpr sl::StringHashType ViewMatWithoutTransformID = sl::StringHash("ub_viewMatWithoutTransform");
+constexpr sl::StringHashType LightsID = sl::StringHash("ub_lights");
+constexpr sl::StringHashType LightCountID = sl::StringHash("ub_lightCount");
 
 void UploadMaterialPropertyGroup(sl::Shader *pShader, const auto &propertyGroup)
 {
@@ -61,20 +63,34 @@ RendererLayer::RendererLayer()
     }));
 
     // Camera uniform buffer
-    uint32_t uniformBufferSize = 0;
-    sl::UniformBufferLayout cameraUniformBufferLayout;
-    cameraUniformBufferLayout.AddElement(CameraPosID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::vec4) });
-    uniformBufferSize += sizeof(glm::vec4);
-    cameraUniformBufferLayout.AddElement(ViewMatID, sl::UniformBufferLayoutElement{ uniformBufferSize , sizeof(glm::mat4) });
-    uniformBufferSize += sizeof(glm::mat4);
-    cameraUniformBufferLayout.AddElement(ProjectionMatID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
-    uniformBufferSize += sizeof(glm::mat4);
-    cameraUniformBufferLayout.AddElement(ViewProjectionMatID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
-    uniformBufferSize += sizeof(glm::mat4);
-    cameraUniformBufferLayout.AddElement(ViewMatWithoutTransformID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
-    uniformBufferSize += sizeof(glm::mat4);
-    cameraUniformBufferLayout.SetSize(uniformBufferSize);
-    m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUniformBufferLayout)));
+    {
+        uint32_t uniformBufferSize = 0;
+        sl::UniformBufferLayout cameraUniformBufferLayout;
+        cameraUniformBufferLayout.AddElement(CameraPosID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::vec4) });
+        uniformBufferSize += sizeof(glm::vec4);
+        cameraUniformBufferLayout.AddElement(ViewMatID, sl::UniformBufferLayoutElement{ uniformBufferSize , sizeof(glm::mat4) });
+        uniformBufferSize += sizeof(glm::mat4);
+        cameraUniformBufferLayout.AddElement(ProjectionMatID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
+        uniformBufferSize += sizeof(glm::mat4);
+        cameraUniformBufferLayout.AddElement(ViewProjectionMatID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
+        uniformBufferSize += sizeof(glm::mat4);
+        cameraUniformBufferLayout.AddElement(ViewMatWithoutTransformID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
+        uniformBufferSize += sizeof(glm::mat4);
+        cameraUniformBufferLayout.SetSize(uniformBufferSize);
+        m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUniformBufferLayout)));
+    }
+
+    // Light uniform buffer
+    {
+        uint32_t uniformBufferSize = 0;
+        sl::UniformBufferLayout lightsUniformBufferLayout;
+        lightsUniformBufferLayout.AddElement(LightsID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(SL_LightUniformBuffer) * SL_LIGHT_MAX_COUNT });
+        uniformBufferSize += sizeof(SL_LightUniformBuffer) * SL_LIGHT_MAX_COUNT;
+        lightsUniformBufferLayout.AddElement(LightCountID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(int32_t) });
+        uniformBufferSize += sizeof(int32_t);
+        lightsUniformBufferLayout.SetSize(uniformBufferSize);
+        m_pLightUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_LIGHT, std::move(lightsUniformBufferLayout)));
+    }
 }
 
 void RendererLayer::OnAttach()
@@ -115,6 +131,14 @@ void RendererLayer::OnRender()
     m_pCameraUniformBuffer->Upload(ProjectionMatID, glm::value_ptr(cameraComponent.GetProjection()));
     m_pCameraUniformBuffer->Upload(ViewProjectionMatID, glm::value_ptr(cameraComponent.GetViewProjection()));
     m_pCameraUniformBuffer->Upload(ViewMatWithoutTransformID, glm::value_ptr(glm::mat4{ glm::mat3{ cameraComponent.GetView() } }));
+
+    // Upload light uniform buffer
+    static std::vector<SL_LightUniformBuffer> s_lightSharedData(SL_LIGHT_MAX_COUNT);
+    s_lightSharedData.clear();
+    // light component -> uniform buffer
+    uint32_t lightCount = 0;
+    m_pLightUniformBuffer->Upload(LightsID, s_lightSharedData.data()); // sizeof(SL_LightUniformBuffer) * lightCount
+    m_pLightUniformBuffer->Upload(LightCountID, &lightCount);
 
     ClearMainFramebuffer();
     BasePass();

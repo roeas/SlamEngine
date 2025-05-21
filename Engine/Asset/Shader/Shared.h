@@ -3,6 +3,7 @@
 
 // Uniform buffer
 #define SL_BINDING_POINT_CAMERA 0
+#define SL_BINDING_POINT_LIGHT 1
 
 // Texture
 #define SL_SLOT_ALBEDO 0
@@ -41,5 +42,24 @@
 #define SL_TYPE_TONEMAPPING_ACES 3
 #define SL_TYPE_TONEMAPPING_ACES_SIMPLE 4
 #define SL_TYPE_TONEMAPPING_PBRNEUTRAL 5
+
+// Light
+#define SL_LIGHT_MAX_COUNT 128
+#define SL_TYPE_LIGHT_DIRECTIONAL 0
+#define SL_TYPE_LIGHT_POINT 1
+#define SL_TYPE_LIGHT_SPOT 2
+
+struct SL_LightUniformBuffer
+{
+    int type;
+    float range;
+    float intensity;
+    float scale;
+    float offset;
+    float colorR, colorG, colorB;
+    float positionX, positionY, positionZ;
+    float directionX, directionY, directionZ;
+    float padding0, padding1;
+};
 
 #endif

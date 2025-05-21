@@ -1,6 +1,7 @@
 #version 460 core
 
 #include <Camera.glsl>
+#include <Light.glsl>
 #include <Material.glsl>
 
 // Input

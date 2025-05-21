@@ -35,4 +35,5 @@ private:
     void EntityIDPass();
 
     std::unique_ptr<sl::UniformBuffer> m_pCameraUniformBuffer;
+    std::unique_ptr<sl::UniformBuffer> m_pLightUniformBuffer;
 };
