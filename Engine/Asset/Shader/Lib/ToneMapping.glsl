@@ -1,4 +1,4 @@
-#include "Shared/ToneMapping.h"
+#include "Shared.h"
 
 vec3 Clamp(vec3 color)
 {

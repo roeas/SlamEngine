@@ -5,7 +5,7 @@
 #include "Renderer/UniformBuffer.h"
 #include "Resource/ResourceManager.h"
 #include "Scene/World.h"
-#include "Shader/Shared/Standard.h"
+#include "Shader/Shared.h"
 #include "Utils/ProfilerCPU.h"
 #include "Utils/ProfilerGPU.h"
 

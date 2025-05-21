@@ -18,27 +18,27 @@ vec3 ToneMapping(vec3 color)
 {
     switch(u_toneMappingMode)
     {
-        case SL_TONEMAPPING_CLAMP:
+        case SL_TYPE_TONEMAPPING_CLAMP:
         {
             return Clamp(color);
         }
-        case SL_TONEMAPPING_REINHARD:
+        case SL_TYPE_TONEMAPPING_REINHARD:
         {
             return Reinhard(color);
         }
-        case SL_TONEMAPPING_HABLEFILMIC:
+        case SL_TYPE_TONEMAPPING_HABLEFILMIC:
         {
             return HableFilmic(color);
         }
-        case SL_TONEMAPPING_ACES:
+        case SL_TYPE_TONEMAPPING_ACES:
         {
             return ACES(color);
         }
-        case SL_TONEMAPPING_ACES_SIMPLE:
+        case SL_TYPE_TONEMAPPING_ACES_SIMPLE:
         {
             return ACES_Simple(color);
         }
-        case SL_TONEMAPPING_PBRNEUTRAL:
+        case SL_TYPE_TONEMAPPING_PBRNEUTRAL:
         {
             return PBRNeutral(color);
         }
