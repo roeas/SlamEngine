@@ -81,11 +81,11 @@ std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
     // Preprocesser options
     options.SetIncluder(std::make_unique<ShaderIncluder>());
     options.AddMacroDefinition(BackendToDefinition[(size_t)RenderCore::GetBackend()]);
+    options.SetGenerateDebugInfo();
 
     // Compiler options
     if (info.m_debugMode)
     {
-        options.SetGenerateDebugInfo();
         options.SetOptimizationLevel(shaderc_optimization_level_zero);
     }
     else

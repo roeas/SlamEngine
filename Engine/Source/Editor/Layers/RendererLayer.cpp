@@ -32,6 +32,7 @@ void UploadMaterialPropertyGroup(sl::Shader *pShader, const auto &propertyGroup)
     }
     else
     {
+        sl::RenderCore::ClearTextureSlot(propertyGroup.m_textureSlot);
         pShader->UploadUniform(propertyGroup.m_useTextureLocation, false);
     }
 
@@ -135,7 +136,7 @@ void RendererLayer::OnRender()
     // Upload light uniform buffer
     static std::vector<SL_LightUniformBuffer> s_lightSharedData(SL_LIGHT_MAX_COUNT);
     s_lightSharedData.clear();
-    auto group = sl::World::GetRegistry().group<sl::LightComponent, sl::TransformComponent>();
+    auto group = sl::World::GetRegistry().group<sl::LightComponent>(entt::get<sl::TransformComponent>);
     int lightCount = (int)group.size();
     for (auto entity : group)
     {
@@ -162,7 +163,7 @@ void RendererLayer::OnRender()
     m_pLightUniformBuffer->Upload(LightCountID, &lightCount);
 
     ClearMainFramebuffer();
-    BasePass();
+    StandardPass();
     SkyPass();
     PostProcessingPass();
     EntityIDPass();
@@ -187,15 +188,15 @@ void RendererLayer::ClearMainFramebuffer()
     pFramebuffer->Unbind();
 }
 
-void RendererLayer::BasePass()
+void RendererLayer::StandardPass()
 {
-    SL_PROFILE_GPU("Base Pass");
+    SL_PROFILE_GPU("Standard Pass");
     SL_PROFILE;
 
     auto pFramebuffer = sl::RenderCore::GetMainFramebuffer();
     pFramebuffer->Bind();
 
-    auto group = sl::World::GetRegistry().group<sl::RenderingComponent, sl::TransformComponent>();
+    auto group = sl::World::GetRegistry().group<sl::RenderingComponent>(entt::get<sl::TransformComponent>);
     for (auto entity : group)
     {
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
@@ -271,6 +272,9 @@ void RendererLayer::SkyPass()
 
 void RendererLayer::PostProcessingPass()
 {
+    SL_PROFILE_GPU("Post Processing Pass");
+    SL_PROFILE;
+
     auto pFramebuffer = sl::RenderCore::GetFinalFramebuffer();
     pFramebuffer->Bind();
 
@@ -306,15 +310,17 @@ void RendererLayer::EntityIDPass()
     SL_PROFILE_GPU("Entity ID Pass");
     SL_PROFILE;
 
+    auto pFramebuffer = sl::RenderCore::GetEntityIDFramebuffer();
+    pFramebuffer->Bind();
+
     constexpr int entityIDClearData = -1;
-    sl::RenderCore::GetEntityIDFramebuffer()->Bind();
-    sl::RenderCore::GetEntityIDFramebuffer()->Clear(0, &entityIDClearData);
+    pFramebuffer->Clear(0, &entityIDClearData);
     sl::RenderCore::ClearDepth(1.0f);
 
-    auto group = sl::World::GetRegistry().group<sl::RenderingComponent, sl::TransformComponent>();
-    for (auto entity : group)
+    auto view = sl::World::GetRegistry().view<sl::RenderingComponent, sl::TransformComponent>();
+    for (auto entity : view)
     {
-        auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
+        auto [rendering, transform] = view.get<sl::RenderingComponent, sl::TransformComponent>(entity);
 
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
         auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_entityIDShaderResourceID);
@@ -341,5 +347,5 @@ void RendererLayer::EntityIDPass()
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
     }
 
-    sl::RenderCore::GetEntityIDFramebuffer()->Unbind();
+    pFramebuffer->Unbind();
 }

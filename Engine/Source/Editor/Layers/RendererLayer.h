@@ -29,7 +29,7 @@ public:
 private:
     void ClearMainFramebuffer();
 
-    void BasePass();
+    void StandardPass();
     void SkyPass();
     void PostProcessingPass();
     void EntityIDPass();

@@ -390,23 +390,23 @@ void Details::OnUpdate(float deltaTime)
         }
 
         StartWithText("Color");
-        ImGui::DragFloat3("##Color", glm::value_ptr(pComponent->m_color), 0.1f);
+        ImGui::DragFloat3("##Color", glm::value_ptr(pComponent->m_color), 0.01f, 0.0f, 1.0f);
         StartWithText("Intensity");
-        ImGui::DragFloat("##Intensity", &pComponent->m_intensity, 0.1f);
+        ImGui::DragFloat("##Intensity", &pComponent->m_intensity, 1.0f, 0.0f, FLT_MAX);
         StartWithText("Range");
-        ImGui::DragFloat("##Range", &pComponent->m_range, 0.1f);
+        ImGui::DragFloat("##Range", &pComponent->m_range, 1.0f, 0.0f, FLT_MAX);
 
         if (pComponent->m_type == sl::LightType::Spot)
         {
             StartWithText("Outer");
             float outer = glm::degrees(pComponent->m_outer);
-            if (ImGui::DragFloat("##Outer", &outer, 0.1f))
+            if (ImGui::DragFloat("##Outer", &outer, 0.1f, 0.0f, FLT_MAX))
             {
                 pComponent->m_outer = glm::radians(outer);
             }
             StartWithText("Inner");
             float inner = glm::degrees(pComponent->m_inner);
-            if (ImGui::DragFloat("##Inner", &inner, 0.1f))
+            if (ImGui::DragFloat("##Inner", &inner, 0.1f, 0.0f, FLT_MAX))
             {
                 pComponent->m_inner = glm::radians(inner);
             }

@@ -114,6 +114,11 @@ void OpenGLRenderAPI::DisableSeamlessCubemap()
     glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
+void OpenGLRenderAPI::ClearTextureSlot(uint32_t slot)
+{
+    glBindTextureUnit(slot, 0);
+}
+
 void OpenGLRenderAPI::DrawIndexed(uint32_t count)
 {
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);

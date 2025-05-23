@@ -35,6 +35,7 @@ public:
     void EnableSeamlessCubemap() override;
     void DisableSeamlessCubemap() override;
 
+    void ClearTextureSlot(uint32_t slot) override;
     void DrawIndexed(uint32_t count) override;
 };
 

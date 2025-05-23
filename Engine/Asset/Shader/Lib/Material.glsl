@@ -53,6 +53,7 @@ struct Material
     float roughness;
     float metallic;
     vec3 emissive;
+    vec3 F0;
 };
 
 Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
@@ -96,6 +97,7 @@ Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
     {
         material.emissive *= SampleEmissiveTexture(uv);
     }
+    material.F0 = mix(vec3(0.04), material.albedo, vec3(material.metallic));
 
     return material;
 }
