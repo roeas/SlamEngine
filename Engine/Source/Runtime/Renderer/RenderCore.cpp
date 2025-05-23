@@ -148,6 +148,11 @@ void RenderCore::SeamlessCubemap(bool enable)
     }
 }
 
+void RenderCore::ClearTextureSlot(uint32_t slot)
+{
+    pRenderAPI->ClearTextureSlot(slot);
+}
+
 void RenderCore::Submit(VertexArray *pVertexArray, Shader *pShader)
 {
     pVertexArray->Bind();

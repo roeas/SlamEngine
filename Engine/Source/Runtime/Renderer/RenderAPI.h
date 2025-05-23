@@ -42,6 +42,7 @@ public:
     virtual void EnableSeamlessCubemap() = 0;
     virtual void DisableSeamlessCubemap() = 0;
 
+    virtual void ClearTextureSlot(uint32_t slot) = 0;
     virtual void DrawIndexed(uint32_t count) = 0;
 };
 

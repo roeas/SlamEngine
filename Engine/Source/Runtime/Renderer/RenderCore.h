@@ -55,6 +55,7 @@ public:
 
     static void SeamlessCubemap(bool enable);
 
+    static void ClearTextureSlot(uint32_t slot);
     static void Submit(VertexArray *pVertexArray, Shader *pShader);
 
 private:
