@@ -16,6 +16,11 @@ layout(location = 4) in vec2 v_uv0;
 // Output
 layout(location = 0) out vec4 o_color;
 
+// Texture
+layout(binding = SL_SLOT_RADIANCE) uniform samplerCube s_radiance;
+layout(binding = SL_SLOT_IRRADIANCE) uniform samplerCube s_irradiance;
+layout(binding = SL_SLOT_IBLLUT) uniform sampler2D s_IBLLUT;
+
 float GetDistanceAttenuation(float distance2, float range)
 {
     // n = 4
@@ -119,9 +124,21 @@ vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
     return directColor;
 }
 
-vec3 EvalEnvironmentLight()
+vec3 EvalEnvironmentLight(vec3 viewDir, vec3 normal, Material material)
 {
-    return vec3(0.01);
+    vec3 fre = FresnelSchlickRoughness(material.F0, max(dot(normal, viewDir), 0.0), material.roughness);
+    vec3 ks = fre;
+    vec3 kd = 1.0 - ks;
+    kd *= 1.0 - material.metallic; 
+
+    vec3 reflectDir = reflect(-viewDir, normal);
+    float mip = material.roughness * 6.0; // [0, 6] 
+    vec3 radiance = textureLod(s_radiance, reflectDir, mip).xyz;
+    vec3 irradiance = texture(s_irradiance, reflectDir).xyz;
+    vec2 lut = texture(s_IBLLUT, vec2(max(dot(normal, viewDir), 0.0), material.roughness)).xy;
+    vec3 specularBRDF = fre * lut.x + lut.y;
+
+    return kd * material.albedo * irradiance + ks * specularBRDF * radiance;
 }
 
 void main()
@@ -134,7 +151,7 @@ void main()
     directColor *= vec3(material.occlusion);
 
     // Environment
-    vec3 environmentColor = EvalEnvironmentLight();
+    vec3 environmentColor = EvalEnvironmentLight(normalize(cameraPos - v_worldPos), normalize(v_normal), material);
 
     vec3 finalColor = directColor + environmentColor + material.emissive;
     o_color = vec4(finalColor, 1.0);

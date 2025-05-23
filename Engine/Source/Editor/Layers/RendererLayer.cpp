@@ -1,5 +1,6 @@
 #include "RendererLayer.h"
 
+#include "Core/Path.h"
 #include "Renderer/RenderCore.h"
 #include "Renderer/Shader.h"
 #include "Renderer/UniformBuffer.h"
@@ -21,6 +22,10 @@ constexpr sl::StringHashType ViewProjectionMatID = sl::StringHash("ub_viewProjct
 constexpr sl::StringHashType ViewMatWithoutTransformID = sl::StringHash("ub_viewMatWithoutTransform");
 constexpr sl::StringHashType LightsID = sl::StringHash("ub_lights");
 constexpr sl::StringHashType LightCountID = sl::StringHash("ub_lightCount");
+
+constexpr sl::StringHashType RadianceTextureID = sl::StringHash("Radiance Texture");
+constexpr sl::StringHashType IrradianceTextureID = sl::StringHash("Irradiance Texture");
+constexpr sl::StringHashType IBLLUTTextureID = sl::StringHash("IBL LUT Texture");
 
 void UploadMaterialPropertyGroup(sl::Shader *pShader, const auto &propertyGroup)
 {
@@ -92,6 +97,16 @@ RendererLayer::RendererLayer()
         lightsUniformBufferLayout.SetSize(uniformBufferSize);
         m_pLightUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_LIGHT, std::move(lightsUniformBufferLayout)));
     }
+
+    std::unique_ptr<sl::TextureResource> pRadianceTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Rad.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pIrradianceTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Irr.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pIBLLUTTextureResource = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/DFG.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(RadianceTextureID, std::move(pRadianceTextureResource));
+    sl::ResourceManager::AddTextureResource(IrradianceTextureID, std::move(pIrradianceTextureResource));
+    sl::ResourceManager::AddTextureResource(IBLLUTTextureID, std::move(pIBLLUTTextureResource));
 }
 
 void RendererLayer::OnAttach()
@@ -225,9 +240,22 @@ void RendererLayer::StandardPass()
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetMetallicPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetEmissivePropertyGroup());
 
+        // Culling
         if (pMaterialResource->GetTwoSide())
         {
             sl::RenderCore::Culling(false);
+        }
+
+        // IBL
+        auto *pRadianceTextureResource = sl::ResourceManager::GetTextureResource(RadianceTextureID);
+        auto *pIrradianceTextureResource = sl::ResourceManager::GetTextureResource(IrradianceTextureID);
+        auto *pIBLLUTTextureResource = sl::ResourceManager::GetTextureResource(IBLLUTTextureID);
+        if(pRadianceTextureResource && pIrradianceTextureResource && pIBLLUTTextureResource &&
+            pRadianceTextureResource->IsReady() && pIrradianceTextureResource->IsReady() && pIBLLUTTextureResource->IsReady())
+        {
+            pRadianceTextureResource->GetTexture()->Bind(SL_SLOT_RADIANCE);
+            pIrradianceTextureResource->GetTexture()->Bind(SL_SLOT_IRRADIANCE);
+            pIBLLUTTextureResource->GetTexture()->Bind(SL_SLOT_IBLLUT);
         }
 
         pShader->Unbind();

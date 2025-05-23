@@ -10,6 +10,9 @@
 #define SL_SLOT_NORMAL 1
 #define SL_SLOT_ORM 2
 #define SL_SLOT_EMISSIVE 3
+#define SL_SLOT_RADIANCE 4
+#define SL_SLOT_IRRADIANCE 5
+#define SL_SLOT_IBLLUT 6
 
 // Model mat
 #define SL_LOCATION_MODEL 0

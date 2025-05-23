@@ -19,8 +19,6 @@ constexpr sl::StringHashType SkyboxShaderID = sl::StringHash("Skybox Shader");
 constexpr sl::StringHashType FullScreenShaderID = sl::StringHash("Full Screen Shader");
 constexpr sl::StringHashType EntityIDShaderID = sl::StringHash("EntityID Shader");
 
-constexpr sl::StringHashType RadianceTextureID = sl::StringHash("Radiance Texture");
-constexpr sl::StringHashType IrradianceTextureID = sl::StringHash("Irradiance Texture");
 constexpr sl::StringHashType SkyTextureID = sl::StringHash("Skybox Texture");
 constexpr sl::StringHashType FullScreenTextureID = sl::StringHash("Full Screen Texture");
 constexpr sl::StringHashType NoResourceTextureID = sl::StringHash("No Resource Texture");
@@ -104,18 +102,12 @@ SandboxLayer::SandboxLayer()
 
     // Textures
     {
-        std::unique_ptr<sl::TextureResource> pRadianceTextureResource = std::make_unique<sl::TextureResource>(
-            sl::Path::FromeAsset("Texture/Rad.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-        std::unique_ptr<sl::TextureResource> pIrradianceTextureResource = std::make_unique<sl::TextureResource>(
-            sl::Path::FromeAsset("Texture/Irr.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pSkyboxTextureResource = std::make_unique<sl::TextureResource>(
             sl::Path::FromeAsset("Texture/Sky.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pNoResourceTextureResource = std::make_unique<sl::TextureResource>(
             sl::Path::FromeAsset("Texture/NoResource.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pDebugUVTextureResource = std::make_unique<sl::TextureResource>(
             sl::Path::FromeAsset("Texture/DebugUV.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-        sl::ResourceManager::AddTextureResource(RadianceTextureID, std::move(pRadianceTextureResource));
-        sl::ResourceManager::AddTextureResource(IrradianceTextureID, std::move(pIrradianceTextureResource));
         sl::ResourceManager::AddTextureResource(SkyTextureID, std::move(pSkyboxTextureResource));
         sl::ResourceManager::AddTextureResource(NoResourceTextureID, std::move(pNoResourceTextureResource));
         sl::ResourceManager::AddTextureResource(DebugUVTextureID, std::move(pDebugUVTextureResource));
@@ -134,7 +126,7 @@ SandboxLayer::SandboxLayer()
     }
 
     // Model
-    std::string modelPath{ "D:/Works/Model/slum_house/scene.gltf" };
+    std::string modelPath{ "D:/Works/Model/leather_shoes/scene.gltf" };
     if (!sl::Path::Exists(modelPath))
     {
         SL_LOG_DEBUG("Hi there, please change the model path at {} line {} if you want to render something.",
@@ -144,6 +136,7 @@ SandboxLayer::SandboxLayer()
     else
     {
         sl::ModelImporter importer{ std::move(modelPath) };
+        importer.SetGlobalScale(0.1f);
         importer.Import();
     }
 
