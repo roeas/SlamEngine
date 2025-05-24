@@ -19,7 +19,10 @@ layout(location = 0) out vec4 o_color;
 // Texture
 layout(binding = SL_SLOT_RADIANCE) uniform samplerCube s_radiance;
 layout(binding = SL_SLOT_IRRADIANCE) uniform samplerCube s_irradiance;
-layout(binding = SL_SLOT_IBLLUT) uniform sampler2D s_IBLLUT;
+layout(binding = SL_SLOT_IBL_LUT) uniform sampler2D s_IBL_LUT;
+
+// Uniform
+layout(location = SL_LOCATION_IBL_FACTOR) uniform float u_IBLFactor;
 
 float GetDistanceAttenuation(float distance2, float range)
 {
@@ -135,10 +138,14 @@ vec3 EvalEnvironmentLight(vec3 viewDir, vec3 normal, Material material)
     float mip = material.roughness * 6.0; // [0, 6] 
     vec3 radiance = textureLod(s_radiance, reflectDir, mip).xyz;
     vec3 irradiance = texture(s_irradiance, reflectDir).xyz;
-    vec2 lut = texture(s_IBLLUT, vec2(max(dot(normal, viewDir), 0.0), material.roughness)).xy;
+    vec2 lut = texture(s_IBL_LUT, vec2(max(dot(normal, viewDir), 0.0), material.roughness)).xy;
     vec3 specularBRDF = fre * lut.x + lut.y;
 
-    return kd * material.albedo * irradiance + ks * specularBRDF * radiance;
+    vec3 diffuse = kd * material.albedo * irradiance;
+    vec3 specular = ks * specularBRDF * radiance;
+    vec3 environmentColor = (diffuse + specular) * vec3(u_IBLFactor);
+
+    return environmentColor;
 }
 
 void main()

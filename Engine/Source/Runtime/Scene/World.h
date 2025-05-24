@@ -35,6 +35,8 @@ public:
     static TransformComponent &GetMainCameraTransformComponent();
     static void SetMainCameraTransform(glm::vec3 position, glm::vec3 rotation);
 
+    static float GetSkyFactor();
+
     template<typename T>
     static void Clear() { registry.clear<T>(); }
     static void Clear() { registry.clear(); }

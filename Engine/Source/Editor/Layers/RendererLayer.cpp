@@ -255,7 +255,9 @@ void RendererLayer::StandardPass()
         {
             pRadianceTextureResource->GetTexture()->Bind(SL_SLOT_RADIANCE);
             pIrradianceTextureResource->GetTexture()->Bind(SL_SLOT_IRRADIANCE);
-            pIBLLUTTextureResource->GetTexture()->Bind(SL_SLOT_IBLLUT);
+            pIBLLUTTextureResource->GetTexture()->Bind(SL_SLOT_IBL_LUT);
+            
+            pShader->UploadUniform(SL_LOCATION_IBL_FACTOR, pMaterialResource->GetIBLFactor());
         }
 
         pShader->Unbind();
@@ -289,6 +291,7 @@ void RendererLayer::SkyPass()
 
         auto *pShader = pShaderResource->GetShaderProgram();
         pShader->Bind();
+        pShader->UploadUniform(SL_LOCATION_SKY_FACTOR, sky.m_factor);
         pTextureResource->GetTexture()->Bind(0);
         pShader->Unbind();
 

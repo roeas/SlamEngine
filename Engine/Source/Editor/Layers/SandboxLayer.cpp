@@ -136,7 +136,7 @@ SandboxLayer::SandboxLayer()
     else
     {
         sl::ModelImporter importer{ std::move(modelPath) };
-        importer.SetGlobalScale(0.1f);
+        importer.SetGlobalScale(0.01f);
         importer.Import();
     }
 

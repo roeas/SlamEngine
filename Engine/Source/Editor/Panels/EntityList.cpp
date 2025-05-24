@@ -70,12 +70,16 @@ void EntityList::OnUpdate(float deltaTime)
             if (ImGui::MenuItem("Destory Entity"))
             {
                 sl::Entity slEntity{ entity };
-
                 // Not allowed to destroy the main camera
-                auto pCameraComponent = slEntity.TryGetComponents<sl::CameraComponent>();
-                if (pCameraComponent && pCameraComponent->m_isMainCamera)
+                if (auto pCameraComponent = slEntity.TryGetComponents<sl::CameraComponent>();
+                    pCameraComponent && pCameraComponent->m_isMainCamera)
                 {
-                    SL_LOG_WARN("Can not destroy main camera entity {}", (uint32_t)entity);
+                    SL_LOG_WARN("Can not destroy the main camera entity {}", (uint32_t)entity);
+                }
+                // Not allowed to destroy the sky component
+                else if (auto pSkyComponent = slEntity.TryGetComponents<sl::SkyComponent>(); pSkyComponent)
+                {
+                    SL_LOG_WARN("Can not destroy the skt entity {}", (uint32_t)entity);
                 }
                 else
                 {

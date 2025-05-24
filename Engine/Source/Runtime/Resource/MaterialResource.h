@@ -154,6 +154,10 @@ public:
     bool &GetTwoSide() { return m_twoSide; }
     const bool &GetTwoSide() const { return m_twoSide; }
 
+    void SetIBLFactor(float factor) { m_IBLFactor = factor; }
+    float &GetIBLFactor() { return m_IBLFactor; }
+    const float &GetIBLFactor() const { return m_IBLFactor; }
+
 private:
     void OnImport() override;
     void OnBuild() override;
@@ -170,6 +174,7 @@ private:
     MetallicPropertyGroup m_metallicPropertyGroup;
     EmissivePropertyGroup m_emissivePropertyGroup;
 
+    float m_IBLFactor = 0.5f;
     bool m_twoSide = false;
 };
 

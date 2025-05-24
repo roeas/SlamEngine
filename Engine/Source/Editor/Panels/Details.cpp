@@ -484,6 +484,9 @@ void Details::OnUpdate(float deltaTime)
                 ImGui::Separator();
                 StartWithText("TwoSide");
                 ImGui::Checkbox("##TwoSide", &pMaterialResource->GetTwoSide());
+
+                StartWithText("IBL Factor");
+                ImGui::DragFloat("##IBLFactor", &pMaterialResource->GetIBLFactor(), 0.01f, 0.0f, 1.0f);
             }
         }
 
@@ -517,6 +520,9 @@ void Details::OnUpdate(float deltaTime)
     // Draw sky component
     DrawComponent<sl::SkyComponent>("Sky", [pData](sl::SkyComponent *pComponent)
     {
+        StartWithText("Sky Factor");
+        ImGui::DragFloat("##SkyFactor", &pComponent->m_factor, 0.01f, 0.0f, 1.0f);
+
         if (ImGui::TreeNodeEx("Texture", SubTreeFlags))
         {
             if (auto *pTextureResource = sl::ResourceManager::GetTextureResource(pComponent->m_textureResourceID); pTextureResource)

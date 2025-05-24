@@ -81,17 +81,14 @@ std::vector<uint32_t> ShaderCompiler::SourceToSpirv(const ShaderInfo &info)
     // Preprocesser options
     options.SetIncluder(std::make_unique<ShaderIncluder>());
     options.AddMacroDefinition(BackendToDefinition[(size_t)RenderCore::GetBackend()]);
-    options.SetGenerateDebugInfo();
 
     // Compiler options
     if (info.m_debugMode)
     {
-        options.SetOptimizationLevel(shaderc_optimization_level_zero);
+        options.SetGenerateDebugInfo();
     }
-    else
-    {
-        options.SetOptimizationLevel(shaderc_optimization_level_performance);
-    }
+    // WHY: Optimization level performance just messed up my shader.
+    options.SetOptimizationLevel(shaderc_optimization_level_zero);
 
     // TODO: RHI
     options.SetSourceLanguage(shaderc_source_language_glsl);

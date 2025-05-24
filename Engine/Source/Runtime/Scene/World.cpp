@@ -98,6 +98,18 @@ void World::SetMainCameraTransform(glm::vec3 position, glm::vec3 rotation)
     camera.m_isDirty = true;
 }
 
+float World::GetSkyFactor()
+{
+    auto view = registry.view<SkyComponent>();
+    for (auto entity : view)
+    {
+        auto &sky = view.get<SkyComponent>(entity);
+        return sky.m_factor;
+    }
+
+    return 0.5f;
+}
+
 bool Entity::IsValid() const
 {
     return World::registry.valid(m_handle);
