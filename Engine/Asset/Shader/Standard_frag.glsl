@@ -46,7 +46,7 @@ float GetAngleAttenuation(vec3 lightDir, vec3 lightForward, float angleScale, fl
     return attenuation * attenuation;
 }
 
-vec3 GetBRDFDirect(vec3 lightDir, vec3 viewDir, Material material)
+vec3 GetDirectBRDF(vec3 lightDir, vec3 viewDir, Material material)
 {
     vec3 harfDir = normalize(lightDir + viewDir);
     float NdotV = max(dot(material.normal, viewDir), 0.0);
@@ -59,7 +59,7 @@ vec3 GetBRDFDirect(vec3 lightDir, vec3 viewDir, Material material)
     vec3 fre = FresnelSchlick(material.F0, VdotH);
     vec3 kd = mix(vec3(1.0) - fre, vec3(0.0), material.metallic);
 
-    return vec3(dis) * vec3(vis) * fre + kd * material.albedo * vec3(SL_PI_INV);
+    return kd * material.albedo * vec3(SL_PI_INV) + vec3(dis) * vec3(vis) * fre;
 }
 
 vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
@@ -87,7 +87,7 @@ vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
 
                 lightDir = -light.direction;
                 NdotL = max(dot(material.normal, lightDir), 0.0);
-                vec3 BRDF = GetBRDFDirect(lightDir, viewDir, material);
+                vec3 BRDF = GetDirectBRDF(lightDir, viewDir, material);
 
                 directColor += BRDF * light.color * light.intensity * NdotL;
                 break;
@@ -97,7 +97,7 @@ vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
                 // I = Phi / 4Pi
                 // L_out = f * L_in * cosTheta
 
-                vec3 BRDF = GetBRDFDirect(lightDir, viewDir, material);
+                vec3 BRDF = GetDirectBRDF(lightDir, viewDir, material);
                 float I = light.intensity * 0.25 * SL_PI_INV;
                 float L = I * distanceAttenuation;
 
@@ -109,7 +109,7 @@ vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
                 // I = Phi / Pi
                 // L_out = f * L_in * cosTheta
 
-                vec3 BRDF = GetBRDFDirect(lightDir, viewDir, material);
+                vec3 BRDF = GetDirectBRDF(lightDir, viewDir, material);
                 float I = light.intensity * SL_PI_INV;
                 float L = I * distanceAttenuation * angleAttenuation;
 
@@ -127,7 +127,7 @@ vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
     return directColor;
 }
 
-vec3 EvalEnvironmentLight(vec3 viewDir, vec3 normal, Material material)
+vec3 EvalEnvLight(vec3 viewDir, vec3 normal, Material material)
 {
     vec3 fre = FresnelSchlickRoughness(material.F0, max(dot(normal, viewDir), 0.0), material.roughness);
     vec3 ks = fre;
@@ -141,11 +141,8 @@ vec3 EvalEnvironmentLight(vec3 viewDir, vec3 normal, Material material)
     vec2 lut = texture(s_IBL_LUT, vec2(max(dot(normal, viewDir), 0.0), material.roughness)).xy;
     vec3 specularBRDF = fre * lut.x + lut.y;
 
-    vec3 diffuse = kd * material.albedo * irradiance;
-    vec3 specular = ks * specularBRDF * radiance;
-    vec3 environmentColor = (diffuse + specular) * vec3(u_IBLFactor);
-
-    return environmentColor;
+    vec3 envColor = kd * material.albedo * irradiance + ks * specularBRDF * radiance;
+    return envColor * vec3(u_IBLFactor);
 }
 
 void main()
@@ -158,8 +155,8 @@ void main()
     directColor *= vec3(material.occlusion);
 
     // Environment
-    vec3 environmentColor = EvalEnvironmentLight(normalize(cameraPos - v_worldPos), normalize(v_normal), material);
+    vec3 envColor = EvalEnvLight(normalize(cameraPos - v_worldPos), v_normal, material);
 
-    vec3 finalColor = directColor + environmentColor + material.emissive;
+    vec3 finalColor = directColor + envColor + material.emissive;
     o_color = vec4(finalColor, 1.0);
 }

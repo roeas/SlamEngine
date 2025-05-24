@@ -79,7 +79,7 @@ void EntityList::OnUpdate(float deltaTime)
                 // Not allowed to destroy the sky component
                 else if (auto pSkyComponent = slEntity.TryGetComponents<sl::SkyComponent>(); pSkyComponent)
                 {
-                    SL_LOG_WARN("Can not destroy the skt entity {}", (uint32_t)entity);
+                    SL_LOG_WARN("Can not destroy the sky entity {}", (uint32_t)entity);
                 }
                 else
                 {

@@ -448,15 +448,15 @@ void Details::OnUpdate(float deltaTime)
                     StartWithText("Factor", offset);
                     if constexpr (std::same_as<decltype(propertyGroup.m_factor), glm::vec3>)
                     {
-                        ImGui::DragFloat3("##Factor", glm::value_ptr(propertyGroup.m_factor), 0.1f, 0.0f, 1000.0f);
+                        ImGui::DragFloat3("##Factor", glm::value_ptr(propertyGroup.m_factor), 0.01f, 0.0f, 10.0f);
                     }
                     else if constexpr (std::same_as<decltype(propertyGroup.m_factor), glm::vec2>)
                     {
-                        ImGui::DragFloat2("##Factor", glm::value_ptr(propertyGroup.m_factor), 0.1f, 0.0f, 1000.0f);
+                        ImGui::DragFloat2("##Factor", glm::value_ptr(propertyGroup.m_factor), 0.01f, 0.0f, 10.0f);
                     }
                     else if constexpr (std::same_as<decltype(propertyGroup.m_factor), float>)
                     {
-                        ImGui::DragFloat("##Factor", &propertyGroup.m_factor, 0.1f, 0.0f, 1000.0f);
+                        ImGui::DragFloat("##Factor", &propertyGroup.m_factor, 0.01f, 0.0f, 10.0f);
                     }
                     StartWithText("Offset", offset);
                     ImGui::DragFloat2("##Offset", glm::value_ptr(propertyGroup.m_offset));
