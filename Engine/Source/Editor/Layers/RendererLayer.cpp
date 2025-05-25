@@ -99,11 +99,11 @@ RendererLayer::RendererLayer()
     }
 
     std::unique_ptr<sl::TextureResource> pRadianceTextureResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/Rad.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+        sl::Path::FromeAsset("Texture/Rad.ktx"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
     std::unique_ptr<sl::TextureResource> pIrradianceTextureResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/Irr.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+        sl::Path::FromeAsset("Texture/Irr.ktx"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
     std::unique_ptr<sl::TextureResource> pIBLLUTTextureResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/DFG.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+        sl::Path::FromeAsset("Texture/DFG.png"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
     sl::ResourceManager::AddTextureResource(RadianceTextureID, std::move(pRadianceTextureResource));
     sl::ResourceManager::AddTextureResource(IrradianceTextureID, std::move(pIrradianceTextureResource));
     sl::ResourceManager::AddTextureResource(IBLLUTTextureID, std::move(pIBLLUTTextureResource));

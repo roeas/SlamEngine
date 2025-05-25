@@ -114,24 +114,21 @@ void OpenGLTextureCube::Create(const void *pData)
     // Storage
     SL_ASSERT(m_width == m_height);
     glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_handle);
-    glTextureStorage2D(m_handle, 1, GLTextureInternalFormat[(size_t)m_format], m_width, m_height);
+    glTextureStorage2D(m_handle, m_mipmapCount, GLTextureInternalFormat[(size_t)m_format], m_width, m_height);
 
     // Data
-    bool hasMipmap = m_mipmapCount > 1;
     if (pData)
     {
         // TMP
-        constexpr size_t FaceSize = 256 * 256 * 4 * 32 / 8;
-        for (size_t face = 0; face < 6; ++face)
+        constexpr size_t Mip0FaceSize = 256 * 256 * 4 * 32 / 8;
+        unsigned char *pDataOffset = (unsigned char *)pData;
+        for (size_t mip = 0; mip < m_mipmapCount; ++mip)
         {
-            size_t mipSize = FaceSize;
-            for (size_t mip = 0; mip < m_mipmapCount; ++mip)
+            for (size_t face = 0; face < 6; ++face)
             {
-                const void *pFaceMipData = (unsigned char *)pData + face * FaceSize + mip * mipSize;
-                mipSize /= 4;
-
-                glTextureSubImage3D(m_handle, (GLint)mip, 0, 0, (GLint)face, m_width, m_height, 1,
-                    GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pFaceMipData);
+                glTextureSubImage3D(m_handle, (GLint)mip, 0, 0, (GLint)face, m_width >> mip, m_height >> mip, 1,
+                    GLTextureFormat[(size_t)m_format], GLDataType[(size_t)m_format], pDataOffset);
+                pDataOffset += Mip0FaceSize >> (mip * 2);
             }
         }
     }
@@ -144,14 +141,14 @@ void OpenGLTextureCube::Create(const void *pData)
     // Filters
     glTextureParameteri(m_handle, GL_TEXTURE_MIN_FILTER, GLTextureFilter[(m_flags & SL_SAMPLER_MIN_MASK) >> SL_SAMPLER_MIN_SHIFT]);
     glTextureParameteri(m_handle, GL_TEXTURE_MAG_FILTER, GLTextureFilter[(m_flags & SL_SAMPLER_MAG_MASK) >> SL_SAMPLER_MAG_SHIFT]);
+    if (m_mipmapCount > 1 || m_genMipmap)
+    {
+        glTextureParameteri(m_handle, GL_TEXTURE_MIN_FILTER, GLTextureMipmapFilter[(m_flags & SL_SAMPLER_MIPMAP_MASK) >> SL_SAMPLER_MIPMAP_SHIFT]);
+    }
+
     if (m_genMipmap)
     {
         glGenerateTextureMipmap(m_handle);
-        hasMipmap = true;
-    }
-    if (hasMipmap)
-    {
-        glTextureParameteri(m_handle, GL_TEXTURE_MIN_FILTER, GLTextureMipmapFilter[(m_flags & SL_SAMPLER_MIPMAP_MASK) >> SL_SAMPLER_MIPMAP_SHIFT]);
     }
 }
 

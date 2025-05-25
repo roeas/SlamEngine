@@ -103,7 +103,7 @@ SandboxLayer::SandboxLayer()
     // Textures
     {
         std::unique_ptr<sl::TextureResource> pSkyboxTextureResource = std::make_unique<sl::TextureResource>(
-            sl::Path::FromeAsset("Texture/Sky.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+            sl::Path::FromeAsset("Texture/Sky.ktx"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pNoResourceTextureResource = std::make_unique<sl::TextureResource>(
             sl::Path::FromeAsset("Texture/NoResource.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pDebugUVTextureResource = std::make_unique<sl::TextureResource>(
@@ -126,7 +126,7 @@ SandboxLayer::SandboxLayer()
     }
 
     // Model
-    std::string modelPath{ "D:/Works/Model/leather_shoes/scene.gltf" };
+    std::string modelPath{ "D:/Works/Model/slum_house/scene.gltf" };
     if (!sl::Path::Exists(modelPath))
     {
         SL_LOG_DEBUG("Hi there, please change the model path at {} line {} if you want to render something.",
@@ -136,7 +136,7 @@ SandboxLayer::SandboxLayer()
     else
     {
         sl::ModelImporter importer{ std::move(modelPath) };
-        importer.SetGlobalScale(0.01f);
+        importer.SetGlobalScale(1.0f);
         importer.Import();
     }
 

@@ -72,14 +72,14 @@ void TextureResource::OnImport()
             m_width, m_height, m_mipmapCount, 4, "RGBA32F", true);
 
         m_imageData.resize(textureSize);
-        for (size_t f = 0; f < face; ++f)
+        unsigned char *pDataOffset = m_imageData.data();
+        for (size_t l = 0; l < level; ++l)
         {
-            unsigned char *pOffset = m_imageData.data() + f * faceSize;
-            for (size_t l = 0; l < level; ++l)
+            size_t mipSize = texture.size(l);
+            for (size_t f = 0; f < face; ++f)
             {
-                size_t levelSize = texture.size(l);
-                memcpy(pOffset, texture.data(0, f, l), levelSize);
-                pOffset += levelSize;
+                memcpy(pDataOffset, texture.data(0, f, l), mipSize);
+                pDataOffset += mipSize;
             }
         }
     }

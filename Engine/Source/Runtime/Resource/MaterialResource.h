@@ -174,7 +174,7 @@ private:
     MetallicPropertyGroup m_metallicPropertyGroup;
     EmissivePropertyGroup m_emissivePropertyGroup;
 
-    float m_IBLFactor = 0.8f;
+    float m_IBLFactor = 0.75f;
     bool m_twoSide = false;
 };
 

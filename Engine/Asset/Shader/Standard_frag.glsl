@@ -135,9 +135,9 @@ vec3 EvalEnvLight(vec3 viewDir, vec3 normal, Material material)
     kd *= 1.0 - material.metallic; 
 
     vec3 reflectDir = reflect(-viewDir, normal);
-    float mip = material.roughness * 6.0; // [0, 6] 
+    float mip = material.roughness * float(textureQueryLevels(s_radiance) - 1);
     vec3 radiance = textureLod(s_radiance, reflectDir, mip).xyz;
-    vec3 irradiance = texture(s_irradiance, reflectDir).xyz;
+    vec3 irradiance = texture(s_irradiance, normal).xyz;
     vec2 lut = texture(s_IBL_LUT, vec2(max(dot(normal, viewDir), 0.0), material.roughness)).xy;
     vec3 specularBRDF = fre * lut.x + lut.y;
 
