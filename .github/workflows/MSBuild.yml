@@ -24,10 +24,7 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: Setup third party
-      run: ${{github.workspace}}/SetupThirdParty.bat
-
-    - name: Setup engine and editor
+    - name: Third parties, engine solution and resources
       run: ${{github.workspace}}/Setup.bat
 
     - name: Build Debug x64

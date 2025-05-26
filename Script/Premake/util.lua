@@ -10,14 +10,13 @@ project("Build")
 
     files
     {
-        path.join(RootPath, "Setup.bat"),
-        path.join(RootPath, "SetupThirdParty.bat"),
-        path.join(RootPath, "Script/*.lua"),
+        path.join(RootPath, "Script/*.bat"),
+        path.join(RootPath, "Script/Premake/*.lua"),
     }
 
     postbuildcommands
     {
-        path.join(RootPath, "Setup.bat"),
+        path.join(RootPath, "Script/Premake.bat"),
     }
 
     flags

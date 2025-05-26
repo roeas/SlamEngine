@@ -1,15 +1,16 @@
 @echo off
 
-set "THIRD_PARTY_PATH=%~dp0Engine\Source\ThirdParty\"
-echo ThirdParty path: %THIRD_PARTY_PATH%
+for %%A in ("%~dp0..") do set "ROOT_PATH=%%~fA"
+set "THIRD_PARTY_PATH=%ROOT_PATH%\Engine\Source\ThirdParty"
+echo Third party path: %THIRD_PARTY_PATH%
 
 rem Find MSBuild by vswhere
 set "VSWHERE_PATH=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 for /f "usebackq tokens=*" %%i in (`"%VSWHERE_PATH%" -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe`) do (
-  set "MSBUILD_PATH=%%i"
+    set "MSBUILD_PATH=%%i"
 )
 if defined MSBUILD_PATH (
-    echo MSBuild found at: %MSBUILD_PATH%
+    echo MSBuild found: %MSBUILD_PATH%
 ) else (
     echo MSBuild not found.
 )
@@ -65,4 +66,6 @@ cmake --build build --target TracyClient --config Debug
 cmake --build build --target TracyClient --config Release
 echo.
 
-pause
+if "%1" neq "continue" (
+    pause
+)

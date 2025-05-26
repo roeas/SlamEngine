@@ -6,8 +6,7 @@
 # Getting up
 1. Install [CMake](https://cmake.org/download/#latest)
 2. Install [Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)
-4. Run **SetupThirdParty.bat**
-5. Run **Setup.bat**
+5. Run `Setup.bat`
 
 # Config diff
 ||Debug|Release|Final|

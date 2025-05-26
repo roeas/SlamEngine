@@ -1,5 +1,5 @@
 CurrentWorkingDirectory = os.getcwd()
-RootPath = string.sub(CurrentWorkingDirectory, 0, string.len(CurrentWorkingDirectory) - string.len("Script") - 1)
+RootPath = string.sub(CurrentWorkingDirectory, 0, string.len(CurrentWorkingDirectory) - string.len("/Script/Premake"))
 EnginePath = path.join(RootPath, "Engine")
 
 SourcePath = path.join(EnginePath, "Source")
