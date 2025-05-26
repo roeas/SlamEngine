@@ -1,7 +1,18 @@
-/.vs/
-/Engine/Binary/
-/Engine/Log/
+# Visual Studio
 /Engine/Project/
+/.vs/
 /*.sln
 
+# C++
+/Engine/Binary/
+
+# Log
+/Engine/Log/
+
+# Resource
+/Engine/Asset/Texture/Sky.ktx
+/Engine/Asset/Texture/Rad.ktx
+/Engine/Asset/Texture/Irr.ktx
+
+# Third party
 build/

@@ -103,7 +103,7 @@ SandboxLayer::SandboxLayer()
     // Textures
     {
         std::unique_ptr<sl::TextureResource> pSkyboxTextureResource = std::make_unique<sl::TextureResource>(
-            sl::Path::FromeAsset("Texture/Sky.ktx"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
+            sl::Path::FromeAsset("Texture/Sky.ktx"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pNoResourceTextureResource = std::make_unique<sl::TextureResource>(
             sl::Path::FromeAsset("Texture/NoResource.png"), true, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
         std::unique_ptr<sl::TextureResource> pDebugUVTextureResource = std::make_unique<sl::TextureResource>(

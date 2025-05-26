@@ -42,7 +42,7 @@ void TextureResource::OnImport()
         /*
          * We pre-convolve skybox by cmft and store it as ktx or dds,
          * texture format is hardcoded here for now.
-         * See "SlamEngine/Tool/cmft/cmft.bat" for details.
+         * See "SlamEngine/Script/Resource.bat" for details.
          * 
          * TODO: Support KTX2
          */
