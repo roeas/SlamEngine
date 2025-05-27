@@ -27,7 +27,7 @@ layout(location = SL_LOCATION_IBL_FACTOR) uniform float u_IBLFactor;
 float GetDistanceAttenuation(float distance2, float range)
 {
     // n = 4
-    float attenuation = 1.0 / (max(distance2, 0.01 * 0.01));
+    float attenuation = 1.0 / max(distance2, 0.01 * 0.01);
     float factor = distance2 / (range * range);
     float smoothFactor = clamp(1.0 - factor * factor, 0.0, 1.0);
     float smoothDistanceAtt = smoothFactor * smoothFactor;
@@ -49,10 +49,10 @@ float GetAngleAttenuation(vec3 lightDir, vec3 lightForward, float angleScale, fl
 vec3 GetDirectBRDF(vec3 lightDir, vec3 viewDir, Material material)
 {
     vec3 harfDir = normalize(lightDir + viewDir);
-    float NdotV = max(dot(material.normal, viewDir), 0.0);
-    float NdotL = max(dot(material.normal, lightDir), 0.0);
-    float NdotH = max(dot(material.normal, harfDir), 0.0);
-    float VdotH = max(dot(viewDir, harfDir), 0.0);
+    float NdotV = clamp(dot(material.normal, viewDir), 0.0, 1.0);
+    float NdotL = clamp(dot(material.normal, lightDir), 0.0, 1.0);
+    float NdotH = clamp(dot(material.normal, harfDir), 0.0, 1.0);
+    float VdotH = clamp(dot(viewDir, harfDir), 0.0, 1.0);
 
     float dis = DistributionGGX(material.roughness, NdotH);
     float vis = VisibilitySchlickSmith(material.roughness, NdotV, NdotL);

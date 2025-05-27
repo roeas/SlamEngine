@@ -288,22 +288,15 @@ void Details::OnUpdate(float deltaTime)
 
         StartWithText("Main Camera");
         bool isMainCamera = pComponent->m_isMainCamera;
-        if (ImGui::Checkbox("##MainCameraCheckBox", &isMainCamera))
+        if (ImGui::Checkbox("##MainCameraCheckBox", &isMainCamera) && isMainCamera)
         {
-            if (isMainCamera)
+            auto view = sl::World::GetRegistry().view<sl::CameraComponent>();
+            for (auto entity : view)
             {
-                auto view = sl::World::GetRegistry().view<sl::CameraComponent>();
-                for (auto entity : view)
-                {
-                    view.get<sl::CameraComponent>(entity).m_isMainCamera = false;
-                }
-                pComponent->m_isMainCamera = true;
-                cameraMightDirty = true;
+                view.get<sl::CameraComponent>(entity).m_isMainCamera = false;
             }
-            else
-            {
-                SL_LOG_WARN("Main camera must exist!");
-            }
+            pComponent->m_isMainCamera = true;
+            cameraMightDirty = true;
         }
 
         StartWithText("Projection");

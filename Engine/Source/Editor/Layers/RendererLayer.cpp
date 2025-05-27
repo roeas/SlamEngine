@@ -69,44 +69,41 @@ RendererLayer::RendererLayer()
     }));
 
     // Camera uniform buffer
-    {
-        uint32_t uniformBufferSize = 0;
-        sl::UniformBufferLayout cameraUniformBufferLayout;
-        cameraUniformBufferLayout.AddElement(CameraPosID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::vec4) });
-        uniformBufferSize += sizeof(glm::vec4);
-        cameraUniformBufferLayout.AddElement(ViewMatID, sl::UniformBufferLayoutElement{ uniformBufferSize , sizeof(glm::mat4) });
-        uniformBufferSize += sizeof(glm::mat4);
-        cameraUniformBufferLayout.AddElement(ProjectionMatID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
-        uniformBufferSize += sizeof(glm::mat4);
-        cameraUniformBufferLayout.AddElement(ViewProjectionMatID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
-        uniformBufferSize += sizeof(glm::mat4);
-        cameraUniformBufferLayout.AddElement(ViewMatWithoutTransformID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(glm::mat4) });
-        uniformBufferSize += sizeof(glm::mat4);
-        cameraUniformBufferLayout.SetSize(uniformBufferSize);
-        m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUniformBufferLayout)));
-    }
+    uint32_t cameraUBSize = 0;
+    sl::UniformBufferLayout cameraUBayout;
+    cameraUBayout.AddElement(CameraPosID, sl::UniformBufferLayoutElement{ cameraUBSize, sizeof(glm::vec4) });
+    cameraUBSize += sizeof(glm::vec4);
+    cameraUBayout.AddElement(ViewMatID, sl::UniformBufferLayoutElement{ cameraUBSize, sizeof(glm::mat4) });
+    cameraUBSize += sizeof(glm::mat4);
+    cameraUBayout.AddElement(ProjectionMatID, sl::UniformBufferLayoutElement{ cameraUBSize, sizeof(glm::mat4) });
+    cameraUBSize += sizeof(glm::mat4);
+    cameraUBayout.AddElement(ViewProjectionMatID, sl::UniformBufferLayoutElement{ cameraUBSize, sizeof(glm::mat4) });
+    cameraUBSize += sizeof(glm::mat4);
+    cameraUBayout.AddElement(ViewMatWithoutTransformID, sl::UniformBufferLayoutElement{ cameraUBSize, sizeof(glm::mat4) });
+    cameraUBSize += sizeof(glm::mat4);
+    cameraUBayout.SetSize(cameraUBSize);
+    m_pCameraUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_CAMERA, std::move(cameraUBayout)));
 
     // Light uniform buffer
-    {
-        uint32_t uniformBufferSize = 0;
-        sl::UniformBufferLayout lightsUniformBufferLayout;
-        lightsUniformBufferLayout.AddElement(LightsID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(SL_LightUniformBuffer) * SL_LIGHT_MAX_COUNT });
-        uniformBufferSize += sizeof(SL_LightUniformBuffer) * SL_LIGHT_MAX_COUNT;
-        lightsUniformBufferLayout.AddElement(LightCountID, sl::UniformBufferLayoutElement{ uniformBufferSize, sizeof(int32_t) });
-        uniformBufferSize += sizeof(int32_t);
-        lightsUniformBufferLayout.SetSize(uniformBufferSize);
-        m_pLightUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_LIGHT, std::move(lightsUniformBufferLayout)));
-    }
+    uint32_t lightUBize = 0;
+    sl::UniformBufferLayout lightUBLayout;
+    lightUBLayout.AddElement(LightsID, sl::UniformBufferLayoutElement{ lightUBize, sizeof(SL_LightUniformBuffer) * SL_LIGHT_MAX_COUNT });
+    lightUBize += sizeof(SL_LightUniformBuffer) * SL_LIGHT_MAX_COUNT;
+    lightUBLayout.AddElement(LightCountID, sl::UniformBufferLayoutElement{ lightUBize, sizeof(int32_t) });
+    lightUBize += sizeof(int32_t);
+    lightUBLayout.SetSize(lightUBize);
+    m_pLightUniformBuffer.reset(sl::UniformBuffer::Create(SL_BINDING_POINT_LIGHT, std::move(lightUBLayout)));
 
-    std::unique_ptr<sl::TextureResource> pRadianceTextureResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/Rad.ktx"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-    std::unique_ptr<sl::TextureResource> pIrradianceTextureResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/Irr.ktx"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-    std::unique_ptr<sl::TextureResource> pIBLLUTTextureResource = std::make_unique<sl::TextureResource>(
-        sl::Path::FromeAsset("Texture/DFG.png"), false, SL_SAMPLER_REPEAT | SL_SAMPLER_LINEAR);
-    sl::ResourceManager::AddTextureResource(RadianceTextureID, std::move(pRadianceTextureResource));
-    sl::ResourceManager::AddTextureResource(IrradianceTextureID, std::move(pIrradianceTextureResource));
-    sl::ResourceManager::AddTextureResource(IBLLUTTextureID, std::move(pIBLLUTTextureResource));
+    // IBL texture
+    std::unique_ptr<sl::TextureResource> pRadiance = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Rad.ktx"), false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pIrradiance = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/Irr.ktx"), false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR);
+    std::unique_ptr<sl::TextureResource> pIBLLUT = std::make_unique<sl::TextureResource>(
+        sl::Path::FromeAsset("Texture/DFG.png"), false, SL_SAMPLER_CLAMP | SL_SAMPLER_LINEAR);
+    sl::ResourceManager::AddTextureResource(RadianceTextureID, std::move(pRadiance));
+    sl::ResourceManager::AddTextureResource(IrradianceTextureID, std::move(pIrradiance));
+    sl::ResourceManager::AddTextureResource(IBLLUTTextureID, std::move(pIBLLUT));
 }
 
 void RendererLayer::OnAttach()
@@ -141,12 +138,12 @@ void RendererLayer::OnRender()
 
     // Upload camera uniform buffer
     sl::Entity mainCamera = sl::World::GetMainCameraEntity();
-    auto &cameraComponent = mainCamera.GetComponents<sl::CameraComponent>();
+    auto &camera = mainCamera.GetComponents<sl::CameraComponent>();
     m_pCameraUniformBuffer->Upload(CameraPosID, glm::value_ptr(mainCamera.GetComponents<sl::TransformComponent>().m_position));
-    m_pCameraUniformBuffer->Upload(ViewMatID, glm::value_ptr(cameraComponent.GetView()));
-    m_pCameraUniformBuffer->Upload(ProjectionMatID, glm::value_ptr(cameraComponent.GetProjection()));
-    m_pCameraUniformBuffer->Upload(ViewProjectionMatID, glm::value_ptr(cameraComponent.GetViewProjection()));
-    m_pCameraUniformBuffer->Upload(ViewMatWithoutTransformID, glm::value_ptr(glm::mat4{ glm::mat3{ cameraComponent.GetView() } }));
+    m_pCameraUniformBuffer->Upload(ViewMatID, glm::value_ptr(camera.GetView()));
+    m_pCameraUniformBuffer->Upload(ProjectionMatID, glm::value_ptr(camera.GetProjection()));
+    m_pCameraUniformBuffer->Upload(ViewProjectionMatID, glm::value_ptr(camera.GetViewProjection()));
+    m_pCameraUniformBuffer->Upload(ViewMatWithoutTransformID, glm::value_ptr(glm::mat4{ glm::mat3{ camera.GetView() } }));
 
     // Upload light uniform buffer
     static std::vector<SL_LightUniformBuffer> s_lightSharedData(SL_LIGHT_MAX_COUNT);
@@ -169,6 +166,7 @@ void RendererLayer::OnRender()
         memcpy(&lightData.colorR, &light.m_color, sizeof(float) * 3);
         memcpy(&lightData.positionX, &transform.m_position, sizeof(float) * 3);
         glm::vec4 dir = glm::vec4{ 1.0f, 0.0f, 0.0f, 0.0f } * transform.GetRotate();
+        dir /= dir.w;
         memcpy(&lightData.directionX, &dir, sizeof(float) * 3);
 
         s_lightSharedData.push_back(lightData);

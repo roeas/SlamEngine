@@ -70,16 +70,12 @@ void EntityList::OnUpdate(float deltaTime)
             if (ImGui::MenuItem("Destory Entity"))
             {
                 sl::Entity slEntity{ entity };
-                // Not allowed to destroy the main camera
-                if (auto pCameraComponent = slEntity.TryGetComponents<sl::CameraComponent>();
-                    pCameraComponent && pCameraComponent->m_isMainCamera)
+                auto pCamera = slEntity.TryGetComponents<sl::CameraComponent>();
+                auto pSky = slEntity.TryGetComponents<sl::SkyComponent>();
+                auto pPostProcessing = slEntity.TryGetComponents<sl::PostProcessingComponent>();
+                if ((pCamera && pCamera->m_isMainCamera) || pSky || pPostProcessing)
                 {
-                    SL_LOG_WARN("Can not destroy the main camera entity {}", (uint32_t)entity);
-                }
-                // Not allowed to destroy the sky component
-                else if (auto pSkyComponent = slEntity.TryGetComponents<sl::SkyComponent>(); pSkyComponent)
-                {
-                    SL_LOG_WARN("Can not destroy the sky entity {}", (uint32_t)entity);
+                    SL_LOG_WARN("Can not destroy entity {}", slEntity.GetComponents<sl::TagComponent>().m_name);
                 }
                 else
                 {
@@ -110,23 +106,24 @@ void EntityList::OnUpdate(float deltaTime)
     }
     if (ImGui::BeginPopup("##CreateNewEntityPopup"))
     {
-        auto &cameraTransform = sl::World::GetMainCameraTransformComponent();
+        const auto &cameraTransform = sl::World::GetMainCameraTransformComponent();
 
-        if (ImGui::MenuItem("Creat New Entity"))
+        if (ImGui::MenuItem("Create New Entity"))
         {
             pData->m_selectedEntity = sl::World::CreateEntity();
         }
-        if (ImGui::MenuItem("Creat Directional Light"))
+        if (ImGui::MenuItem("Create Directional Light"))
         {
             auto entity = sl::World::CreateEntity("Directional Light");
-            entity.GetComponents<sl::TransformComponent>().m_rotation = cameraTransform.m_rotation;
+            auto &transform = entity.GetComponents<sl::TransformComponent>();
+            transform.m_rotation = cameraTransform.m_rotation;
             auto &light = entity.AddComponent<sl::LightComponent>();
             light.m_intensity = 4.0f;
             light.m_type = sl::LightType::Directional;
 
             pData->m_selectedEntity = entity;
         }
-        if (ImGui::MenuItem("Creat Point Light"))
+        if (ImGui::MenuItem("Create Point Light"))
         {
             auto entity = sl::World::CreateEntity("Point Light");
             auto &light = entity.AddComponent<sl::LightComponent>();
@@ -134,7 +131,7 @@ void EntityList::OnUpdate(float deltaTime)
         
             pData->m_selectedEntity = entity;
         }
-        if (ImGui::MenuItem("Creat Spot Light"))
+        if (ImGui::MenuItem("Create Spot Light"))
         {
             auto entity = sl::World::CreateEntity("Spot Light");
             auto &transform = entity.GetComponents<sl::TransformComponent>();

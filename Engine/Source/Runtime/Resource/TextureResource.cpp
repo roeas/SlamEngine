@@ -36,6 +36,11 @@ void TextureResource::OnImport()
     std::string extension = Path::Extension(m_assetPath);
     m_isCubemap = extension == ".ktx" || extension == ".dds";
     std::vector<unsigned char> assetData = FileIO::ReadBinary(m_assetPath.data());
+    if (assetData.empty())
+    {
+        m_state = ResourceState::Destroying;
+        return;
+    }
 
     if(m_isCubemap) // Use GLI to import KTX and DDS
     {
