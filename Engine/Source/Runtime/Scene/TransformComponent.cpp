@@ -40,9 +40,7 @@ glm::mat4 TransformComponent::GetScale() const
 
 glm::mat4 TransformComponent::GetTransform() const
 {
-    return glm::translate(glm::mat4{ 1.0f }, m_position) *
-        glm::toMat4(glm::quat(m_rotation)) *
-        glm::scale(glm::mat4{ 1.0f }, m_scale);
+    return GetTranslate() * GetRotate() * GetScale();
 }
 
 } // namespace sl

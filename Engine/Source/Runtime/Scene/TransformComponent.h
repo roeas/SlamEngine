@@ -19,7 +19,7 @@ struct TransformComponent
     glm::mat4 GetTransform() const;
 
     glm::vec3 m_position{ 0.0f, 0.0f , 0.0f };
-    glm::vec3 m_rotation{ 0.0f, 0.0f , 0.0f }; // Stores in radians
+    glm::vec3 m_rotation{ 0.0f, 0.0f , 0.0f }; // Pitch Yaw Roll, stores in radians
     glm::vec3 m_scale{ 1.0f, 1.0f , 1.0f };
 };
 

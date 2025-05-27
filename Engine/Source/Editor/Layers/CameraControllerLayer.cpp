@@ -65,11 +65,10 @@ void CameraControllerLayer::UpdateFPSMode(float deltaTime)
     auto [camera, transform] = sl::World::GetMainCameraEntity().GetComponents<sl::CameraComponent, sl::TransformComponent>();
 
     // Rotation
-    {
-        glm::vec2 offset = sl::Input::GetMouseDelta();
-        transform.m_rotation += glm::vec3{ glm::vec2{ -offset.y, offset.x } * camera.m_rotateSpeed, 0.0f };
-        transform.m_rotation.x = std::clamp(transform.m_rotation.x, glm::radians(-89.9f), glm::radians(89.9f));
-    }
+    glm::vec2 offset = sl::Input::GetMouseDelta();
+    transform.m_rotation += glm::vec3{ camera.m_rotateSpeed * glm::vec2{ -offset.y, -offset.x }, 0.0f };
+    transform.m_rotation.x = std::clamp(transform.m_rotation.x, glm::radians(-89.9f), glm::radians(89.9f));
+    camera.m_rotation = transform.m_rotation;
 
     // Movement
     constexpr size_t MoveDirCount = 6;
@@ -106,7 +105,6 @@ void CameraControllerLayer::UpdateFPSMode(float deltaTime)
 
     transform.m_position += finalMoveDir * finalMoveSpeed * deltaTime;
     camera.m_position = transform.m_position;
-    camera.m_rotation = transform.m_rotation;
     camera.m_isDirty = true;
 }
 

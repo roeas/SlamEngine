@@ -165,8 +165,7 @@ void RendererLayer::OnRender()
 
         memcpy(&lightData.colorR, &light.m_color, sizeof(float) * 3);
         memcpy(&lightData.positionX, &transform.m_position, sizeof(float) * 3);
-        glm::vec4 dir = glm::vec4{ 1.0f, 0.0f, 0.0f, 0.0f } * transform.GetRotate();
-        dir /= dir.w;
+        glm::vec3 dir = glm::normalize(glm::vec3{ transform.GetRotate() * glm::vec4{ 0.0f, 0.0f, -1.0f, 0.0f } });
         memcpy(&lightData.directionX, &dir, sizeof(float) * 3);
 
         s_lightSharedData.push_back(lightData);

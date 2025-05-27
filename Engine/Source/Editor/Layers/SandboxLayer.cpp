@@ -123,7 +123,7 @@ SandboxLayer::SandboxLayer()
     importer.Import();
 
     // Camera
-    sl::World::SetMainCameraTransform({ 6.0f, 5.5f, 12.0f }, { glm::radians(-18.5f), glm::radians(-118.0f), 0.0f });
+    sl::World::SetMainCameraTransform({ 4.5f, 6.2f, 12.0f }, { glm::radians(-23.8f), glm::radians(22.8f), 0.0f });
 }
 
 void SandboxLayer::OnAttach()

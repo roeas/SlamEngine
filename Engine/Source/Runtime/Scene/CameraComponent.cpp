@@ -2,7 +2,8 @@
 
 #include "Scene/World.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/quaternion.hpp>
 
 namespace sl
 {
@@ -30,12 +31,7 @@ void CameraComponent::Recalculate()
         return;
     }
 
-    float pitch = m_rotation.x;
-    float yaw = m_rotation.y;
-    m_frontDir.x = glm::cos(pitch) * glm::cos(yaw);
-    m_frontDir.y = glm::sin(pitch);
-    m_frontDir.z = glm::cos(pitch) * glm::sin(yaw);
-    m_frontDir = glm::normalize(m_frontDir);
+    m_frontDir = glm::toMat4(glm::quat(m_rotation)) * glm::vec4{ 0.0, 0.0, -1.0, 0.0 };
     m_rightDir = glm::normalize(glm::cross(m_frontDir, WorldUp));
     m_upDir = glm::normalize(glm::cross(m_rightDir, m_frontDir));
 
