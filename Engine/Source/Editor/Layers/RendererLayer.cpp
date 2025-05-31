@@ -229,6 +229,8 @@ void RendererLayer::StandardPass()
         glm::mat4 modelMat = transform.GetTransform();
         pShader->UploadUniform(SL_LOCATION_MODEL, modelMat);
         pShader->UploadUniform(SL_LOCATION_MODEL_INV_TRANS, glm::transpose(glm::inverse(modelMat)));
+        pShader->UploadUniform(SL_LOCATION_RENDERING_MODE, (int)pMaterialResource->GetRenderingMode());
+        pShader->UploadUniform(SL_LOCATION_ALPHA_CUTOFF, pMaterialResource->GetAlphaCutoff());
 
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetAlbedoPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetNormalPropertyGroup());

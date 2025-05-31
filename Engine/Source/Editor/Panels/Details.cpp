@@ -416,6 +416,26 @@ void Details::OnUpdate(float deltaTime)
                 StartWithText("Name");
                 ImGui::TextUnformatted(pMaterialResource->GetName().data());
 
+                StartWithText("Rendering Mode");
+                if (ImGui::BeginCombo("##RenderingMode", magic_enum::enum_name(pMaterialResource->GetRenderingMode()).data(), ImGuiComboFlags_WidthFitPreview))
+                {
+                    for (size_t i = 0; i < magic_enum::enum_count<sl::RenderingMode>(); ++i)
+                    {
+                        sl::RenderingMode mode = (sl::RenderingMode)i;
+                        if (ImGui::Selectable(magic_enum::enum_name(mode).data(), mode == pMaterialResource->GetRenderingMode()))
+                        {
+                            pMaterialResource->SetRenderingMode(mode);
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                if (pMaterialResource->GetRenderingMode() == sl::RenderingMode::Cutout)
+                {
+                    StartWithText("Alpha Cutoff");
+                    ImGui::DragFloat("##AlphaCutoff", &pMaterialResource->GetAlphaCutoff(), 0.01f, 0.0f, 1.0f);
+                }
+
                 auto DrawPropertyGroup = [](const char *pLabel, auto &propertyGroup)
                 {
                     ImGui::PushID(pLabel);

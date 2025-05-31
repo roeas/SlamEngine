@@ -17,6 +17,13 @@ namespace sl
  * Anyway, lets support PBR material by hard coding at first.
  */
 
+enum class RenderingMode : uint8_t
+{
+    Opaque = SL_TYPE_RENDERING_MODE_OPAQUE,
+    Cutout = SL_TYPE_RENDERING_MODE_CUTOUT,
+    Transparent = SL_TYPE_RENDERING_MODE_TRANSPARENT,
+};
+
 struct AlbedoPropertyGroup
 {
     StringHashType m_textureID = 0;
@@ -150,13 +157,21 @@ public:
     const MetallicPropertyGroup &GetMetallicPropertyGroup() const { return m_metallicPropertyGroup; }
     const EmissivePropertyGroup &GetEmissivePropertyGroup() const { return m_emissivePropertyGroup; }
 
-    void SetTwoSide(bool twoside) { m_twoSide = twoside; }
-    bool &GetTwoSide() { return m_twoSide; }
-    const bool &GetTwoSide() const { return m_twoSide; }
+    void SetRenderingMode(RenderingMode mode) { m_mode = mode; }
+    RenderingMode &GetRenderingMode() { return m_mode; }
+    const RenderingMode &GetRenderingMode() const { return m_mode; }
+
+    void SetAlphaCutoff(float cutoff) { m_alphaCutoff = cutoff; }
+    float &GetAlphaCutoff() { return m_alphaCutoff; }
+    const float &GetAlphaCutoff() const { return m_alphaCutoff; }
 
     void SetIBLFactor(float factor) { m_IBLFactor = factor; }
     float &GetIBLFactor() { return m_IBLFactor; }
     const float &GetIBLFactor() const { return m_IBLFactor; }
+
+    void SetTwoSide(bool twoside) { m_twoSide = twoside; }
+    bool &GetTwoSide() { return m_twoSide; }
+    const bool &GetTwoSide() const { return m_twoSide; }
 
 private:
     void OnImport() override;
@@ -174,7 +189,9 @@ private:
     MetallicPropertyGroup m_metallicPropertyGroup;
     EmissivePropertyGroup m_emissivePropertyGroup;
 
+    float m_alphaCutoff = 0.5f;
     float m_IBLFactor = 0.75f;
+    RenderingMode m_mode = RenderingMode::Opaque;
     bool m_twoSide = false;
 };
 

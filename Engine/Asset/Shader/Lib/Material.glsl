@@ -26,10 +26,11 @@ layout(location = SL_LOCATION_EMISSIVE_USE_TEXTURE) uniform bool u_useEmissiveTe
 
 // TODO: UV transform
 
-vec3 SampleAlbedoTexture(vec2 uv)
+vec4 SampleAlbedoTexture(vec2 uv)
 {
     // TODO: Compile albedo textures to linear space before rendering
-    return pow(texture(s_albedo, uv).xyz, vec3(2.2));
+    vec4 albedo = texture(s_albedo, uv);
+    return vec4(pow(albedo.xyz, vec3(2.2)), albedo.w);
 }
 vec3 SampleNormalTexture(vec2 uv)
 {
@@ -52,6 +53,7 @@ struct Material
     float occlusion;
     float roughness;
     float metallic;
+    float alpha;
     vec3 emissive;
     vec3 F0;
 };
@@ -64,11 +66,14 @@ Material GetMaterial(vec2 uv, vec3 normal, vec3 tangent, vec3 bitangent)
     material.occlusion = u_occlusionFactor;
     material.roughness = u_roughnessFactor;
     material.metallic = u_metallicFactor;
+    material.alpha = 1.0;
     material.emissive = u_emissiveFactor;
     
     if (u_useAlbedoTexture)
     {
-        material.albedo *= SampleAlbedoTexture(uv);
+        vec4 albedo = SampleAlbedoTexture(uv);
+        material.albedo *= albedo.xyz;
+        material.alpha = albedo.w;
     }
     if (u_useNormalTexture)
     {

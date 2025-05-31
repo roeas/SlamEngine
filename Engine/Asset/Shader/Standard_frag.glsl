@@ -22,6 +22,8 @@ layout(binding = SL_SLOT_IRRADIANCE) uniform samplerCube s_irradiance;
 layout(binding = SL_SLOT_IBL_LUT) uniform sampler2D s_IBL_LUT;
 
 // Uniform
+layout(location = SL_LOCATION_RENDERING_MODE) uniform int u_RenderingMode;
+layout(location = SL_LOCATION_ALPHA_CUTOFF) uniform float u_AlphaCutoff;
 layout(location = SL_LOCATION_IBL_FACTOR) uniform float u_IBLFactor;
 
 float GetDistanceAttenuation(float distance2, float range)
@@ -147,16 +149,16 @@ vec3 EvalEnvLight(vec3 viewDir, vec3 normal, Material material)
 
 void main()
 {
-    vec3 cameraPos = GetCameraPos();
     Material material = GetMaterial(v_uv0, v_normal, v_tangent, v_bitangent);
+    if(u_RenderingMode == SL_TYPE_RENDERING_MODE_CUTOUT && material.alpha < u_AlphaCutoff)
+    {
+        discard;
+    }
 
-    // Direct
+    vec3 cameraPos = GetCameraPos();
     vec3 directColor = EvalDirectLight(v_worldPos, cameraPos, material);
-    directColor *= vec3(material.occlusion);
-
-    // Environment
     vec3 envColor = EvalEnvLight(normalize(cameraPos - v_worldPos), v_normal, material);
 
-    vec3 finalColor = directColor + envColor + material.emissive;
-    o_color = vec4(finalColor, 1.0);
+    vec3 finalColor = directColor * vec3(material.occlusion) + envColor + material.emissive;
+    o_color = vec4(finalColor, u_RenderingMode == SL_TYPE_RENDERING_MODE_TRANSPARENT ? material.alpha : 1.0);
 }
