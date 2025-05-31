@@ -99,13 +99,9 @@ void LogSceneInfoDetail(const aiScene *pScene)
     }
 
     // Embedded textures
-    if (pScene->mNumTextures)
+    for (size_t i = 0; i < pScene->mNumTextures; ++i)
     {
-        SL_LOG_WARN("No support for embedded texture");
-        for (size_t i = 0; i < pScene->mNumTextures; ++i)
-        {
-            SL_LOG_WARN("Embedded Texture: {}", pScene->mTextures[i]->mFilename.C_Str());
-        }
+        SL_LOG_WARN("Embedded Texture: {}", pScene->mTextures[i]->mFilename.C_Str());
     }
 }
 
@@ -198,8 +194,11 @@ void ModelImporter::ProcessNode(const aiNode *pNode)
 
 void ModelImporter::ProcessMesh(const aiMesh *pMesh)
 {
-    SL_ASSERT(pMesh->mPrimitiveTypes & aiPrimitiveType::aiPrimitiveType_TRIANGLE);
-    SL_ASSERT(pMesh->mVertices && pMesh->mNormals && pMesh->mTangents && pMesh->mBitangents && pMesh->mTextureCoords[0]);
+    if (!pMesh->HasPositions() || !pMesh->HasFaces() || !pMesh->HasNormals() || !pMesh->HasTangentsAndBitangents() || !pMesh->HasTextureCoords(0))
+    {
+        SL_LOG_WARN("Invalid mesh: {}", pMesh->mName.C_Str());
+        return;
+    }
 
     // 1. Vertex
     std::vector<sl::VertexLayoutElement> elements
