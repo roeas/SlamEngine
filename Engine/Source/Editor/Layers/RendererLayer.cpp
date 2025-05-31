@@ -130,12 +130,6 @@ void RendererLayer::OnRender()
 {
     SL_PROFILE;
 
-    // Default state
-    sl::RenderCore::DepthTestFunction(sl::Function::LessEqual);
-    sl::RenderCore::BlendFunction(sl::Factor::SourceAlpha, sl::Factor::OneMinusSourceAlpha);
-    sl::RenderCore::CullingFace(sl::Face::Back);
-    sl::RenderCore::SeamlessCubemap(true);
-
     // Upload camera uniform buffer
     sl::Entity mainCamera = sl::World::GetMainCameraEntity();
     auto &camera = mainCamera.GetComponents<sl::CameraComponent>();
@@ -205,14 +199,36 @@ void RendererLayer::StandardPass()
     SL_PROFILE_GPU("Standard Pass");
     SL_PROFILE;
 
+    sl::RenderCore::CullingFace(sl::Face::Back);
+    sl::RenderCore::DepthTestFunction(sl::Function::Less);
+    sl::RenderCore::BlendFunction(sl::Factor::SourceAlpha, sl::Factor::OneMinusSourceAlpha);
+    sl::RenderCore::SeamlessCubemap(true);
+
     auto pFramebuffer = sl::RenderCore::GetMainFramebuffer();
     pFramebuffer->Bind();
 
+    // Sort entities, first render opaque materials from near to far, then render transparent materials from far to near
+    const glm::vec3 &cameraPos = sl::World::GetMainCameraTransformComponent().m_position;
     auto group = sl::World::GetRegistry().group<sl::RenderingComponent>(entt::get<sl::TransformComponent>);
+    group.sort([&group, &cameraPos](const entt::entity l, const entt::entity r)
+    {
+        auto *pMaterialL = sl::ResourceManager::GetMaterialResource(group.get<sl::RenderingComponent>(l).m_materialResourceID);
+        auto *pMaterialR = sl::ResourceManager::GetMaterialResource(group.get<sl::RenderingComponent>(r).m_materialResourceID);
+        bool isTransparentL = pMaterialL->GetRenderingMode() == sl::RenderingMode::Transparent;
+        bool isTransparentR = pMaterialR->GetRenderingMode() == sl::RenderingMode::Transparent;
+        if (isTransparentL != isTransparentR)
+        {
+            return !isTransparentL;
+        }
+
+        float distLhs = glm::distance(cameraPos, group.get<sl::TransformComponent>(l).m_position);
+        float distRhs = glm::distance(cameraPos, group.get<sl::TransformComponent>(r).m_position);
+        return isTransparentL ? (distLhs > distRhs) : (distLhs < distRhs);
+    });
+
     for (auto entity : group)
     {
         auto [rendering, transform] = group.get<sl::RenderingComponent, sl::TransformComponent>(entity);
-
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
         auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_shaderResourceID);
         auto *pMaterialResource = sl::ResourceManager::GetMaterialResource(rendering.m_materialResourceID);
@@ -231,19 +247,12 @@ void RendererLayer::StandardPass()
         pShader->UploadUniform(SL_LOCATION_MODEL_INV_TRANS, glm::transpose(glm::inverse(modelMat)));
         pShader->UploadUniform(SL_LOCATION_RENDERING_MODE, (int)pMaterialResource->GetRenderingMode());
         pShader->UploadUniform(SL_LOCATION_ALPHA_CUTOFF, pMaterialResource->GetAlphaCutoff());
-
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetAlbedoPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetNormalPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetOcclusionPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetRoughnessPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetMetallicPropertyGroup());
         UploadMaterialPropertyGroup(pShader, pMaterialResource->GetEmissivePropertyGroup());
-
-        // Culling
-        if (pMaterialResource->GetTwoSide())
-        {
-            sl::RenderCore::Culling(false);
-        }
 
         // IBL
         auto *pRadianceTextureResource = sl::ResourceManager::GetTextureResource(RadianceTextureID);
@@ -260,6 +269,9 @@ void RendererLayer::StandardPass()
         }
 
         pShader->Unbind();
+
+        // States
+        sl::RenderCore::Culling(!pMaterialResource->GetTwoSide());
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShader);
     }
  
@@ -271,6 +283,10 @@ void RendererLayer::SkyPass()
     SL_PROFILE_GPU("Sky Pass");
     SL_PROFILE;
 
+    sl::RenderCore::Culling(false);
+    sl::RenderCore::DepthTestFunction(sl::Function::LessEqual);
+    sl::RenderCore::SeamlessCubemap(true);
+
     auto pFramebuffer = sl::RenderCore::GetMainFramebuffer();
     pFramebuffer->Bind();
 
@@ -278,7 +294,6 @@ void RendererLayer::SkyPass()
     for (auto entity : view)
     {
         auto &sky = view.get<sl::SkyComponent>(entity);
-
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(sky.m_meshResourceID);
         auto *pShaderResource = sl::ResourceManager::GetShaderResource(sky.m_shaderResourceID);
         auto *pTextureResource = sl::ResourceManager::GetTextureResource(sky.m_textureResourceID);
@@ -305,9 +320,10 @@ void RendererLayer::PostProcessingPass()
     SL_PROFILE_GPU("Post Processing Pass");
     SL_PROFILE;
 
+    sl::RenderCore::CullingFace(sl::Face::Back);
+
     auto pFramebuffer = sl::RenderCore::GetFinalFramebuffer();
     pFramebuffer->Bind();
-
     sl::RenderCore::ClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
 
     auto view = sl::World::GetRegistry().view<sl::PostProcessingComponent>();
@@ -340,9 +356,11 @@ void RendererLayer::EntityIDPass()
     SL_PROFILE_GPU("Entity ID Pass");
     SL_PROFILE;
 
+    sl::RenderCore::CullingFace(sl::Face::Back);
+    sl::RenderCore::DepthTestFunction(sl::Function::Less);
+
     auto pFramebuffer = sl::RenderCore::GetEntityIDFramebuffer();
     pFramebuffer->Bind();
-
     constexpr int entityIDClearData = -1;
     pFramebuffer->Clear(0, &entityIDClearData);
     sl::RenderCore::ClearDepth(1.0f);
@@ -351,7 +369,6 @@ void RendererLayer::EntityIDPass()
     for (auto entity : view)
     {
         auto [rendering, transform] = view.get<sl::RenderingComponent, sl::TransformComponent>(entity);
-
         auto *pMeshResource = sl::ResourceManager::GetMeshResource(rendering.m_meshResourceID);
         auto *pShaderResource = sl::ResourceManager::GetShaderResource(rendering.m_entityIDShaderResourceID);
         auto *pMaterialResource = sl::ResourceManager::GetMaterialResource(rendering.m_materialResourceID);
@@ -367,11 +384,7 @@ void RendererLayer::EntityIDPass()
         pShader->UploadUniform(0, transform.GetTransform());
         pShader->UploadUniform(1, (int)entity);
 
-        if (pMaterialResource->GetTwoSide())
-        {
-            sl::RenderCore::Culling(false);
-        }
-
+        sl::RenderCore::Culling(!pMaterialResource->GetTwoSide());
         pShader->Unbind();
 
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
