@@ -29,69 +29,14 @@ void OpenGLRenderAPI::Clear(uint8_t bits)
         GLClearBufferBit[(bits & SL_CLEAR_STENCIL_MASK) >> SL_CLEAR_STENCIL_SHIFT]);
 };
 
-void OpenGLRenderAPI::EnableDepthTest()
+void OpenGLRenderAPI::ClearTextureSlot(uint32_t slot)
 {
-    glEnable(GL_DEPTH_TEST);
+    glBindTextureUnit(slot, 0);
 }
 
-void OpenGLRenderAPI::DisableDepthTest()
+void OpenGLRenderAPI::Culling(bool enable)
 {
-    glDisable(GL_DEPTH_TEST);
-}
-
-void OpenGLRenderAPI::DepthTestFunction(Function fun)
-{
-    glDepthFunc(GLFunction[(size_t)fun]);
-}
-
-void OpenGLRenderAPI::EnableStencilTest()
-{
-    glEnable(GL_STENCIL_TEST);
-}
-
-void OpenGLRenderAPI::DisableStencilTest()
-{
-    glDisable(GL_STENCIL_TEST);
-}
-
-void OpenGLRenderAPI::StencilFunction(Function fun, int32_t ref, uint32_t mask)
-{
-    glStencilFunc(GLFunction[(size_t)fun], ref, mask);
-}
-
-void OpenGLRenderAPI::StencilOperation(Operation sfail, Operation dpfail, Operation dppass)
-{
-    glStencilOp(GLOperation[(size_t)sfail], GLOperation[(size_t)dpfail], GLOperation[(size_t)dppass]);
-}
-
-void OpenGLRenderAPI::EnableBlending()
-{
-    glEnable(GL_BLEND);
-}
-
-void OpenGLRenderAPI::DisableBlending()
-{
-    glDisable(GL_BLEND);
-}
-
-void OpenGLRenderAPI::BlendFunction(Factor source, Factor destination)
-{
-    glBlendFunc(GLFactor[(size_t)source], GLFactor[(size_t)destination]);
-}
-
-void OpenGLRenderAPI::BlendColor(const glm::vec4 &color)
-{
-    glBlendColor(color.r, color.g, color.b, color.a);
-}
-
-void OpenGLRenderAPI::EnableCulling()
-{
-    glEnable(GL_CULL_FACE);
-}
-
-void OpenGLRenderAPI::DisableCulling()
-{
-    glDisable(GL_CULL_FACE);
+    enable ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 }
 
 void OpenGLRenderAPI::CullingFace(Face face)
@@ -104,19 +49,54 @@ void OpenGLRenderAPI::FrontFace(Winding winding)
     glFrontFace(GLWinding[(size_t)winding]);
 }
 
-void OpenGLRenderAPI::EnableSeamlessCubemap()
+void OpenGLRenderAPI::StencilTest(bool enable)
 {
-    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    enable ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 }
 
-void OpenGLRenderAPI::DisableSeamlessCubemap()
+void OpenGLRenderAPI::StencilFunction(Function fun, int32_t ref, uint32_t mask)
 {
-    glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+    glStencilFunc(GLFunction[(size_t)fun], ref, mask);
 }
 
-void OpenGLRenderAPI::ClearTextureSlot(uint32_t slot)
+void OpenGLRenderAPI::StencilOperation(Operation sfail, Operation dpfail, Operation dppass)
 {
-    glBindTextureUnit(slot, 0);
+    glStencilOp(GLOperation[(size_t)sfail], GLOperation[(size_t)dpfail], GLOperation[(size_t)dppass]);
+}
+
+void OpenGLRenderAPI::DepthTest(bool enable)
+{
+    enable ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+}
+
+void OpenGLRenderAPI::WriteDepthBuffer(bool enable)
+{
+    glDepthMask(enable ? GL_TRUE : GL_FALSE);
+}
+
+void OpenGLRenderAPI::DepthTestFunction(Function fun)
+{
+    glDepthFunc(GLFunction[(size_t)fun]);
+}
+
+void OpenGLRenderAPI::Blending(bool enable)
+{
+    enable ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+}
+
+void OpenGLRenderAPI::BlendFunction(Factor source, Factor destination)
+{
+    glBlendFunc(GLFactor[(size_t)source], GLFactor[(size_t)destination]);
+}
+
+void OpenGLRenderAPI::BlendColor(const glm::vec4 &color)
+{
+    glBlendColor(color.r, color.g, color.b, color.a);
+}
+
+void OpenGLRenderAPI::SeamlessCubemap(bool enable)
+{
+    enable ? glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS) : glDisable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 void OpenGLRenderAPI::DrawIndexed(uint32_t count)
