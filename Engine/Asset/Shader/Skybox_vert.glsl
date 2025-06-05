@@ -12,6 +12,5 @@ void main()
 {
     v_dir = a_position;
 
-    vec4 pos = GetProjectionMat() * GetViewMatWithoutTransform() * vec4(a_position, 1.0);
-    gl_Position = pos.xyww;
+    gl_Position = GetProjectionMat() * GetViewMatWithoutTransform() * vec4(a_position, 1.0);
 }

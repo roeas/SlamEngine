@@ -169,8 +169,8 @@ void RendererLayer::OnRender()
     m_pLightUniformBuffer->Upload(LightCountID, &lightCount);
 
     ClearMainFramebuffer();
-    StandardPass();
     SkyPass();
+    StandardPass();
     PostProcessingPass();
     EntityIDPass();
 }
@@ -191,6 +191,43 @@ void RendererLayer::ClearMainFramebuffer()
     pFramebuffer->Bind();
     sl::RenderCore::ClearColor(glm::vec4{ 0.0f, 0.0f, 0.0f, 1.0f });
     sl::RenderCore::ClearDepth(1.0f);
+    pFramebuffer->Unbind();
+}
+
+void RendererLayer::SkyPass()
+{
+    SL_PROFILE_GPU("Sky Pass");
+    SL_PROFILE;
+
+    sl::RenderCore::Culling(false);
+    sl::RenderCore::DepthTest(false);
+    sl::RenderCore::SeamlessCubemap(true);
+
+    auto pFramebuffer = sl::RenderCore::GetMainFramebuffer();
+    pFramebuffer->Bind();
+
+    auto view = sl::World::GetRegistry().view<sl::SkyComponent>();
+    for (auto entity : view)
+    {
+        auto &sky = view.get<sl::SkyComponent>(entity);
+        auto *pMeshResource = sl::ResourceManager::GetMeshResource(sky.m_meshResourceID);
+        auto *pShaderResource = sl::ResourceManager::GetShaderResource(sky.m_shaderResourceID);
+        auto *pTextureResource = sl::ResourceManager::GetTextureResource(sky.m_textureResourceID);
+        if (!pMeshResource || !pShaderResource || !pTextureResource ||
+            !pMeshResource->IsReady() || !pShaderResource->IsReady() || !pTextureResource->IsReady())
+        {
+            continue;
+        }
+
+        auto *pShader = pShaderResource->GetShaderProgram();
+        pShader->Bind();
+        pShader->UploadUniform(SL_LOCATION_SKY_FACTOR, sky.m_factor);
+        pTextureResource->GetTexture()->Bind(0);
+        pShader->Unbind();
+
+        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
+    }
+
     pFramebuffer->Unbind();
 }
 
@@ -275,43 +312,6 @@ void RendererLayer::StandardPass()
         sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShader);
     }
  
-    pFramebuffer->Unbind();
-}
-
-void RendererLayer::SkyPass()
-{
-    SL_PROFILE_GPU("Sky Pass");
-    SL_PROFILE;
-
-    sl::RenderCore::Culling(false);
-    sl::RenderCore::DepthTestFunction(sl::Function::LessEqual);
-    sl::RenderCore::SeamlessCubemap(true);
-
-    auto pFramebuffer = sl::RenderCore::GetMainFramebuffer();
-    pFramebuffer->Bind();
-
-    auto view = sl::World::GetRegistry().view<sl::SkyComponent>();
-    for (auto entity : view)
-    {
-        auto &sky = view.get<sl::SkyComponent>(entity);
-        auto *pMeshResource = sl::ResourceManager::GetMeshResource(sky.m_meshResourceID);
-        auto *pShaderResource = sl::ResourceManager::GetShaderResource(sky.m_shaderResourceID);
-        auto *pTextureResource = sl::ResourceManager::GetTextureResource(sky.m_textureResourceID);
-        if (!pMeshResource || !pShaderResource || !pTextureResource ||
-            !pMeshResource->IsReady() || !pShaderResource->IsReady() || !pTextureResource->IsReady())
-        {
-            continue;
-        }
-
-        auto *pShader = pShaderResource->GetShaderProgram();
-        pShader->Bind();
-        pShader->UploadUniform(SL_LOCATION_SKY_FACTOR, sky.m_factor);
-        pTextureResource->GetTexture()->Bind(0);
-        pShader->Unbind();
-
-        sl::RenderCore::Submit(pMeshResource->GetVertexArray(), pShaderResource->GetShaderProgram());
-    }
-
     pFramebuffer->Unbind();
 }
 

@@ -42,12 +42,12 @@ SandboxLayer::SandboxLayer()
     };
     std::vector<uint32_t> cubeIndices
     {
-        0, 2, 1, 0, 3, 2,
-        5, 7, 4, 5, 6, 7,
-        3, 6, 2, 3, 7, 6,
-        4, 1, 5, 4, 0, 1,
-        4, 3, 0, 4, 7, 3,
-        1, 6, 5, 1, 2, 6,
+        0, 1, 2, 0, 2, 3,
+        5, 4, 7, 5, 7, 6,
+        3, 2, 6, 3, 6, 7,
+        4, 5, 1, 4, 1, 0,
+        4, 0, 3, 4, 3, 7,
+        1, 5, 6, 1, 6, 2,
     };
     std::vector<sl::VertexLayoutElement> cubeElements
     {
