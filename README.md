@@ -26,7 +26,7 @@
 
 [spdlog](https://github.com/gabime/spdlog) v1.15.3
 
-[SDL](https://github.com/libsdl-org/SDL) v3.2.14
+[SDL](https://github.com/libsdl-org/SDL) v3.2.16
 
 [glad](https://github.com/Dav1dde/glad) v2.0.8
 
