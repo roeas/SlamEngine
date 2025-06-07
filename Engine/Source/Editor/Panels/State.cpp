@@ -66,52 +66,82 @@ void State::OnUpdate(float deltaTime)
 {
     SL_PROFILE;
 
-    ImGui::Begin("State");
+    constexpr float PlotWindow = 0.5f;
 
-    constexpr float WindowTime = 0.5f; // In seconds
+    static float s_plotSumTime = 0.0f;
     static float s_sumFrame = 0.0f;
-    static float s_sumTime = 0.0f; // In seconds
-    static float s_plotSumTime = 0.0f; // In seconds
-    static ScrollingBuffer s_buffer;
+    static float s_windowSumTime = 0.0f;
+    static float s_avgFPS = 0.0f;
+    static ScrollingBuffer s_avgBuffer;
+    static ScrollingBuffer s_crtBuffer;
 
-    float avgFPS = 0.0f;
-    float crtFPS = 1000.0f / deltaTime;
-
-    ++s_sumFrame;
-    s_sumTime += deltaTime * 0.001f;
     s_plotSumTime += deltaTime * 0.001f;
-    if (s_sumTime >= WindowTime)
+
+    // Current
+    float crtFPS = 1000.0f / deltaTime;
+    s_crtBuffer.AddPoint(s_plotSumTime, crtFPS);
+    SL_PROFILE_PLOT("Frame Per Second", crtFPS);
+
+    // Average
+    ++s_sumFrame;
+    s_windowSumTime += deltaTime * 0.001f;
+    if (s_windowSumTime > PlotWindow)
     {
-        avgFPS = s_sumFrame / s_sumTime;
-        s_buffer.AddPoint(s_plotSumTime, avgFPS);
+        s_avgFPS = s_sumFrame / s_windowSumTime;
+        s_avgBuffer.AddPoint(s_plotSumTime, s_avgFPS);
         s_sumFrame = 0.0f;
-        s_sumTime = 0.0f;
+        s_windowSumTime = 0.0f;
+    }
+
+    if (!ImGui::Begin("State"))
+    {
+        ImGui::End();
+        return;
     }
 
     ImGui::Text("Backend: %s", magic_enum::enum_name(sl::RenderCore::GetBackend()).data());
-    ImGui::Text("Average FPS: %i", (int)std::round(avgFPS));
-    ImGui::Text("FPS: %i", (int)std::round(crtFPS));
-    ImGui::Text("Cost: %i ms", (int)std::round(deltaTime));
-
-    SL_PROFILE_PLOT("Frame Per Second", crtFPS);
+    ImGui::Text("Average FPS: %i", (int)std::round(s_avgFPS));
+    ImGui::Text("Current FPS: %i", (int)std::round(crtFPS));
 
     ImGui::Separator();
     ImGui::TextUnformatted("Average FPS:");
-    if (ImPlot::BeginPlot("##FPSPanel", ImVec2(-1.0f, 128.0f),
+    if (ImPlot::BeginPlot("##AverageFPSPanel", ImVec2(-1.0f, 128.0f),
         ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs | ImPlotFlags_NoFrame))
     {
         ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None);
-        ImPlot::SetupAxisLimits(ImAxis_X1, s_plotSumTime - 5.0f, s_plotSumTime - WindowTime, ImGuiCond_Always);
-        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 200.0f, ImGuiCond_Always);
+        ImPlot::SetupAxisLimits(ImAxis_X1, s_plotSumTime - 5.0f, s_plotSumTime - PlotWindow, ImGuiCond_Always);
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 500.0f, ImGuiCond_Always);
         ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 0.5f);
-        if (!s_buffer.m_datas.empty()) [[likely]]
+        if (!s_avgBuffer.m_datas.empty())
         {
-            ImPlot::PlotLine("FPS",
-                &s_buffer.m_datas[0].x,
-                &s_buffer.m_datas[0].y,
-                s_buffer.m_datas.size(),
+            ImPlot::PlotLine("Average FPS",
+                &s_avgBuffer.m_datas[0].x,
+                &s_avgBuffer.m_datas[0].y,
+                s_avgBuffer.m_datas.size(),
                 ImPlotLineFlags_SkipNaN | ImPlotLineFlags_Shaded,
-                s_buffer.m_offset,
+                s_avgBuffer.m_offset,
+                2 * sizeof(float));
+        }
+
+        ImPlot::EndPlot();
+    }
+
+    ImGui::TextUnformatted("Current FPS:");
+    if (ImPlot::BeginPlot("##CurrentFPSPanel", ImVec2(-1.0f, 128.0f),
+        ImPlotFlags_CanvasOnly | ImPlotFlags_NoInputs | ImPlotFlags_NoFrame))
+    {
+        ImPlot::SetupAxes(nullptr, nullptr, ImPlotAxisFlags_NoDecorations, ImPlotAxisFlags_None);
+        ImPlot::SetupAxisLimits(ImAxis_X1, s_plotSumTime - 5.0f, s_plotSumTime - PlotWindow, ImGuiCond_Always);
+        ImPlot::SetupAxisLimits(ImAxis_Y1, 0.0f, 500.0f, ImGuiCond_Always);
+        ImPlot::SetNextFillStyle(IMPLOT_AUTO_COL, 0.5f);
+        if (!s_crtBuffer.m_datas.empty())
+        {
+            ImPlot::PlotLine("Current FPS",
+                &s_crtBuffer.m_datas[0].x,
+                &s_crtBuffer.m_datas[0].y,
+                s_crtBuffer.m_datas.size(),
+                ImPlotLineFlags_SkipNaN | ImPlotLineFlags_Shaded,
+                s_crtBuffer.m_offset,
                 2 * sizeof(float));
         }
 
