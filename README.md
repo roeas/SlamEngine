@@ -1,7 +1,8 @@
 # SlamEngine
 [![MSBuild](https://github.com/roeas/SlamEngine/actions/workflows/MSBuild.yml/badge.svg?branch=main)](https://github.com/roeas/SlamEngine/actions/workflows/MSBuild.yml)
 
-![Preview](Engine/Asset/Texture/Preview.png)
+![Preview1](Engine/Asset/Texture/Preview1.png)
+![Preview2](Engine/Asset/Texture/Preview2.png)
 
 # Start
 1. Install [CMake](https://cmake.org/download/#latest)
