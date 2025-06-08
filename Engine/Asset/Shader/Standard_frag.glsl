@@ -129,21 +129,28 @@ vec3 EvalDirectLight(vec3 worldPos, vec3 cameraPos, Material material)
     return directColor;
 }
 
-vec3 EvalEnvLight(vec3 viewDir, vec3 normal, Material material)
+vec3 EvalEnvLight(vec3 viewDir, vec3 vertexNormal, Material material)
 {
-    vec3 fre = FresnelSchlickRoughness(material.F0, max(dot(normal, viewDir), 0.0), material.roughness);
-    vec3 ks = fre;
-    vec3 kd = 1.0 - ks;
-    kd *= 1.0 - material.metallic; 
-
-    vec3 reflectDir = reflect(-viewDir, normal);
+    float NdotV = max(dot(material.normal, viewDir), 0.0);
+    vec3 fre = FresnelSchlick(material.F0, NdotV);
+    vec3 reflectDir = reflect(-viewDir, material.normal);
     float mip = material.roughness * float(textureQueryLevels(s_radiance) - 1);
-    vec3 radiance = textureLod(s_radiance, reflectDir, mip).xyz;
-    vec3 irradiance = texture(s_irradiance, normal).xyz;
-    vec2 lut = texture(s_IBL_LUT, vec2(max(dot(normal, viewDir), 0.0), material.roughness)).xy;
-    vec3 specularBRDF = fre * lut.x + lut.y;
 
-    vec3 envColor = kd * material.albedo * irradiance + ks * specularBRDF * radiance;
+    // Textures
+    vec3 irradiance = texture(s_irradiance, material.normal).xyz;
+    vec3 radiance = textureLod(s_radiance, reflectDir, mip).xyz;
+    vec2 lut = texture(s_IBL_LUT, vec2(NdotV, material.roughness)).xy;
+    vec3 specularBRDF = material.F0 * lut.x + lut.y;
+
+    // Occlusion
+    float specularOcclusion = mix(pow(material.occlusion, 4.0), 1.0, clamp(-0.3 + NdotV * NdotV, 0.0, 1.0));
+    float horizonOcclusion = clamp(1.0 + 1.2 * dot(reflectDir, vertexNormal), 0.0, 1.0);
+    horizonOcclusion *= horizonOcclusion;
+    float finalSpecularOcclusion = min(specularOcclusion, horizonOcclusion);
+
+    vec3 ks = fre;
+    vec3 kd = (1.0 - material.metallic) * (vec3(1.0) - ks);
+    vec3 envColor = kd * material.albedo * irradiance * vec3(material.occlusion) + ks * specularBRDF * radiance * vec3(finalSpecularOcclusion);
     return envColor * vec3(u_IBLFactor);
 }
 
